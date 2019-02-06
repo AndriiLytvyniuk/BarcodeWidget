@@ -12,9 +12,6 @@ import androidx.core.content.FileProvider
 import java.io.File
 import android.appwidget.AppWidgetManager
 
-
-
-
 class BarcodeCaptureActivity : AppCompatActivity() {
 
     companion object {
@@ -26,6 +23,7 @@ class BarcodeCaptureActivity : AppCompatActivity() {
         setContentView(R.layout.activity_barcode_capture)
         setSupportActionBar(toolbar)
 
+        //TODO temp confirmation
         fab.setOnClickListener {
             val intent = intent
             val extras = intent.extras
@@ -40,8 +38,6 @@ class BarcodeCaptureActivity : AppCompatActivity() {
                 finish()
             }
         }
-
-        //dispatchTakePictureIntent()
     }
 
     private fun dispatchTakePictureIntent() {
