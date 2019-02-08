@@ -21,7 +21,7 @@ class BitmapToBarcodeConverterTest {
             }
         })
         converter.sendResult(barcodeMock)
-        assertNull(converter.barcodeListener)
+        assertNull(converter.listener)
     }
 
     @Test(expected = IllegalStateException::class)

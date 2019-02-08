@@ -12,20 +12,20 @@ class BitmapToBarcodeConverter {
     }
 
     @VisibleForTesting
-    var barcodeListener : BarcodeListener? = null
+    var listener : BarcodeListener? = null
 
     @Synchronized
     fun convert(bitmap: Bitmap, barcodeListener: BarcodeListener) {
-        if (this.barcodeListener != null) {
+        if (this.listener != null) {
             throw IllegalStateException("BitmapToBarcodeConverter supports only one image at time")
         }
-        this.barcodeListener = barcodeListener
+        this.listener = barcodeListener
     }
 
     @VisibleForTesting
     fun sendResult(barcode: Barcode) {
-        val barcodeListener = this.barcodeListener
-        this.barcodeListener = null
+        val barcodeListener = this.listener
+        this.listener = null
         barcodeListener!!.onBarcodeConverted(barcode)
     }
 }
