@@ -6,6 +6,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import org.mockito.Mockito.mock
+import java.lang.IllegalStateException
 
 class BitmapToBarcodeConverterTest {
 
@@ -21,5 +22,13 @@ class BitmapToBarcodeConverterTest {
         })
         converter.sendResult(barcodeMock)
         assertNull(converter.barcodeListener)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun convertTestMultiple() {
+        val converter = BitmapToBarcodeConverter()
+        val bitmapMock = mock(Bitmap::class.java)
+        converter.convert(bitmapMock, mock(BitmapToBarcodeConverter.BarcodeListener::class.java))
+        converter.convert(bitmapMock, mock(BitmapToBarcodeConverter.BarcodeListener::class.java))
     }
 }
