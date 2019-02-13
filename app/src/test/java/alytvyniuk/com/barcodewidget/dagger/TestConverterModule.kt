@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 
 @Module
-class ConverterModule {
+class TestConverterModule {
 
     companion object {
         val testBitmap = mock(Bitmap::class.java)!!

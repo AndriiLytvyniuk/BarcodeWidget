@@ -1,5 +1,7 @@
 package alytvyniuk.com.barcodewidget
 
+import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
+import alytvyniuk.com.barcodewidget.dagger.DaggerConverterComponent
 import android.app.Activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,8 @@ import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import java.io.File
 import android.appwidget.AppWidgetManager
+import android.util.Log
+import javax.inject.Inject
 
 class BarcodeCaptureActivity : AppCompatActivity() {
 
@@ -18,10 +22,15 @@ class BarcodeCaptureActivity : AppCompatActivity() {
         private const val REQUEST_IMAGE_CAPTURE = 1
     }
 
+    @Inject lateinit var barcodeToBitmapConverter : CodeToImageConverter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_barcode_capture)
         setSupportActionBar(toolbar)
+
+        DaggerConverterComponent.create().inject(this)
+        Log.d("Andrii", ": $barcodeToBitmapConverter.")
 
         //TODO temp confirmation
         fab.setOnClickListener {

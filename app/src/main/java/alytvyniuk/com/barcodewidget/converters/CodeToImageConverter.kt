@@ -4,14 +4,20 @@ import alytvyniuk.com.barcodewidget.model.Barcode
 import android.graphics.Bitmap
 import androidx.annotation.VisibleForTesting
 import java.lang.IllegalStateException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class BarcodeToBitmapConverter {
+@Singleton
+class CodeToImageConverter @Inject constructor(
+    private val barcodeToBitmap: BarcodeToBitmap
+) {
+
     interface BitmapListener {
         fun onBitmapConverted(bitmap: Bitmap)
     }
 
     @VisibleForTesting
-    var listener : BitmapListener? = null
+    var listener: BitmapListener? = null
 
     @Synchronized
     fun convert(barcode: Barcode, bitmapListener: BitmapListener) {
@@ -19,12 +25,13 @@ class BarcodeToBitmapConverter {
             throw IllegalStateException("BarcodeToBitmapConverter supports only one image at time")
         }
         this.listener = bitmapListener
+        performConversion(barcode)
     }
 
     @VisibleForTesting
-    fun sendResult(bitmap: Bitmap) {
-        val bitmapListener = this.listener
-        this.listener = null
-        bitmapListener!!.onBitmapConverted(bitmap)
+    fun performConversion(barcode: Barcode) {
+        val bitmap = barcodeToBitmap.convert(barcode)
+        listener?.onBitmapConverted(bitmap)
+        listener = null
     }
 }

@@ -12,10 +12,10 @@ class BitmapToBarcodeConverterTest {
 
     @Test
     fun convert() {
-        val converter = BitmapToBarcodeConverter()
+        val converter = ImageToCodeConverter()
         val bitmapMock = mock(Bitmap::class.java)
         val barcodeMock = Barcode()
-        converter.convert(bitmapMock, object: BitmapToBarcodeConverter.BarcodeListener {
+        converter.convert(bitmapMock, object: ImageToCodeConverter.BarcodeListener {
             override fun onBarcodeConverted(barcode: Barcode) {
                 assertEquals(barcodeMock, barcode)
             }
@@ -26,9 +26,9 @@ class BitmapToBarcodeConverterTest {
 
     @Test(expected = IllegalStateException::class)
     fun convertTestMultiple() {
-        val converter = BitmapToBarcodeConverter()
+        val converter = ImageToCodeConverter()
         val bitmapMock = mock(Bitmap::class.java)
-        converter.convert(bitmapMock, mock(BitmapToBarcodeConverter.BarcodeListener::class.java))
-        converter.convert(bitmapMock, mock(BitmapToBarcodeConverter.BarcodeListener::class.java))
+        converter.convert(bitmapMock, mock(ImageToCodeConverter.BarcodeListener::class.java))
+        converter.convert(bitmapMock, mock(ImageToCodeConverter.BarcodeListener::class.java))
     }
 }

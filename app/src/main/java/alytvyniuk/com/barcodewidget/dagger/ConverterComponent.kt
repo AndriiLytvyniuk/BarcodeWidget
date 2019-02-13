@@ -1,7 +1,7 @@
 package alytvyniuk.com.barcodewidget.dagger
 
-import alytvyniuk.com.barcodewidget.converters.BarcodeToBitmapConverter
-import androidx.annotation.NonNull
+import alytvyniuk.com.barcodewidget.BarcodeCaptureActivity
+import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import dagger.Component
 import javax.inject.Singleton
 
@@ -9,11 +9,7 @@ import javax.inject.Singleton
 @Component(modules = [ConverterModule::class])
 interface ConverterComponent {
 
-    companion object {
-        fun barcodeToBitmap() : ConverterComponent {
-            return DaggerConverterComponent.builder().converterModule(ConverterModule()).build()
-        }
-    }
+    fun barcodeToBitmapConverter() : CodeToImageConverter
 
-    fun inject(@NonNull barcodeToBitmapConverter : BarcodeToBitmapConverter)
+    fun inject(barcodeCaptureActivity: BarcodeCaptureActivity)
 }

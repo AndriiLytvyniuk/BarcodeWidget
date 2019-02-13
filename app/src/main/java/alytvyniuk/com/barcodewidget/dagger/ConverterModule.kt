@@ -9,19 +9,19 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class ConverterModule {
+open class ConverterModule {
 
     @Provides
     @NonNull
     @Singleton
-    fun provideBarcodeToBitmap() : BarcodeToBitmap {
-        return object : BarcodeToBitmap {
-            override fun convert(barcode: Barcode): Bitmap {
-                val w = 300
-                val h = 300
-                val conf = Bitmap.Config.ARGB_8888 // see other conf types
-                return Bitmap.createBitmap(w, h, conf)
-            }
+    fun provideBarcodeToBitmap() : BarcodeToBitmap = returnReleaseStub()
+
+    private fun returnReleaseStub() : BarcodeToBitmap = object : BarcodeToBitmap {
+        override fun convert(barcode: Barcode): Bitmap {
+            val w = 300
+            val h = 300
+            val conf = Bitmap.Config.ARGB_8888 // see other conf types
+            return Bitmap.createBitmap(w, h, conf)
         }
     }
 }
