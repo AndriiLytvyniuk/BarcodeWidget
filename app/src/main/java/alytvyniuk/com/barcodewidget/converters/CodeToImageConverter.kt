@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CodeToImageConverter @Inject constructor(
-    private val barcodeToBitmap: BarcodeToBitmap
+    val barcodeToBitmap: BarcodeToBitmap
 ) {
 
     interface BitmapListener {

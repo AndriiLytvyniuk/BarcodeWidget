@@ -1,6 +1,7 @@
 package alytvyniuk.com.barcodewidget
 
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
+import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.dagger.DaggerConverterComponent
 import android.app.Activity
 import android.os.Bundle
@@ -22,7 +23,8 @@ class BarcodeCaptureActivity : AppCompatActivity() {
         private const val REQUEST_IMAGE_CAPTURE = 1
     }
 
-    @Inject lateinit var barcodeToBitmapConverter : CodeToImageConverter
+    @Inject lateinit var codeToImageConverter : CodeToImageConverter
+    @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +32,8 @@ class BarcodeCaptureActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         DaggerConverterComponent.create().inject(this)
-        Log.d("Andrii", ": $barcodeToBitmapConverter.")
+        Log.d("Andrii", "cti: ${codeToImageConverter.barcodeToBitmap.hashCode()}")
+        Log.d("Andrii", "itc: ${imageToCodeConverter.bitmapToBarcode.hashCode()}, ${imageToCodeConverter.handler.hashCode()}")
 
         //TODO temp confirmation
         fab.setOnClickListener {

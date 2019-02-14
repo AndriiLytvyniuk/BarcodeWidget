@@ -1,6 +1,7 @@
 package alytvyniuk.com.barcodewidget.dagger
 
 import alytvyniuk.com.barcodewidget.converters.BarcodeToBitmap
+import alytvyniuk.com.barcodewidget.converters.BitmapToBarcode
 import alytvyniuk.com.barcodewidget.model.Barcode
 import android.graphics.Bitmap
 import androidx.annotation.NonNull
@@ -15,6 +16,7 @@ class TestConverterModule {
 
     companion object {
         val testBitmap = mock(Bitmap::class.java)!!
+        val testBarcode = Barcode("Hello", "Test")
     }
 
     @Provides
@@ -25,6 +27,17 @@ class TestConverterModule {
             override fun convert(barcode: Barcode): Bitmap {
                 return testBitmap
             }
+        }
+    }
+
+    @Provides
+    @NonNull
+    @Singleton
+    fun provideBitmapToBarcode() : BitmapToBarcode = testBitmapToBarcodeStub()
+
+    private fun testBitmapToBarcodeStub() : BitmapToBarcode = object : BitmapToBarcode {
+        override fun convert(barcode: Bitmap): Barcode {
+            return testBarcode
         }
     }
 }
