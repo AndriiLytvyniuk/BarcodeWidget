@@ -6,12 +6,18 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import android.app.PendingIntent
+import android.util.Log
 
 
 class BarcodeWidgetProvider : AppWidgetProvider() {
 
     companion object {
         private const val WIDGET_REQUEST_CODE = 2
+    }
+
+    override fun onReceive(context: Context?, intent: Intent?) {
+        super.onReceive(context, intent)
+        Log.d("Andrii", "onReceive: " + intent)
     }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {

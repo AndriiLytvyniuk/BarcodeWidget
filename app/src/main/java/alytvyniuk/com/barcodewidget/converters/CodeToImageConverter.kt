@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 
 class CodeToImageConverter @Inject constructor(handler: Handler,
-                                               val barcodeToBitmap: BarcodeToBitmap)
+                                               private val barcodeToBitmap: BarcodeToBitmap)
     : AsyncConverter<Barcode, Bitmap>(handler) {
 
     override fun performConversion(from: Barcode) {

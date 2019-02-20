@@ -23,7 +23,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <Button
-            android:id="@+id/btn_from_photo"
+            android:id="@+id/buttonFromPhoto"
             android:text="from photo"
             android:layout_width="match_parent"
             android:layout_height="50dp"/>
