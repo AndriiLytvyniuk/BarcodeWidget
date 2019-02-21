@@ -1,6 +1,5 @@
 package alytvyniuk.com.barcodewidget.converters
 
-import alytvyniuk.com.barcodewidget.dagger.AsyncConverter
 import alytvyniuk.com.barcodewidget.dagger.DaggerTestConverterComponent
 import alytvyniuk.com.barcodewidget.dagger.TestConverterModule
 import alytvyniuk.com.barcodewidget.model.Barcode

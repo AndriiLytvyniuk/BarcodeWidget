@@ -1,4 +1,4 @@
-package alytvyniuk.com.barcodewidget.dagger
+package alytvyniuk.com.barcodewidget.converters
 
 import android.os.Handler
 import androidx.annotation.VisibleForTesting

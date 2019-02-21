@@ -1,6 +1,5 @@
 package alytvyniuk.com.barcodewidget.converters
 
-import alytvyniuk.com.barcodewidget.dagger.AsyncConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
 import android.graphics.Bitmap
 import android.os.Handler
