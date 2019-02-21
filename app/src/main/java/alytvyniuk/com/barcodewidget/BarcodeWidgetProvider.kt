@@ -17,11 +17,12 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
-        Log.d("Andrii", "onReceive: " + intent)
+        Log.d("Andrii", "onReceive: " + intent + " " + intent?.extras)
     }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
+        Log.d("Andrii", "onUpdate: ")
         for (widgetId in appWidgetIds) {
 
             val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)

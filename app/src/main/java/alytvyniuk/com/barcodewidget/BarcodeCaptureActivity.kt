@@ -25,6 +25,9 @@ import android.graphics.BitmapFactory
 import android.graphics.Bitmap
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import android.widget.RemoteViews
+
+
 
 
 class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
@@ -75,7 +78,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
         val storageDir: File = filesDir
         val fileName = "temp_image"
         val fileExtension = ".jpg"
-        return File.createTempFile(fileName, fileExtension, storageDir)
+        return File("$storageDir", "$fileName.$fileExtension")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -120,9 +123,17 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID
             )
+
+            val appWidgetManager = AppWidgetManager.getInstance(this)
+
+            val remoteViews = RemoteViews(packageName, R.layout.widget_layout)
+
+            val b = BitmapFactory.decodeResource(resources, R.drawable.sample)
+            remoteViews.setBitmap(R.id.widget_root_view, "setImageBitmap", b)
+            appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
+
             val resultValue = Intent()
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            resultValue.putExtra("Andrii", "AndriiValue")
             setResult(Activity.RESULT_OK, resultValue)
             finish()
         }
