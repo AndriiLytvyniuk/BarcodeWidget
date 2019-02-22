@@ -28,6 +28,7 @@ import android.widget.RemoteViews
 
 private const val TAG = "BarcodeCaptureActivity"
 private const val REQUEST_IMAGE_CAPTURE = 1
+private const val REQUEST_GALLERY = 2
 private const val REQUEST_CAMERA_PERMISSION_PHOTO = 10
 
 class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
@@ -44,12 +45,14 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
         DaggerConverterComponent.create().inject(this)
         buttonFromPhoto.setOnClickListener(this)
+        buttonFromGallery.setOnClickListener(this)
         fileStorage = FileStorage(applicationContext)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.buttonFromPhoto -> dispatchTakePictureIntent()
+            R.id.buttonFromGallery -> dispatchGalleryIntent()
         }
     }
 
@@ -58,28 +61,58 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
             requestCameraPermission(this, REQUEST_CAMERA_PERMISSION_PHOTO)
         } else {
             fileStorage.eraseImageTempFile()
-            val photoURI = fileStorage.getImageTempFileUri()
+            val uri = fileStorage.getImageTempFileUri()
             val requestIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                .putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                .putExtra(MediaStore.EXTRA_OUTPUT, uri)
             startActivityForResult(requestIntent, REQUEST_IMAGE_CAPTURE)
         }
     }
 
+    private fun dispatchGalleryIntent() {
+        val imagePickerIntent = Intent(Intent.ACTION_PICK).setType("image/*")
+        startActivityForResult(imagePickerIntent, REQUEST_GALLERY)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if (resultCode == Activity.RESULT_OK) {
-                val bitmap = BitmapFactory.decodeFile(fileStorage.getImageTempFile().absolutePath)
+        when (requestCode) {
+            REQUEST_IMAGE_CAPTURE -> handleImageCaptureResult(resultCode)
+            REQUEST_GALLERY -> handleGalleryResult(resultCode, data)
+        }
+    }
+
+    private fun handleImageCaptureResult(resultCode: Int) {
+        if (resultCode == Activity.RESULT_OK) {
+            val bitmap = BitmapFactory.decodeFile(fileStorage.getImageTempFile().absolutePath)
+            if (bitmap != null) {
+                performImageToBarcodeConversion(bitmap)
+            } else {
+                // TODO error message
+                Log.e(TAG, "Couldn't get bitmap from photo image")
+            }
+        } else {
+            // TODO error message
+            Log.e(TAG, "Couldn't get photo image")
+        }
+    }
+
+    private fun handleGalleryResult(resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (data != null && data.data != null) {
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, data.data)
                 if (bitmap != null) {
                     performImageToBarcodeConversion(bitmap)
                 } else {
                     // TODO error message
-                    Log.e(TAG, "Couldn't get bitmap from image")
+                    Log.e(TAG, "Couldn't get bitmap from gallery image")
                 }
             } else {
                 // TODO error message
-                Log.e(TAG, "Couldn't get photo image")
+                Log.e(TAG, "Couldn't get image from gallery null uri")
             }
+        } else {
+            // TODO error message
+            Log.e(TAG, "Couldn't get image from gallery")
         }
     }
 
