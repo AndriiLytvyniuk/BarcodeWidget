@@ -13,8 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_barcode_capture.*
 import android.content.Intent
 import android.provider.MediaStore
-import androidx.core.content.FileProvider
-import java.io.File
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.pm.PackageManager
@@ -28,18 +26,16 @@ import androidx.core.content.ContextCompat
 import android.widget.RemoteViews
 
 
-
+private const val TAG = "BarcodeCaptureActivity"
+private const val REQUEST_IMAGE_CAPTURE = 1
+private const val REQUEST_CAMERA_PERMISSION_PHOTO = 10
 
 class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
-    companion object {
-        private const val TAG = "BarcodeCaptureActivity"
-        private const val REQUEST_IMAGE_CAPTURE = 1
-        private const val REQUEST_CAMERA_PERMISSION_PHOTO = 10
-        private const val FILE_PROVIDER_AUTHORITY = BuildConfig.APPLICATION_ID + ".fileprovider"
-    }
 
     @Inject lateinit var codeToImageConverter : CodeToImageConverter
     @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
+    //TODO Inject
+    private lateinit var fileStorage: FileStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +44,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
         DaggerConverterComponent.create().inject(this)
         buttonFromPhoto.setOnClickListener(this)
+        fileStorage = FileStorage(applicationContext)
     }
 
     override fun onClick(v: View?) {
@@ -60,32 +57,19 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
         if (!hasCameraPermission(this)) {
             requestCameraPermission(this, REQUEST_CAMERA_PERMISSION_PHOTO)
         } else {
-            val photoFile = createImageFile()
-            val photoURI = FileProvider.getUriForFile(this, FILE_PROVIDER_AUTHORITY, photoFile)
+            fileStorage.eraseImageTempFile()
+            val photoURI = fileStorage.getImageTempFileUri()
             val requestIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 .putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
             startActivityForResult(requestIntent, REQUEST_IMAGE_CAPTURE)
         }
     }
 
-    private fun createImageFile(): File {
-        val tempFile = getImageFile()
-        tempFile.delete()
-        return tempFile
-    }
-
-    private fun getImageFile() : File {
-        val storageDir: File = filesDir
-        val fileName = "temp_image"
-        val fileExtension = ".jpg"
-        return File("$storageDir", "$fileName.$fileExtension")
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
-                val bitmap = BitmapFactory.decodeFile(getImageFile().absolutePath)
+                val bitmap = BitmapFactory.decodeFile(fileStorage.getImageTempFile().absolutePath)
                 if (bitmap != null) {
                     performImageToBarcodeConversion(bitmap)
                 } else {

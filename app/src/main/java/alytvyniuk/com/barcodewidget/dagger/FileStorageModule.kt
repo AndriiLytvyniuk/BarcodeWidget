@@ -1,2 +1,0 @@
-package alytvyniuk.com.barcodewidget
-
