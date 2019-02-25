@@ -1,0 +1,62 @@
+package alytvyniuk.com.barcodewidget
+
+import alytvyniuk.com.barcodewidget.converters.AsyncConverter
+import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
+import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
+import alytvyniuk.com.barcodewidget.model.Barcode
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_test_capture.*
+import javax.inject.Inject
+
+
+class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
+
+    @Inject
+    lateinit var codeToImageConverter : CodeToImageConverter
+    @Inject
+    lateinit var imageToCodeConverter: ImageToCodeConverter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_test_capture)
+        setSupportActionBar(toolbar)
+        fab.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.fab -> convertImage()
+        }
+    }
+
+    private fun convertImage() {
+        val b = BitmapFactory.decodeResource(resources, R.drawable.widget_preview)
+        performImageToBarcodeConversion(b)
+
+    }
+
+
+    private fun performImageToBarcodeConversion(bitmap: Bitmap) {
+        imageToCodeConverter.convert(bitmap, object : AsyncConverter.ConverterListener<Barcode> {
+            override fun onResult(to: Barcode) {
+                performBarcodeToImageConversion(to)
+            }
+        })
+    }
+
+    private fun performBarcodeToImageConversion(barcode: Barcode) {
+        codeToImageConverter.convert(barcode, object : AsyncConverter.ConverterListener<Bitmap> {
+            override fun onResult(to: Bitmap) {
+                setImage(to)
+            }
+        })
+    }
+
+    private fun setImage(bitmap: Bitmap) {
+        testImageView.setImageBitmap(bitmap)
+    }
+}

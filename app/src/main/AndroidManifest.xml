@@ -25,16 +25,20 @@
                 android:name=".BarcodeCaptureActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+                android:name=".BarcodePreviewActivity"
+                android:label="@string/app_name"
+                android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".TestCaptureActivity"
+                  android:label="@string/app_name"
+                  android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-                android:name=".BarcodePreviewActivity"
-                android:label="@string/app_name"
-                android:theme="@style/AppTheme.NoActionBar"/>
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="${applicationId}.fileprovider"
