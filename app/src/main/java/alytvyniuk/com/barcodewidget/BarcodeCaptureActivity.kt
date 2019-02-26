@@ -43,7 +43,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_barcode_capture)
         setSupportActionBar(toolbar)
 
-        DaggerConverterComponent.create().inject(this)
+        //DaggerConverterComponent.create().inject(this)
         buttonFromPhoto.setOnClickListener(this)
         buttonFromGallery.setOnClickListener(this)
         fileStorage = FileStorage(applicationContext)

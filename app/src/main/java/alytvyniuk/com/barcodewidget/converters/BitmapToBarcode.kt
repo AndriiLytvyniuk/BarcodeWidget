@@ -5,5 +5,5 @@ import android.graphics.Bitmap
 
 interface BitmapToBarcode {
 
-    fun convert(barcode: Bitmap) : Barcode
+    fun convert(bitmap: Bitmap) : Barcode
 }

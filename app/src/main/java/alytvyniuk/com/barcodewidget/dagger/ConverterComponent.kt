@@ -8,5 +8,5 @@ import javax.inject.Singleton
 @Component(modules = [ConverterModule::class, MainHandlerModule::class])
 interface ConverterComponent {
 
-    fun inject(barcodeCaptureActivity: BarcodeCaptureActivity)
+    //fun inject(barcodeCaptureActivity: BarcodeCaptureActivity)
 }

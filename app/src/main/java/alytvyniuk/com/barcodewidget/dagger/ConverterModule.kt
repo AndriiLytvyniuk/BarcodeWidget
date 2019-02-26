@@ -32,7 +32,7 @@ open class ConverterModule {
     }
 
     private fun releaseBitmapToBarcodeStub() : BitmapToBarcode = object : BitmapToBarcode {
-        override fun convert(barcode: Bitmap): Barcode {
+        override fun convert(bitmap: Bitmap): Barcode {
             return Barcode("Hello", "World")
         }
     }
