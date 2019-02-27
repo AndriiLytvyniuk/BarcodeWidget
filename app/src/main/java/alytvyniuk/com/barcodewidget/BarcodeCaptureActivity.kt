@@ -24,6 +24,7 @@ import android.graphics.Bitmap
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.widget.RemoteViews
+import java.lang.Exception
 
 
 private const val TAG = "BarcodeCaptureActivity"
@@ -118,6 +119,10 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun performImageToBarcodeConversion(bitmap: Bitmap) {
         imageToCodeConverter.convert(bitmap, object : AsyncConverter.ConverterListener<Barcode> {
+            override fun onError(exception: Exception) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
             override fun onResult(to: Barcode) {
                 performBarcodeToImageConversion(to)
             }
@@ -126,6 +131,10 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun performBarcodeToImageConversion(barcode: Barcode) {
         codeToImageConverter.convert(barcode, object : AsyncConverter.ConverterListener<Bitmap> {
+            override fun onError(exception: Exception) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
             override fun onResult(to: Bitmap) {
                 initWidget()
             }

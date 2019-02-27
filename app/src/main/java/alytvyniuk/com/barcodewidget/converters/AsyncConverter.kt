@@ -1,47 +1,84 @@
 package alytvyniuk.com.barcodewidget.converters
 
 import android.os.Handler
-import androidx.annotation.VisibleForTesting
+import android.os.Looper
+import android.os.Message
+import android.util.SparseArray
+import java.lang.Exception
 
-abstract class AsyncConverter<FROM, TO> (
-    val handler: Handler
+private const val MESSAGE_RESULT = 100
+private const val RESULT_OK = 0
+private const val RESULT_FAILURE = 1
+
+abstract class AsyncConverter<FROM, TO : Any> (
+    looper: Looper
 ) {
+
+    private val handler = ConverterHandler(looper)
+    private val listeners : SparseArray<ConverterListener<TO>> = SparseArray()
+
+    @Synchronized
+    fun convert(from : FROM, listener: ConverterListener<TO>) {
+        val key = getNextKey()
+        listeners.put(key, listener)
+        performConversion(from, key)
+    }
+
+    protected abstract fun performConversion(from: FROM, id : Int)
+
+    @Synchronized
+    protected fun sendResult(to : TO, id : Int) {
+        val message = getMessage(id, to)
+        handler.sendMessage(message)
+    }
+
+    @Synchronized
+    protected fun sendError(exception: Exception, id : Int) {
+        val message = getMessage(id, exception)
+        handler.sendMessage(message)
+    }
+
+    @Synchronized
+    private fun getNextKey() : Int {
+        val size = listeners.size()
+        return if (size > 0) listeners.keyAt(size - 1) + 1 else 0
+    }
+
+    private fun getMessage(id : Int, result : Any) : Message {
+        val message = handler.obtainMessage()
+        message.what = MESSAGE_RESULT
+        message.arg1 = id
+        message.arg2 = RESULT_OK
+        message.obj = result
+        return message
+    }
+
+    @Synchronized
+    private fun removeListener(id : Int) :  ConverterListener<TO> {
+        val listener = listeners.get(id)
+        listeners.remove(id)
+        return listener
+    }
 
     interface ConverterListener<RESULT> {
 
         fun onResult(to : RESULT)
+
+        fun onError(exception: Exception)
     }
 
-    @VisibleForTesting
-    var listener : ConverterListener<TO>? = null
-
-    private val postRunnable = object : Runnable {
-        private var result : TO? = null
-        private var l : ConverterListener<TO>? = null
-
-        override fun run() {
-            l?.onResult(result!!)
-            l = null
+    inner class ConverterHandler(looper: Looper) : Handler(looper) {
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            if (msg.what == MESSAGE_RESULT) {
+                val id = msg.arg1
+                val listener = removeListener(id)
+                val resultCode = msg.arg2
+                when (resultCode) {
+                    RESULT_OK -> listener.onResult(msg.obj as TO)
+                    RESULT_FAILURE -> listener.onError(msg.obj as Exception)
+                }
+            }
         }
-
-        fun setResult(r: TO, listener : ConverterListener<TO>) : Runnable {
-            result = r
-            l = listener
-            return this
-        }
-    }
-
-    @Synchronized
-    fun convert(from : FROM, listener: ConverterListener<TO>) {
-        this.listener = listener
-        performConversion(from)
-    }
-
-    protected abstract fun performConversion(from: FROM)
-
-    @Synchronized
-    protected fun sendResult(to : TO) {
-        handler.post(postRunnable.setResult(to, listener!!))
-        listener = null
     }
 }

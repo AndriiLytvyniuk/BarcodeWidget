@@ -10,6 +10,7 @@ import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_test_capture.*
+import java.lang.Exception
 
 
 class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
@@ -23,9 +24,8 @@ class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_test_capture)
         setSupportActionBar(toolbar)
         fab.setOnClickListener(this)
-        val handler = Handler(Looper.getMainLooper())
-        codeToImageConverter = ZXingCodeToImageConverter(handler)
-        imageToCodeConverter = MLKitImageToCodeConverter(handler)
+        codeToImageConverter = ZXingCodeToImageConverter(Looper.getMainLooper())
+        imageToCodeConverter = MLKitImageToCodeConverter(Looper.getMainLooper())
     }
 
     override fun onClick(v: View?) {
@@ -42,6 +42,10 @@ class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun performImageToBarcodeConversion(bitmap: Bitmap) {
         imageToCodeConverter.convert(bitmap, object : AsyncConverter.ConverterListener<Barcode> {
+            override fun onError(exception: Exception) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
             override fun onResult(to: Barcode) {
                 performBarcodeToImageConversion(to)
             }
@@ -50,6 +54,10 @@ class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun performBarcodeToImageConversion(barcode: Barcode) {
         codeToImageConverter.convert(barcode, object : AsyncConverter.ConverterListener<Bitmap> {
+            override fun onError(exception: Exception) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
             override fun onResult(to: Bitmap) {
                 setImage(to)
             }
