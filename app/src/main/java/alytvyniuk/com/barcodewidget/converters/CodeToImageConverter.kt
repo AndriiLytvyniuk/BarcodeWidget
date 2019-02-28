@@ -3,7 +3,6 @@ package alytvyniuk.com.barcodewidget.converters
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.Format
 import android.graphics.Bitmap
-import android.os.Handler
 import android.os.Looper
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType

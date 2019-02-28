@@ -3,7 +3,6 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.converters.AsyncConverter
-import alytvyniuk.com.barcodewidget.dagger.DaggerConverterComponent
 import alytvyniuk.com.barcodewidget.model.Barcode
 import android.Manifest
 import android.app.Activity
