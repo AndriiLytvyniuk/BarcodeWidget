@@ -7,7 +7,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [TestConverterModule::class, TestHandlerModule::class])
-interface TestConverterComponent : ConverterComponent {
+interface TestConverterComponent : AppComponent {
 
     fun inject(codeToImageConverterTest: CodeToImageConverterTest)
 

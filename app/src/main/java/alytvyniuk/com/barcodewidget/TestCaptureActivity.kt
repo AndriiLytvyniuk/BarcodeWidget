@@ -5,26 +5,27 @@ import alytvyniuk.com.barcodewidget.model.Barcode
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_test_capture.*
 import java.lang.Exception
+import javax.inject.Inject
 
 
 class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
 
-    lateinit var codeToImageConverter : CodeToImageConverter
-    lateinit var imageToCodeConverter: ImageToCodeConverter
+    @Inject lateinit var codeToImageConverter : CodeToImageConverter
+    @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_capture)
         setSupportActionBar(toolbar)
         fab.setOnClickListener(this)
-        codeToImageConverter = ZXingCodeToImageConverter(Looper.getMainLooper())
-        imageToCodeConverter = MLKitImageToCodeConverter(Looper.getMainLooper())
+        App.component().inject(this)
+//        codeToImageConverter = ZXingCodeToImageConverter(Looper.getMainLooper())
+//        imageToCodeConverter = MLKitImageToCodeConverter(Looper.getMainLooper())
     }
 
     override fun onClick(v: View?) {

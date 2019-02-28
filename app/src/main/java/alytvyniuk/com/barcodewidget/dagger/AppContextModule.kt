@@ -1,7 +1,7 @@
 package alytvyniuk.com.barcodewidget.dagger;
 
-import android.os.Handler
-import android.os.Looper
+import android.app.Application
+import android.content.Context
 import androidx.annotation.NonNull
 import dagger.Module
 import dagger.Provides
@@ -9,12 +9,12 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class MainHandlerModule {
+class AppContextModule(private val application: Application) {
 
     @Provides
     @Singleton
     @NonNull
-    fun provideMainHandler() : Handler {
-        return Handler(Looper.getMainLooper())
+    fun providesContext() : Context {
+        return application
     }
 }
