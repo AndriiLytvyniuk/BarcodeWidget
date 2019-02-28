@@ -16,9 +16,14 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
     <ImageView
-            android:id="@+id/testImageView"
+            android:id="@+id/sampleImageView"
             android:layout_width="match_parent"
-            android:layout_height="300dp"/>
+            android:layout_height="200dp"/>
+
+    <ImageView
+            android:id="@+id/resultImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -27,6 +32,7 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             app:srcCompat="@android:drawable/ic_dialog_email"
+            android:layout_weight="0"
             tools:layout_editor_absoluteY="485dp"
             tools:layout_editor_absoluteX="320dp"/>
 

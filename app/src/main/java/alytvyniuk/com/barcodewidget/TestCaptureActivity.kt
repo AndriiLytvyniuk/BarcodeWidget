@@ -5,7 +5,6 @@ import alytvyniuk.com.barcodewidget.model.Barcode
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -35,7 +34,9 @@ class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun convertImage() {
-        val b = BitmapFactory.decodeResource(resources, R.drawable.widget_preview)
+        val imageId = R.drawable.widget_preview
+        sampleImageView.setImageResource(imageId)
+        val b = BitmapFactory.decodeResource(resources, imageId)
         performImageToBarcodeConversion(b)
     }
 
@@ -65,6 +66,6 @@ class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setImage(bitmap: Bitmap) {
-        testImageView.setImageBitmap(bitmap)
+        resultImageView.setImageBitmap(bitmap)
     }
 }

@@ -3,6 +3,7 @@ package alytvyniuk.com.barcodewidget.dagger
 import alytvyniuk.com.barcodewidget.converters.BarcodeToBitmap
 import alytvyniuk.com.barcodewidget.converters.BitmapToBarcode
 import alytvyniuk.com.barcodewidget.model.Barcode
+import alytvyniuk.com.barcodewidget.model.Format
 import android.graphics.Bitmap
 import androidx.annotation.NonNull
 import dagger.Module
@@ -33,7 +34,7 @@ open class ConverterModule {
 
     private fun releaseBitmapToBarcodeStub() : BitmapToBarcode = object : BitmapToBarcode {
         override fun convert(bitmap: Bitmap): Barcode {
-            return Barcode("Hello", "World")
+            return Barcode(Format.QR_CODE, "World")
         }
     }
 }
