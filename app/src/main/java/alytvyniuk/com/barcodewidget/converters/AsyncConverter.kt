@@ -4,47 +4,51 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.SparseArray
+import androidx.annotation.VisibleForTesting
 import java.lang.Exception
 
 private const val MESSAGE_RESULT = 100
 private const val RESULT_OK = 0
 private const val RESULT_FAILURE = 1
 
-abstract class AsyncConverter<FROM, TO : Any> (
+abstract class AsyncConverter<FROM, TO : Any>(
     looper: Looper
 ) {
 
-    private val handler = ConverterHandler(looper)
-    private val listeners : SparseArray<ConverterListener<TO>> = SparseArray()
+    private val handler = createConverterHandler(looper)
+    @VisibleForTesting
+    val listeners: SparseArray<ConverterListener<TO>> = SparseArray()
+
+    @VisibleForTesting
+    open fun createConverterHandler(looper: Looper): Handler = ConverterHandler(looper)
 
     @Synchronized
-    fun convert(from : FROM, listener: ConverterListener<TO>) {
-        val key = getNextKey()
-        listeners.put(key, listener)
+    fun convert(from: FROM, listener: ConverterListener<TO>) {
+        val key = addListener(listener)
         performConversion(from, key)
     }
 
-    protected abstract fun performConversion(from: FROM, id : Int)
+    protected abstract fun performConversion(from: FROM, id: Int)
 
     @Synchronized
-    protected fun sendResult(to : TO, id : Int) {
+    protected fun sendResult(to: TO, id: Int) {
         val message = getMessage(id, to)
         handler.sendMessage(message)
     }
 
     @Synchronized
-    protected fun sendError(exception: Exception, id : Int) {
+    protected fun sendError(exception: Exception, id: Int) {
         val message = getMessage(id, exception)
         handler.sendMessage(message)
     }
 
     @Synchronized
-    private fun getNextKey() : Int {
+    private fun getNextKey(): Int {
         val size = listeners.size()
         return if (size > 0) listeners.keyAt(size - 1) + 1 else 0
     }
 
-    private fun getMessage(id : Int, result : Any) : Message {
+    private fun getMessage(id: Int, result: Any): Message {
         val message = handler.obtainMessage()
         message.what = MESSAGE_RESULT
         message.arg1 = id
@@ -54,7 +58,17 @@ abstract class AsyncConverter<FROM, TO : Any> (
     }
 
     @Synchronized
-    private fun removeListener(id : Int) :  ConverterListener<TO> {
+    @VisibleForTesting
+    fun addListener(listener: ConverterListener<TO>): Int {
+        val key = getNextKey()
+        listeners.put(key, listener)
+        return key
+    }
+
+
+    @Synchronized
+    @VisibleForTesting
+    fun removeListener(id: Int): ConverterListener<TO> {
         val listener = listeners.get(id)
         listeners.remove(id)
         return listener
@@ -62,7 +76,7 @@ abstract class AsyncConverter<FROM, TO : Any> (
 
     interface ConverterListener<RESULT> {
 
-        fun onResult(to : RESULT)
+        fun onResult(to: RESULT)
 
         fun onError(exception: Exception)
     }
