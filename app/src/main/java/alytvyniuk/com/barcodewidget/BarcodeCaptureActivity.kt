@@ -35,18 +35,17 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
     @Inject lateinit var codeToImageConverter : CodeToImageConverter
     @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
-    //TODO Inject
-    private lateinit var fileStorage: FileStorage
+
+    @Inject lateinit var fileStorage: FileStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_barcode_capture)
         setSupportActionBar(toolbar)
+        App.component().inject(this)
 
-        //DaggerConverterComponent.create().inject(this)
         buttonFromPhoto.setOnClickListener(this)
         buttonFromGallery.setOnClickListener(this)
-        fileStorage = FileStorage(applicationContext)
     }
 
     override fun onClick(v: View?) {

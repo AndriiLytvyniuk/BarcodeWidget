@@ -14,7 +14,6 @@ import javax.inject.Inject
 
 class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
-
     @Inject lateinit var codeToImageConverter : CodeToImageConverter
     @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
 
@@ -22,10 +21,8 @@ class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_capture)
         setSupportActionBar(toolbar)
-        fab.setOnClickListener(this)
         App.component().inject(this)
-//        codeToImageConverter = ZXingCodeToImageConverter(Looper.getMainLooper())
-//        imageToCodeConverter = MLKitImageToCodeConverter(Looper.getMainLooper())
+        fab.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -40,7 +37,6 @@ class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
         val b = BitmapFactory.decodeResource(resources, imageId)
         performImageToBarcodeConversion(b)
     }
-
 
     private fun performImageToBarcodeConversion(bitmap: Bitmap) {
         imageToCodeConverter.convert(bitmap, object : AsyncConverter.ConverterListener<Barcode> {
