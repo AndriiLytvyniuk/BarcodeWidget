@@ -4,6 +4,7 @@ gen
 libs
 obj
 lint.xml
+local.properties
 
 # IntelliJ IDEA
 .idea
