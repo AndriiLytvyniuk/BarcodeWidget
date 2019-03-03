@@ -39,6 +39,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-ml-vision:19.0.2'
 
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
     kapt 'com.google.dagger:dagger-compiler:2.14.1'
     kaptTest 'com.google.dagger:dagger-compiler:2.14.1'
     kaptAndroidTest 'com.google.dagger:dagger-compiler:2.14.1'
