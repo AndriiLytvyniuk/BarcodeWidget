@@ -6,5 +6,5 @@ import androidx.room.RoomDatabase
 @Database(entities = [BarcodeEntity::class], version = 1)
 abstract class BarcodeDB : RoomDatabase() {
 
-    abstract fun getDao() : BarcodeDao
+    abstract fun getDao() : RoomBarcodeDao
 }

@@ -1,15 +1,17 @@
 package alytvyniuk.com.barcodewidget.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import alytvyniuk.com.barcodewidget.model.Barcode
+import javax.inject.Inject
 
-@Dao
-interface BarcodeDao {
+class BarcodeDao @Inject constructor(private val roomBarcodeDao: RoomBarcodeDao) {
 
-    @Insert
-    fun insert(barcode: BarcodeEntity)
+    fun insert(barcode: Barcode, widgetId: Int) {
+        val barcodeEntity = barcode.toBarcodeEntity(widgetId)
+        roomBarcodeDao.insert(barcodeEntity)
+    }
 
-    @Query("SELECT * FROM BarcodeEntity WHERE widgetId = :widgetId")
-    fun loadBarcodeEntity(widgetId: Int) : BarcodeEntity
+    fun loadBarcodeEntity(widgetId: Int) : Barcode {
+        val barcodeEntity = roomBarcodeDao.loadBarcodeEntity(widgetId)
+        return barcodeEntity.toBarcode()
+    }
 }

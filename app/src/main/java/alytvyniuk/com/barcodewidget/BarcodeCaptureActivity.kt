@@ -3,6 +3,7 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.converters.AsyncConverter
+import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
 import android.Manifest
 import android.app.Activity
@@ -35,7 +36,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
     @Inject lateinit var codeToImageConverter : CodeToImageConverter
     @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
-
+    @Inject lateinit var barcodeDao: BarcodeDao
     @Inject lateinit var fileStorage: FileStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
