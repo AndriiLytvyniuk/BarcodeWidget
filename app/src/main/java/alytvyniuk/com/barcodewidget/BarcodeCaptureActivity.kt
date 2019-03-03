@@ -119,11 +119,12 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
     private fun performImageToBarcodeConversion(bitmap: Bitmap) {
         imageToCodeConverter.convertAsync(bitmap, object : AsyncConverter.ConverterListener<Barcode> {
             override fun onError(exception: Exception) {
+                Log.e(TAG, "Couldn't scan", exception)
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onResult(to: Barcode) {
-                Log.e(TAG, "Result of scan = $to")
+                Log.d(TAG, "Result of scan = $to")
                 handleResult(to)
             }
         })

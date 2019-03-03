@@ -1,15 +1,14 @@
 package alytvyniuk.com.barcodewidget
 
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
-import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.widget.RemoteViews
-import android.app.PendingIntent
 import android.util.Log
+import android.widget.RemoteViews
 import javax.inject.Inject
 
 private const val TAG = "BarcodeWidgetProvider"
