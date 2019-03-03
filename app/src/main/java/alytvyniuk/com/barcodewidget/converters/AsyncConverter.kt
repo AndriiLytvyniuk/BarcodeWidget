@@ -20,10 +20,10 @@ abstract class AsyncConverter<FROM, TO : Any>(
     val listeners: SparseArray<ConverterListener<TO>> = SparseArray()
 
     @VisibleForTesting
-    open fun createConverterHandler(looper: Looper): Handler = ConverterHandler(looper)
+    fun createConverterHandler(looper: Looper): Handler = ConverterHandler(looper)
 
     @Synchronized
-    fun convert(from: FROM, listener: ConverterListener<TO>) {
+    fun convertAsync(from: FROM, listener: ConverterListener<TO>) {
         val key = addListener(listener)
         performConversion(from, key)
     }

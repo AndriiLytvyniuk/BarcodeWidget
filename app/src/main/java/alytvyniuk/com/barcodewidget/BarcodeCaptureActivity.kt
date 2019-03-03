@@ -1,30 +1,26 @@
 package alytvyniuk.com.barcodewidget
 
-import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
-import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.converters.AsyncConverter
+import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
 import android.Manifest
 import android.app.Activity
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-
-import kotlinx.android.synthetic.main.activity_barcode_capture.*
-import android.content.Intent
-import android.provider.MediaStore
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import javax.inject.Inject
-import android.graphics.BitmapFactory
-import android.graphics.Bitmap
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import android.widget.RemoteViews
-import java.lang.Exception
+import kotlinx.android.synthetic.main.activity_barcode_capture.*
+import javax.inject.Inject
 
 
 private const val TAG = "BarcodeCaptureActivity"
@@ -34,16 +30,20 @@ private const val REQUEST_CAMERA_PERMISSION_PHOTO = 10
 
 class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
-    @Inject lateinit var codeToImageConverter : CodeToImageConverter
     @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
     @Inject lateinit var barcodeDao: BarcodeDao
     @Inject lateinit var fileStorage: FileStorage
+    private var widgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_barcode_capture)
         setSupportActionBar(toolbar)
         App.component().inject(this)
+        widgetId = getWidgetIdFromIntent()
+        if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            //TODO error
+        }
 
         buttonFromPhoto.setOnClickListener(this)
         buttonFromGallery.setOnClickListener(this)
@@ -117,51 +117,40 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun performImageToBarcodeConversion(bitmap: Bitmap) {
-        imageToCodeConverter.convert(bitmap, object : AsyncConverter.ConverterListener<Barcode> {
+        imageToCodeConverter.convertAsync(bitmap, object : AsyncConverter.ConverterListener<Barcode> {
             override fun onError(exception: Exception) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onResult(to: Barcode) {
-                performBarcodeToImageConversion(to)
+                Log.e(TAG, "Result of scan = $to")
+                handleResult(to)
             }
         })
     }
 
-    private fun performBarcodeToImageConversion(barcode: Barcode) {
-        codeToImageConverter.convert(barcode, object : AsyncConverter.ConverterListener<Bitmap> {
-            override fun onError(exception: Exception) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onResult(to: Bitmap) {
-                initWidget()
-            }
-        })
+    private fun handleResult(barcode: Barcode) {
+        updateDb(barcode, widgetId)
+        val resultValue = Intent()
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+        setResult(Activity.RESULT_OK, resultValue)
+        finish()
     }
 
-    private fun initWidget() {
+    private fun updateDb(barcode: Barcode, widgetId : Int) {
+        barcodeDao.insert(barcode, widgetId)
+    }
+
+    private fun getWidgetIdFromIntent() : Int {
         val intent = intent
         val extras = intent.extras
         if (extras != null) {
-            val appWidgetId = extras.getInt(
+            return extras.getInt(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID
             )
-
-            val appWidgetManager = AppWidgetManager.getInstance(this)
-
-            val remoteViews = RemoteViews(packageName, R.layout.widget_layout)
-
-            val b = BitmapFactory.decodeResource(resources, R.drawable.sample)
-            remoteViews.setBitmap(R.id.widget_root_view, "setImageBitmap", b)
-            appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
-
-            val resultValue = Intent()
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            setResult(Activity.RESULT_OK, resultValue)
-            finish()
         }
+        return AppWidgetManager.INVALID_APPWIDGET_ID
     }
 
     private fun requestCameraPermission(activity: Activity, requestCode: Int) {

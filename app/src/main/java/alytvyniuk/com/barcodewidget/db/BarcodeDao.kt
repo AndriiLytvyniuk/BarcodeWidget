@@ -10,8 +10,8 @@ class BarcodeDao @Inject constructor(private val roomBarcodeDao: RoomBarcodeDao)
         roomBarcodeDao.insert(barcodeEntity)
     }
 
-    fun loadBarcodeEntity(widgetId: Int) : Barcode {
+    fun loadBarcodeEntity(widgetId: Int) : Barcode? {
         val barcodeEntity = roomBarcodeDao.loadBarcodeEntity(widgetId)
-        return barcodeEntity.toBarcode()
+        return barcodeEntity?.toBarcode()
     }
 }

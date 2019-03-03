@@ -13,17 +13,25 @@ import java.lang.IllegalArgumentException
 
 private const val IMAGE_SIZE = 200
 
-abstract class CodeToImageConverter(looper: Looper) : AsyncConverter<Barcode, Bitmap>(looper)
+abstract class CodeToImageConverter(looper: Looper) : AsyncConverter<Barcode, Bitmap>(looper) {
+
+    abstract fun convert(barcode: Barcode) : Bitmap
+}
 
 class ZXingCodeToImageConverter(looper: Looper) : CodeToImageConverter(looper) {
-    override fun performConversion(from: Barcode, id : Int) {
+
+    override fun convert(barcode: Barcode): Bitmap {
         val multiFormatWriter = MultiFormatWriter()
-        val format = mapFormat(from.format)
+        val format = mapFormat(barcode.format)
         val hints = HashMap<EncodeHintType, Any>()
         hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.M
-        val bitMatrix = multiFormatWriter.encode(from.value, format, IMAGE_SIZE, IMAGE_SIZE, hints)
+        val bitMatrix = multiFormatWriter.encode(barcode.value, format, IMAGE_SIZE, IMAGE_SIZE, hints)
         val barcodeEncoder = BarcodeEncoder()
-        val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+        return barcodeEncoder.createBitmap(bitMatrix)
+    }
+
+    override fun performConversion(from: Barcode, id : Int) {
+        val bitmap = convert(from)
         sendResult(bitmap, id)
     }
 

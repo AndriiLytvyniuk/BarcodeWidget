@@ -39,7 +39,7 @@ class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun performImageToBarcodeConversion(bitmap: Bitmap) {
-        imageToCodeConverter.convert(bitmap, object : AsyncConverter.ConverterListener<Barcode> {
+        imageToCodeConverter.convertAsync(bitmap, object : AsyncConverter.ConverterListener<Barcode> {
             override fun onError(exception: Exception) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -51,7 +51,7 @@ class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun performBarcodeToImageConversion(barcode: Barcode) {
-        codeToImageConverter.convert(barcode, object : AsyncConverter.ConverterListener<Bitmap> {
+        codeToImageConverter.convertAsync(barcode, object : AsyncConverter.ConverterListener<Bitmap> {
             override fun onError(exception: Exception) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }

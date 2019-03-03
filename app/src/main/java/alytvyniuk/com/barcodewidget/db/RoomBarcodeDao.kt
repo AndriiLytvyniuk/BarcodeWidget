@@ -11,5 +11,5 @@ interface RoomBarcodeDao {
     fun insert(barcode: BarcodeEntity)
 
     @Query("SELECT * FROM BarcodeEntity WHERE widgetId = :widgetId")
-    fun loadBarcodeEntity(widgetId: Int) : BarcodeEntity
+    fun loadBarcodeEntity(widgetId: Int) : BarcodeEntity?
 }

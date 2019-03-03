@@ -1,6 +1,11 @@
 package alytvyniuk.com.barcodewidget.model
 
-data class Barcode(val format : Format, val value: String = "")
+data class Barcode(val format : Format, val value: String = "") {
+
+    override fun toString(): String {
+        return "Barcode(format=$format, value='$value')"
+    }
+}
 
 enum class Format {
     UNKNOWN,

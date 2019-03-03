@@ -18,6 +18,9 @@ class RoomBarcodeDaoModule {
     @Singleton
     @NonNull
     fun providesRoomBarcodeDao(context: Context) : RoomBarcodeDao {
-        return Room.databaseBuilder(context, BarcodeDB::class.java, DB_NAME).build().getDao()
+        return Room.databaseBuilder(context, BarcodeDB::class.java, DB_NAME)
+            .allowMainThreadQueries()
+            .build()
+            .getDao()
     }
 }
