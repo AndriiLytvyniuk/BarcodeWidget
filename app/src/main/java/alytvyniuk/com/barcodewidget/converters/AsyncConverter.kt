@@ -32,13 +32,13 @@ abstract class AsyncConverter<FROM, TO : Any>(
 
     @Synchronized
     protected fun sendResult(to: TO, id: Int) {
-        val message = getMessage(id, to)
+        val message = getMessage(id, to, RESULT_OK)
         handler.sendMessage(message)
     }
 
     @Synchronized
     protected fun sendError(exception: Exception, id: Int) {
-        val message = getMessage(id, exception)
+        val message = getMessage(id, exception, RESULT_FAILURE)
         handler.sendMessage(message)
     }
 
@@ -48,11 +48,11 @@ abstract class AsyncConverter<FROM, TO : Any>(
         return if (size > 0) listeners.keyAt(size - 1) + 1 else 0
     }
 
-    private fun getMessage(id: Int, result: Any): Message {
+    private fun getMessage(id: Int, result: Any, returnType: Int): Message {
         val message = handler.obtainMessage()
         message.what = MESSAGE_RESULT
         message.arg1 = id
-        message.arg2 = RESULT_OK
+        message.arg2 = returnType
         message.obj = result
         return message
     }

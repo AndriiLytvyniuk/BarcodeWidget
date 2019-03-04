@@ -15,6 +15,6 @@ open class ImageToCodeConverterModule {
     @NonNull
     @Singleton
     fun provideImageToCodeConverter(looper: Looper, firebaseApp: FirebaseApp) : ImageToCodeConverter {
-        return MLKitImageToCodeConverter(looper)
+        return ZxingImageToCodeConverter(looper)
     }
 }
