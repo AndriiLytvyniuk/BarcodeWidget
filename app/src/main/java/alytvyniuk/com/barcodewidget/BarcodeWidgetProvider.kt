@@ -40,7 +40,7 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
     }
 
     private fun getOnClickIntent(context: Context) : PendingIntent {
-        val intent = Intent(context, BarcodePreviewActivity::class.java)
+        val intent = Intent(context, PreviewActivity::class.java)
         return PendingIntent.getActivity(context, WIDGET_REQUEST_CODE, intent, 0)
     }
 }

@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".BarcodePreviewActivity"
+                android:name=".PreviewActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".TestCaptureActivity"
