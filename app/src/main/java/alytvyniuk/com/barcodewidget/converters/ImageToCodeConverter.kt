@@ -2,29 +2,58 @@ package alytvyniuk.com.barcodewidget.converters
 
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.Format
+import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Looper
 import android.util.Log
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 
 private const val TAG = "ImageToCode"
-abstract class ImageToCodeConverter (looper: Looper) : AsyncConverter<Bitmap, Barcode>(looper)
+abstract class ImageToCodeConverter (looper: Looper) : AsyncConverter<Bitmap, Barcode>(looper) {
+
+    abstract fun cv(context: Context, uri : Uri)
+}
 
 class MLKitImageToCodeConverter(looper: Looper) : ImageToCodeConverter(looper)  {
 
     override fun performConversion(from: Bitmap, id : Int) {
         val image = FirebaseVisionImage.fromBitmap(from)
-        val detector = FirebaseVision.getInstance().visionBarcodeDetector
+        val options = FirebaseVisionBarcodeDetectorOptions.Builder()
+            .setBarcodeFormats(
+                FirebaseVisionBarcode.FORMAT_QR_CODE)
+            .build()
+        val detector = FirebaseVision.getInstance().getVisionBarcodeDetector(options)
         detector.detectInImage(image)
             .addOnSuccessListener { barcodes ->
+                Log.d(TAG, "Converted barcodes: size = ${barcodes.size}")
                 if (barcodes.size > 0) {
                     sendResult(firebaseBarcodeToBarcode(barcodes[0]), id)
                 }
             }
             .addOnFailureListener { e ->
                 sendError(e, id)
+            }
+    }
+
+    override fun cv(context: Context, uri : Uri) {
+        val image = FirebaseVisionImage.fromFilePath(context, uri)
+        val options = FirebaseVisionBarcodeDetectorOptions.Builder()
+            .setBarcodeFormats(
+                FirebaseVisionBarcode.FORMAT_QR_CODE)
+            .build()
+        Log.d(TAG, "Cv: start")
+
+        val detector = FirebaseVision.getInstance().getVisionBarcodeDetector(options)
+        detector.detectInImage(image)
+            .addOnSuccessListener { barcodes ->
+                Log.d(TAG, "Converted barcodes: size = ${barcodes.size}")
+                for (barcode in barcodes) {
+                    Log.d(TAG, "Barcode = $barcode")
+                }
             }
     }
 

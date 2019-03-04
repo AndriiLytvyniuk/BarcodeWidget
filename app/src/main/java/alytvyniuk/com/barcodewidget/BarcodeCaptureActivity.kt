@@ -11,7 +11,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -83,7 +82,8 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun handleImageCaptureResult(resultCode: Int) {
         if (resultCode == Activity.RESULT_OK) {
-            val bitmap = BitmapFactory.decodeFile(fileStorage.getImageTempFile().absolutePath)
+            val bitmap = fileStorage.getScaledBitmap()
+            //TODO refactor
             if (bitmap != null) {
                 performImageToBarcodeConversion(bitmap)
             } else {
@@ -131,11 +131,12 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun handleResult(barcode: Barcode) {
-        updateDb(barcode, widgetId)
-        val resultValue = Intent()
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
-        setResult(Activity.RESULT_OK, resultValue)
-        finish()
+        startActivity(EditActivity.intent(this, widgetId, barcode))
+//        updateDb(barcode, widgetId)
+//        val resultValue = Intent()
+//        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+//        setResult(Activity.RESULT_OK, resultValue)
+//        finish()
     }
 
     private fun updateDb(barcode: Barcode, widgetId : Int) {
