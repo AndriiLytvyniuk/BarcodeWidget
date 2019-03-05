@@ -7,7 +7,7 @@
         tools:context=".BarcodeCaptureActivity">
 
     <ImageView
-            android:src="@drawable/widget_preview"
+            android:src="@drawable/test_qr_code"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

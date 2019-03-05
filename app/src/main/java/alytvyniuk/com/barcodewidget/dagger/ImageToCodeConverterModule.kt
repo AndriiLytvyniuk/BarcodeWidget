@@ -1,20 +1,20 @@
 package alytvyniuk.com.barcodewidget.dagger
 
-import alytvyniuk.com.barcodewidget.converters.*
+import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
+import alytvyniuk.com.barcodewidget.converters.StubImageToCodeConverter
 import android.os.Looper
 import androidx.annotation.NonNull
-import com.google.firebase.FirebaseApp
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [MainLooperModule::class, FirebaseInitModule::class])
+@Module(includes = [MainLooperModule::class])
 open class ImageToCodeConverterModule {
 
     @Provides
     @NonNull
     @Singleton
-    fun provideImageToCodeConverter(looper: Looper, firebaseApp: FirebaseApp) : ImageToCodeConverter {
-        return ZxingImageToCodeConverter(looper)
+    fun provideImageToCodeConverter(looper: Looper) : ImageToCodeConverter {
+        return StubImageToCodeConverter(looper)
     }
 }

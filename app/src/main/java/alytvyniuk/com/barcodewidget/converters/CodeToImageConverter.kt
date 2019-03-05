@@ -1,8 +1,11 @@
 package alytvyniuk.com.barcodewidget.converters
 
+import alytvyniuk.com.barcodewidget.R
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.Format
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Looper
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -52,4 +55,17 @@ class ZXingCodeToImageConverter(looper: Looper) : CodeToImageConverter(looper) {
             Format.ITF -> BarcodeFormat.ITF
             else -> throw IllegalArgumentException("Unknown format for zxing: $format")
         }
+}
+
+class StubCodeToImageConverter(looper: Looper, context: Context) : CodeToImageConverter(looper) {
+
+    private val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.test_qr_code)
+    override fun convert(barcode: Barcode): Bitmap {
+        return bitmap
+    }
+
+    override fun performConversion(from: Barcode, id: Int) {
+        sendResult(bitmap, id)
+    }
+
 }

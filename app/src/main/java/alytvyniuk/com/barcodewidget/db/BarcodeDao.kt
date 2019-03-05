@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class BarcodeDao @Inject constructor(private val roomBarcodeDao: RoomBarcodeDao) {
 
-    fun insert(barcode: Barcode, widgetId: Int) {
+    fun insert(barcode: Barcode, widgetId: Int?) {
         val barcodeEntity = barcode.toBarcodeEntity(widgetId)
         roomBarcodeDao.insert(barcodeEntity)
     }

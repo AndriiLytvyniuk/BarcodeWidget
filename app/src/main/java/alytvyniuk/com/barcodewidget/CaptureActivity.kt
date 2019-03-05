@@ -18,13 +18,14 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import kotlinx.android.synthetic.main.activity_barcode_capture.*
+import kotlinx.android.synthetic.main.activity_capture.*
 import javax.inject.Inject
 
 
 private const val TAG = "BarcodeCaptureActivity"
 private const val REQUEST_IMAGE_CAPTURE = 1
 private const val REQUEST_GALLERY = 2
+private const val REQUEST_EDIT_ACTIVITY = 3
 private const val REQUEST_CAMERA_PERMISSION_PHOTO = 10
 
 class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
@@ -36,7 +37,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_barcode_capture)
+        setContentView(R.layout.activity_capture)
         setSupportActionBar(toolbar)
         App.component().inject(this)
         widgetId = getWidgetIdFromIntent()
@@ -77,6 +78,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
         when (requestCode) {
             REQUEST_IMAGE_CAPTURE -> handleImageCaptureResult(resultCode)
             REQUEST_GALLERY -> handleGalleryResult(resultCode, data)
+            REQUEST_EDIT_ACTIVITY -> handleEditActivityResult(resultCode)
         }
     }
 
@@ -116,6 +118,17 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun handleEditActivityResult(resultCode: Int) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                Log.d(TAG, "Widget for id $widgetId was set up successfully")
+                val resultValue = Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+                setResult(Activity.RESULT_OK, resultValue)
+            }
+            finish()
+        }
+    }
+
     private fun performImageToBarcodeConversion(bitmap: Bitmap) {
         imageToCodeConverter.convertAsync(bitmap, object : AsyncConverter.ConverterListener<Barcode> {
             override fun onError(exception: Exception) {
@@ -131,12 +144,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun handleResult(barcode: Barcode) {
-        startActivity(EditActivity.intent(this, widgetId, barcode))
-//        updateDb(barcode, widgetId)
-//        val resultValue = Intent()
-//        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
-//        setResult(Activity.RESULT_OK, resultValue)
-//        finish()
+        startActivityForResult(EditActivity.intent(this, widgetId, barcode), REQUEST_EDIT_ACTIVITY)
     }
 
     private fun updateDb(barcode: Barcode, widgetId : Int) {

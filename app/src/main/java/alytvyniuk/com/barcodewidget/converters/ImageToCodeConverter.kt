@@ -103,3 +103,9 @@ class MLKitImageToCodeConverter(looper: Looper) : ImageToCodeConverter(looper)  
             else -> Format.UNKNOWN
         }
 }
+
+class StubImageToCodeConverter(looper: Looper) : ImageToCodeConverter(looper) {
+    override fun performConversion(from: Bitmap, id: Int) {
+        sendResult(Barcode(Format.QR_CODE, "Andrii"), id)
+    }
+}
