@@ -1,5 +1,7 @@
 package alytvyniuk.com.barcodewidget
 
+import alytvyniuk.com.barcodewidget.BarcodeActivityHelper.KEY_BARCODE
+import alytvyniuk.com.barcodewidget.BarcodeActivityHelper.KEY_WIDGET_ID
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
@@ -12,16 +14,13 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_edit.*
 import javax.inject.Inject
 
-private const val KEY_WIDGET_ID = "KEY_WIDGET_ID"
-private const val KEY_BARCODE = "KEY_BARCODE"
-
 class EditActivity : AppCompatActivity() {
 
     companion object {
-        fun intent(context: Context, widgetId: Int, barcode: Barcode): Intent {
-            return Intent(context, EditActivity::class.java)
-                .putExtra(KEY_BARCODE, barcode)
-                .putExtra(KEY_WIDGET_ID, widgetId)
+        const val REQUEST_EDIT_ACTIVITY = 3
+
+        fun intent(context: Context, barcode: Barcode, widgetId: Int): Intent {
+            return BarcodeActivityHelper.intent(EditActivity::class.java, context, barcode, widgetId)
         }
     }
 
@@ -40,7 +39,11 @@ class EditActivity : AppCompatActivity() {
         barcodeImage.setImageBitmap(bitmap)
         confirmButton.setOnClickListener {
             save(barcode, widgetId)
-            setResult(Activity.RESULT_OK)
+            if (widgetId != null) {
+                updateWidgetProvider(widgetId)
+            }
+            val result = Intent().putExtra(KEY_BARCODE, barcode).putExtra(KEY_WIDGET_ID, widgetId)
+            setResult(Activity.RESULT_OK, result)
             finish()
         }
     }
@@ -48,4 +51,23 @@ class EditActivity : AppCompatActivity() {
     private fun save(barcode: Barcode, widgetId : Int?) {
         barcodeDao.insert(barcode, widgetId)
     }
+
+    private fun updateWidgetProvider(widgetId : Int) {
+        sendBroadcast(Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+            .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId)))
+    }
 }
+
+object BarcodeActivityHelper {
+    const val KEY_WIDGET_ID = "KEY_WIDGET_ID"
+    const val KEY_BARCODE = "KEY_BARCODE"
+
+    fun <T> intent(
+        clazz: Class<T>,
+        context: Context,
+        barcode: Barcode,
+        widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
+    ) = Intent(context, clazz).putExtra(KEY_BARCODE, barcode).putExtra(KEY_WIDGET_ID, widgetId)
+}
+
+

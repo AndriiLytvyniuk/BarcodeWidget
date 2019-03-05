@@ -1,5 +1,6 @@
 package alytvyniuk.com.barcodewidget
 
+import alytvyniuk.com.barcodewidget.EditActivity.Companion.REQUEST_EDIT_ACTIVITY
 import alytvyniuk.com.barcodewidget.converters.AsyncConverter
 import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
@@ -25,13 +26,11 @@ import javax.inject.Inject
 private const val TAG = "BarcodeCaptureActivity"
 private const val REQUEST_IMAGE_CAPTURE = 1
 private const val REQUEST_GALLERY = 2
-private const val REQUEST_EDIT_ACTIVITY = 3
 private const val REQUEST_CAMERA_PERMISSION_PHOTO = 10
 
 class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
     @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
-    @Inject lateinit var barcodeDao: BarcodeDao
     @Inject lateinit var fileStorage: FileStorage
     private var widgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
@@ -144,11 +143,7 @@ class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun handleResult(barcode: Barcode) {
-        startActivityForResult(EditActivity.intent(this, widgetId, barcode), REQUEST_EDIT_ACTIVITY)
-    }
-
-    private fun updateDb(barcode: Barcode, widgetId : Int) {
-        barcodeDao.insert(barcode, widgetId)
+        startActivityForResult(EditActivity.intent(this, barcode, widgetId), REQUEST_EDIT_ACTIVITY)
     }
 
     private fun getWidgetIdFromIntent() : Int {

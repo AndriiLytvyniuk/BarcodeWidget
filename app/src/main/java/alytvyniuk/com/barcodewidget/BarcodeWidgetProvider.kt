@@ -2,6 +2,7 @@ package alytvyniuk.com.barcodewidget
 
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
+import alytvyniuk.com.barcodewidget.model.Barcode
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -41,18 +42,18 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId : Int) {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
-        remoteViews.setOnClickPendingIntent(R.id.widget_image, getOnClickIntent(context))
         val barcode = barcodeDao.loadBarcodeEntity(widgetId)
         Log.d(TAG, "Update widget for id $widgetId, barcode = $barcode")
         if (barcode != null) {
             val bitmap = codeToImageConverter.convert(barcode)
             remoteViews.setBitmap(R.id.widget_image, "setImageBitmap", bitmap)
+            remoteViews.setOnClickPendingIntent(R.id.widget_image, getOnClickIntent(context, barcode, widgetId))
             appWidgetManager.updateAppWidget(widgetId, remoteViews)
         }
     }
 
-    private fun getOnClickIntent(context: Context) : PendingIntent {
-        val intent = Intent(context, PreviewActivity::class.java)
+    private fun getOnClickIntent(context: Context, barcode: Barcode, widgetId: Int) : PendingIntent {
+        val intent = PreviewActivity.intent(context, barcode, widgetId)
         return PendingIntent.getActivity(context, WIDGET_REQUEST_CODE, intent, 0)
     }
 }

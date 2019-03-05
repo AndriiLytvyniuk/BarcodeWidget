@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_height="match_parent"
         tools:context=".BarcodeCaptureActivity">
 
     <ImageView
+            android:id="@+id/barcodeImageView"
             android:src="@drawable/test_qr_code"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_weight="1"
+            android:layout_height="0dp"/>
 
-</FrameLayout>
+    <TextView
+            android:id="@+id/dataTextView"
+            android:text="data"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"/>
+
+    <Button
+            android:id="@+id/editButton"
+            android:text="Edit"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"/>
+
+</LinearLayout>
