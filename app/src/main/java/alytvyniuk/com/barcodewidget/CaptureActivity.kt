@@ -28,7 +28,7 @@ private const val REQUEST_IMAGE_CAPTURE = 1
 private const val REQUEST_GALLERY = 2
 private const val REQUEST_CAMERA_PERMISSION_PHOTO = 10
 
-class BarcodeCaptureActivity : AppCompatActivity(), View.OnClickListener {
+class CaptureActivity : AppCompatActivity(), View.OnClickListener {
 
     @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
     @Inject lateinit var fileStorage: FileStorage

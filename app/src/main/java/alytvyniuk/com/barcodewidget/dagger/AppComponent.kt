@@ -14,7 +14,7 @@ import javax.inject.Singleton
 interface AppComponent {
 
     fun inject(testCaptureActivity: TestCaptureActivity)
-    fun inject(barcodeCaptureActivity: BarcodeCaptureActivity)
+    fun inject(barcodeCaptureActivity: CaptureActivity)
     fun inject(barcodeWidgetProvider: BarcodeWidgetProvider)
     fun inject(editActivity: EditActivity)
     fun inject(previewActivity: PreviewActivity)
