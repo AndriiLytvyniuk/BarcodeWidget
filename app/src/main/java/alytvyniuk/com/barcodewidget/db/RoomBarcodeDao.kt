@@ -12,4 +12,7 @@ interface RoomBarcodeDao {
 
     @Query("SELECT * FROM BarcodeEntity WHERE widgetId = :widgetId")
     fun loadBarcodeEntity(widgetId: Int) : BarcodeEntity?
+
+    @Query("SELECT * FROM BarcodeEntity")
+    fun loadAll() : List<BarcodeEntity>
 }

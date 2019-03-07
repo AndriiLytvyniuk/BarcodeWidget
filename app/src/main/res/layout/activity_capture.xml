@@ -35,8 +35,8 @@
             android:layout_height="50dp"/>
 
     <Button
-            android:id="@+id/btn_from_screenshot"
-            android:text="from screenshot"
+            android:id="@+id/fromSavedButton"
+            android:text="from saved"
             android:layout_width="match_parent"
             android:layout_height="50dp"/>
 

@@ -14,4 +14,9 @@ class BarcodeDao @Inject constructor(private val roomBarcodeDao: RoomBarcodeDao)
         val barcodeEntity = roomBarcodeDao.loadBarcodeEntity(widgetId)
         return barcodeEntity?.toBarcode()
     }
+
+    fun loadAll() : List<Barcode> {
+        val entities = roomBarcodeDao.loadAll()
+        return entities.map { it.toBarcode() }
+    }
 }

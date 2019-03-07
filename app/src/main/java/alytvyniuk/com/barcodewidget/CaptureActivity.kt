@@ -52,6 +52,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener {
         when (v?.id) {
             R.id.buttonFromPhoto -> dispatchTakePictureIntent()
             R.id.buttonFromGallery -> dispatchGalleryIntent()
+            R.id.fromSavedButton -> startActivity(BarcodeListActivity.intent(this))
         }
     }
 
