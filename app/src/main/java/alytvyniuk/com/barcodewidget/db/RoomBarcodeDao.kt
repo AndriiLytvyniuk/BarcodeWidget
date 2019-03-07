@@ -8,11 +8,11 @@ import androidx.room.Query
 interface RoomBarcodeDao {
 
     @Insert
-    fun insert(barcode: BarcodeEntity)
+    fun insert(barcode: RoomBarcodeEntity)
 
-    @Query("SELECT * FROM BarcodeEntity WHERE widgetId = :widgetId")
-    fun loadBarcodeEntity(widgetId: Int) : BarcodeEntity?
+    @Query("SELECT * FROM RoomBarcodeEntity WHERE widgetId = :widgetId")
+    fun loadBarcodeEntity(widgetId: Int) : RoomBarcodeEntity?
 
-    @Query("SELECT * FROM BarcodeEntity")
-    fun loadAll() : List<BarcodeEntity>
+    @Query("SELECT * FROM RoomBarcodeEntity")
+    fun loadAll() : List<RoomBarcodeEntity>
 }
