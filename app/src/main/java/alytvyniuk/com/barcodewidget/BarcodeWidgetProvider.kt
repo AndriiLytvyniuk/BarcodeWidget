@@ -42,12 +42,12 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId : Int) {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
-        val barcode = barcodeDao.loadBarcodeEntity(widgetId)
-        Log.d(TAG, "Update widget for id $widgetId, barcode = $barcode")
-        if (barcode != null) {
-            val bitmap = codeToImageConverter.convert(barcode)
+        val barcodeEntity = barcodeDao.loadBarcodeEntity(widgetId)
+        Log.d(TAG, "Update widget for id $widgetId, barcode = $barcodeEntity")
+        if (barcodeEntity != null) {
+            val bitmap = codeToImageConverter.convert(barcodeEntity.barcode)
             remoteViews.setBitmap(R.id.widget_image, "setImageBitmap", bitmap)
-            remoteViews.setOnClickPendingIntent(R.id.widget_image, getOnClickIntent(context, barcode, widgetId))
+            remoteViews.setOnClickPendingIntent(R.id.widget_image, getOnClickIntent(context, barcodeEntity.barcode, widgetId))
             appWidgetManager.updateAppWidget(widgetId, remoteViews)
         }
     }

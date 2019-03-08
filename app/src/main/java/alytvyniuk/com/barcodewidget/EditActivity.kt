@@ -34,21 +34,18 @@ class EditActivity : AppCompatActivity() {
         App.component().inject(this)
         val barcode = intent.getParcelableExtra<Barcode>(KEY_BARCODE)
         val bitmap = codeToImageConverter.convert(barcode)
-        val widgetIdValue : Int = intent.getIntExtra(KEY_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
-        val widgetId = if (widgetIdValue == AppWidgetManager.INVALID_APPWIDGET_ID) null else widgetIdValue
+        val widgetId : Int = intent.getIntExtra(KEY_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
         barcodeImage.setImageBitmap(bitmap)
         confirmButton.setOnClickListener {
             save(barcode, widgetId)
-            if (widgetId != null) {
-                updateWidgetProvider(widgetId)
-            }
+            updateWidgetProvider(widgetId)
             val result = Intent().putExtra(KEY_BARCODE, barcode).putExtra(KEY_WIDGET_ID, widgetId)
             setResult(Activity.RESULT_OK, result)
             finish()
         }
     }
 
-    private fun save(barcode: Barcode, widgetId : Int?) {
+    private fun save(barcode: Barcode, widgetId : Int) {
         barcodeDao.insert(barcode, widgetId)
     }
 

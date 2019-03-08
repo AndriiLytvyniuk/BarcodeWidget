@@ -1,6 +1,6 @@
 package alytvyniuk.com.barcodewidget
 
-import alytvyniuk.com.barcodewidget.db.RoomBarcodeEntity
+import alytvyniuk.com.barcodewidget.model.BarcodeEntity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +9,9 @@ import kotlinx.android.synthetic.main.barcode_list_item.view.*
 
 class BarcodeAdapter : RecyclerView.Adapter<BarcodeAdapter.BarcodeItemHolder>() {
 
-    private var barcodes : List<RoomBarcodeEntity> = listOf()
+    private var barcodes : List<BarcodeEntity> = listOf()
 
-    fun setBarcodes(list : List<RoomBarcodeEntity>) {
+    fun setBarcodes(list : List<BarcodeEntity>) {
         barcodes = list
     }
 
@@ -28,8 +28,12 @@ class BarcodeAdapter : RecyclerView.Adapter<BarcodeAdapter.BarcodeItemHolder>() 
 
     class BarcodeItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: RoomBarcodeEntity) {
-            itemView.dataTextView.text = item.data
+        fun bind(item: BarcodeEntity) {
+            itemView.dataTextView.text = item.barcode.value
+            itemView.setOnClickListener {
+                val intent = EditActivity.intent(itemView.context, item.barcode, item.widgetId)
+                itemView.context.startActivity(intent)
+            }
         }
     }
 }

@@ -3,7 +3,6 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.EditActivity.Companion.REQUEST_EDIT_ACTIVITY
 import alytvyniuk.com.barcodewidget.converters.AsyncConverter
 import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
-import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
 import android.Manifest
 import android.app.Activity
@@ -46,6 +45,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener {
 
         buttonFromPhoto.setOnClickListener(this)
         buttonFromGallery.setOnClickListener(this)
+        fromSavedButton.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
