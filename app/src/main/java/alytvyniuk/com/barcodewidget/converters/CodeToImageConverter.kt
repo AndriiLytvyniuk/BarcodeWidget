@@ -26,9 +26,7 @@ class ZXingCodeToImageConverter(looper: Looper) : CodeToImageConverter(looper) {
     override fun convert(barcode: Barcode): Bitmap {
         val multiFormatWriter = MultiFormatWriter()
         val format = mapFormat(barcode.format)
-        val hints = HashMap<EncodeHintType, Any>()
-        hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.M
-        val bitMatrix = multiFormatWriter.encode(barcode.value, format, IMAGE_SIZE, IMAGE_SIZE, hints)
+        val bitMatrix = multiFormatWriter.encode(barcode.value, format, IMAGE_SIZE, IMAGE_SIZE)
         val barcodeEncoder = BarcodeEncoder()
         return barcodeEncoder.createBitmap(bitMatrix)
     }

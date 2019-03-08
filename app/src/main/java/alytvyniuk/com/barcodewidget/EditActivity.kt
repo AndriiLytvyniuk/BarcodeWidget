@@ -5,6 +5,7 @@ import alytvyniuk.com.barcodewidget.BarcodeActivityHelper.KEY_WIDGET_ID
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
+import alytvyniuk.com.barcodewidget.model.BarcodeEntity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -46,7 +47,7 @@ class EditActivity : AppCompatActivity() {
     }
 
     private fun save(barcode: Barcode, widgetId : Int) {
-        barcodeDao.insert(barcode, widgetId)
+        barcodeDao.insert(BarcodeEntity(barcode, widgetId))
     }
 
     private fun updateWidgetProvider(widgetId : Int) {

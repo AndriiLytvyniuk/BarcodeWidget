@@ -1,21 +1,19 @@
 package alytvyniuk.com.barcodewidget.db
 
-import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.BarcodeEntity
-import alytvyniuk.com.barcodewidget.model.Format
 import javax.inject.Inject
 
 interface BarcodeDao {
-    fun insert(barcode: Barcode, widgetId: Int)
+    fun insert(barcodeEntity: BarcodeEntity)
     fun loadBarcodeEntity(widgetId: Int) : BarcodeEntity?
     fun loadAll() : List<BarcodeEntity>
 }
 
 class RoomBarcodeDaoImpl @Inject constructor(private val roomBarcodeDao: RoomBarcodeDao) : BarcodeDao {
 
-    override fun insert(barcode: Barcode, widgetId: Int) {
-        val barcodeEntity = barcode.toBarcodeEntity(widgetId)
-        roomBarcodeDao.insert(barcodeEntity)
+    override fun insert(barcodeEntity: BarcodeEntity) {
+        val roomEntity = RoomBarcodeEntity(barcodeEntity)
+        roomBarcodeDao.insert(roomEntity)
     }
 
     override fun loadBarcodeEntity(widgetId: Int) : BarcodeEntity? {
@@ -29,18 +27,18 @@ class RoomBarcodeDaoImpl @Inject constructor(private val roomBarcodeDao: RoomBar
     }
 }
 
-class StubDao : BarcodeDao {
-    override fun insert(barcode: Barcode, widgetId: Int) {
-    }
-
-    override fun loadBarcodeEntity(widgetId: Int): BarcodeEntity? {
-        return BarcodeEntity(Barcode(Format.QR_CODE, "StubDaoBarcode"), 1)
-    }
-
-    override fun loadAll(): List<BarcodeEntity> {
-        return listOf(BarcodeEntity(Barcode(Format.QR_CODE, "StubDaoBarcode1"), 1),
-            BarcodeEntity(Barcode(Format.AZTEC, "StubDaoBarcode2"), 2),
-            BarcodeEntity(Barcode(Format.CODABAR, "StubDaoBarcode3"), 3))
-    }
-
-}
+//class StubDao : BarcodeDao {
+//    override fun insert(barcode: Barcode, widgetId: Int) {
+//    }
+//
+//    override fun loadBarcodeEntity(widgetId: Int): BarcodeEntity? {
+//        return BarcodeEntity(Barcode(Format.QR_CODE, "StubDaoBarcode"), 1)
+//    }
+//
+//    override fun loadAll(): List<BarcodeEntity> {
+//        return listOf(BarcodeEntity(Barcode(Format.QR_CODE, "StubDaoBarcode1"), 1),
+//            BarcodeEntity(Barcode(Format.AZTEC, "StubDaoBarcode2"), 2),
+//            BarcodeEntity(Barcode(Format.CODABAR, "StubDaoBarcode3"), 3))
+//    }
+//
+//}
