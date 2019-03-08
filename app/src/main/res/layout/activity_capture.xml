@@ -7,13 +7,26 @@
         android:layout_height="match_parent"
         tools:context=".CaptureActivity">
 
+    <fragment
+            android:name="alytvyniuk.com.barcodewidget.ZXingScannerFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.52"
+            android:id="@+id/fragment"
+    />
+
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:theme="@style/AppTheme.AppBarOverlay" android:id="@+id/appBarLayout">
+            android:theme="@style/AppTheme.AppBarOverlay"
+            android:id="@+id/appBarLayout">
 
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -24,35 +37,44 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <fragment
-            android:name="alytvyniuk.com.barcodewidget.ZXingScannerFragment"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/photoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            app:srcCompat="@android:drawable/ic_menu_camera"
+            app:layout_constraintStart_toEndOf="@+id/galleryButton"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@+id/galleryButton"
+            app:layout_constraintBottom_toBottomOf="@+id/galleryButton"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintHorizontal_bias="0.5"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/galleryButton"
+            android:layout_width="88dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            app:srcCompat="@android:drawable/ic_menu_gallery"
+            app:layout_constraintStart_toEndOf="@+id/savedButton"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/savedButton"
+            app:layout_constraintTop_toTopOf="@+id/savedButton"
+            app:layout_constraintEnd_toStartOf="@+id/photoButton"
+            app:layout_constraintHorizontal_bias="0.5"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/savedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            app:srcCompat="@android:drawable/ic_menu_save"
             app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.52" android:id="@+id/fragment"/>
-
-    <Button
-            android:id="@+id/buttonFromPhoto"
-            android:text="from photo"
-            android:layout_width="match_parent"
-            android:layout_height="50dp" tools:layout_editor_absoluteX="0dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="@+id/fragment"/>
-
-    <Button
-            android:id="@+id/buttonFromGallery"
-            android:text="from gallery"
-            android:layout_width="match_parent"
-            android:layout_height="50dp" tools:layout_editor_absoluteX="0dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/buttonFromPhoto"/>
-
-    <Button
-            android:id="@+id/fromSavedButton"
-            android:text="from saved"
-            android:layout_width="match_parent"
-            android:layout_height="50dp" tools:layout_editor_absoluteX="0dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/buttonFromGallery"/>
+            app:layout_constraintEnd_toStartOf="@+id/galleryButton"
+            app:layout_constraintHorizontal_bias="0.5"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -44,16 +44,16 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
             //TODO error
         }
 
-        buttonFromPhoto.setOnClickListener(this)
-        buttonFromGallery.setOnClickListener(this)
-        fromSavedButton.setOnClickListener(this)
+        photoButton.setOnClickListener(this)
+        galleryButton.setOnClickListener(this)
+        savedButton.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.buttonFromPhoto -> dispatchTakePictureIntent()
-            R.id.buttonFromGallery -> dispatchGalleryIntent()
-            R.id.fromSavedButton -> startActivity(BarcodeListActivity.intent(this))
+            R.id.photoButton -> dispatchTakePictureIntent()
+            R.id.galleryButton -> dispatchGalleryIntent()
+            R.id.savedButton -> startActivity(BarcodeListActivity.intent(this))
         }
     }
 
