@@ -33,8 +33,13 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha02'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     implementation 'com.google.android.material:material:1.1.0-alpha04'
-    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
+
     implementation 'com.google.dagger:dagger:2.14.1'
+    kapt 'com.google.dagger:dagger-compiler:2.14.1'
+    kaptTest 'com.google.dagger:dagger-compiler:2.14.1'
+
+    implementation 'me.dm7.barcodescanner:zxing:1.9.13'
+    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
 
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-ml-vision:19.0.2'
@@ -42,8 +47,6 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    kapt 'com.google.dagger:dagger-compiler:2.14.1'
-    kaptTest 'com.google.dagger:dagger-compiler:2.14.1'
     kaptAndroidTest 'com.google.dagger:dagger-compiler:2.14.1'
     androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
