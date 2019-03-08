@@ -11,23 +11,23 @@ interface BarcodeDao {
     fun loadAll() : List<BarcodeEntity>
 }
 
-//class RoomBarcodeDaoImpl @Inject constructor(private val roomBarcodeDao: RoomBarcodeDao) : BarcodeDao {
-//
-//    override fun insert(barcode: Barcode, widgetId: Int?) {
-//        val barcodeEntity = barcode.toBarcodeEntity(widgetId)
-//        roomBarcodeDao.insert(barcodeEntity)
-//    }
-//
-//    override fun loadBarcodeEntity(widgetId: Int) : Barcode? {
-//        val barcodeEntity = roomBarcodeDao.loadBarcodeEntity(widgetId)
-//        return barcodeEntity?.toBarcode()
-//    }
-//
-//    override fun loadAll() : List<Barcode> {
-//        val entities = roomBarcodeDao.loadAll()
-//        return entities.map { it.toBarcode() }
-//    }
-//}
+class RoomBarcodeDaoImpl @Inject constructor(private val roomBarcodeDao: RoomBarcodeDao) : BarcodeDao {
+
+    override fun insert(barcode: Barcode, widgetId: Int) {
+        val barcodeEntity = barcode.toBarcodeEntity(widgetId)
+        roomBarcodeDao.insert(barcodeEntity)
+    }
+
+    override fun loadBarcodeEntity(widgetId: Int) : BarcodeEntity? {
+        val roomEntity = roomBarcodeDao.loadBarcodeEntity(widgetId)
+        return roomEntity?.toBarcodeEntity()
+    }
+
+    override fun loadAll() : List<BarcodeEntity> {
+        val entities = roomBarcodeDao.loadAll()
+        return entities.map { it.toBarcodeEntity() }
+    }
+}
 
 class StubDao : BarcodeDao {
     override fun insert(barcode: Barcode, widgetId: Int) {
