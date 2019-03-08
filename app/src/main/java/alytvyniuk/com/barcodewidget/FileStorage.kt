@@ -40,7 +40,6 @@ class FileStorage(private val context: Context) {
         BitmapFactory.decodeFile(filePath, options)
         val imageHeight: Int = options.outHeight
         val imageWidth: Int = options.outWidth
-        val imageType: String = options.outMimeType
         Log.d(TAG, "initial size: $imageWidth * $imageHeight")
         options.inSampleSize = calculateInSampleSize(options, 300, 400)
         options.inJustDecodeBounds = false
