@@ -26,8 +26,9 @@ private const val TAG = "BarcodeCaptureActivity"
 private const val REQUEST_IMAGE_CAPTURE = 1
 private const val REQUEST_GALLERY = 2
 private const val REQUEST_CAMERA_PERMISSION_PHOTO = 10
+private const val REQUEST_CAMERA_PERMISSION_ON_RESUME = 11
 
-class CaptureActivity : AppCompatActivity(), View.OnClickListener {
+class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResultHandler {
 
     @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
     @Inject lateinit var fileStorage: FileStorage
@@ -57,7 +58,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun dispatchTakePictureIntent() {
-        if (!hasCameraPermission(this)) {
+        if (!hasCameraPermission()) {
             requestCameraPermission(this, REQUEST_CAMERA_PERMISSION_PHOTO)
         } else {
             fileStorage.eraseImageTempFile()
@@ -138,12 +139,12 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onResult(to: Barcode) {
                 Log.d(TAG, "Result of scan = $to")
-                handleResult(to)
+                onBarcodeResult(to)
             }
         })
     }
 
-    private fun handleResult(barcode: Barcode) {
+    override fun onBarcodeResult(barcode: Barcode) {
         startActivityForResult(EditActivity.intent(this, barcode, widgetId), REQUEST_EDIT_ACTIVITY)
     }
 
@@ -167,9 +168,6 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun hasCameraPermission(context: Context) = ContextCompat
-        .checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) &&
@@ -179,4 +177,19 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (!hasCameraPermission()) {
+            requestCameraPermission(this, REQUEST_CAMERA_PERMISSION_ON_RESUME)
+        }
+    }
 }
+
+interface BarcodeResultHandler {
+
+    fun onBarcodeResult(barcode: Barcode)
+}
+
+fun Context.hasCameraPermission() = ContextCompat
+    .checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
