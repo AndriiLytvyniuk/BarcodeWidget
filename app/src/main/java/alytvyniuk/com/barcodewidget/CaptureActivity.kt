@@ -4,6 +4,7 @@ import alytvyniuk.com.barcodewidget.EditActivity.Companion.REQUEST_EDIT_ACTIVITY
 import alytvyniuk.com.barcodewidget.converters.AsyncConverter
 import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
+import alytvyniuk.com.barcodewidget.model.BarcodeEntity
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
 import android.Manifest
 import android.app.Activity
@@ -34,16 +35,16 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
 
     @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
     @Inject lateinit var fileStorage: FileStorage
-    private var widgetId = AppWidgetManager.INVALID_APPWIDGET_ID
+    private var newWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_capture)
         setSupportActionBar(toolbar)
         App.component().inject(this)
-        widgetId = getWidgetIdFromIntent()
+        newWidgetId = getWidgetIdFromIntent()
         updateWidgetTextView.visibility =
-            if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) View.GONE else View.VISIBLE
+            if (newWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) View.GONE else View.VISIBLE
 
         photoButton.setOnClickListener(this)
         galleryButton.setOnClickListener(this)
@@ -59,7 +60,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     private fun startSavedBarcodesActivity() {
-        startActivityForResult(BarcodeListActivity.intent(this, widgetId), REQUEST_LIST_ACTIVITY)
+        startActivityForResult(BarcodeListActivity.intent(this, newWidgetId), REQUEST_LIST_ACTIVITY)
     }
 
     private fun dispatchTakePictureIntent() {
@@ -125,9 +126,9 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     private fun handleEditActivityResult(resultCode: Int) {
-        if (resultCode == Activity.RESULT_OK && widgetId.isValidWidgetId()) {
-            Log.d(TAG, "Widget for id $widgetId was set up successfully")
-            val resultValue = Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+        if (resultCode == Activity.RESULT_OK && newWidgetId.isValidWidgetId()) {
+            Log.d(TAG, "Widget for id $newWidgetId was set up successfully")
+            val resultValue = Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, newWidgetId)
             setResult(Activity.RESULT_OK, resultValue)
             finish()
         }
@@ -148,7 +149,8 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     override fun onBarcodeResult(barcode: Barcode) {
-        startActivityForResult(EditActivity.intent(this, barcode, widgetId), REQUEST_EDIT_ACTIVITY)
+        val barcodeEntity = BarcodeEntity(barcode)
+        startActivityForResult(EditActivity.intent(this, barcodeEntity, newWidgetId), REQUEST_EDIT_ACTIVITY)
     }
 
     private fun getWidgetIdFromIntent() : Int {

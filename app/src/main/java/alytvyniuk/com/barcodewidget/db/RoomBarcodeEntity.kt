@@ -12,15 +12,16 @@ import androidx.room.PrimaryKey
 data class RoomBarcodeEntity (@ColumnInfo val widgetId : Int = AppWidgetManager.INVALID_APPWIDGET_ID,
                               @ColumnInfo val barcodeFormat : String,
                               @ColumnInfo val data : String,
-                              @PrimaryKey(autoGenerate = true) var id: Int = 0) {
+                              @PrimaryKey(autoGenerate = true) var id: Int = 0,
+                              @ColumnInfo val note : String = "") {
 
 
     constructor(entity: BarcodeEntity) : this(entity.widgetId,
-        entity.barcode.format.toString(), entity.barcode.value, entity.id)
+        entity.barcode.format.toString(), entity.barcode.value, entity.id, entity.note)
 
     fun toBarcodeEntity() : BarcodeEntity {
         val barcodeFormat = Format.valueOf(barcodeFormat)
         val barcode = Barcode(barcodeFormat, data)
-        return BarcodeEntity(barcode, widgetId, id)
+        return BarcodeEntity(barcode, widgetId, id, note)
     }
 }

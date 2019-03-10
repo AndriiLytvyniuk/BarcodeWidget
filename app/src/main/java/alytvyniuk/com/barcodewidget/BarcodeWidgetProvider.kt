@@ -2,7 +2,7 @@ package alytvyniuk.com.barcodewidget
 
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
-import alytvyniuk.com.barcodewidget.model.Barcode
+import alytvyniuk.com.barcodewidget.model.BarcodeEntity
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -47,13 +47,13 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
         if (barcodeEntity != null) {
             val bitmap = codeToImageConverter.convert(barcodeEntity.barcode)
             remoteViews.setBitmap(R.id.widget_image, "setImageBitmap", bitmap)
-            remoteViews.setOnClickPendingIntent(R.id.widget_image, getOnClickIntent(context, barcodeEntity.barcode, widgetId))
+            remoteViews.setOnClickPendingIntent(R.id.widget_image, getOnClickIntent(context, barcodeEntity))
             appWidgetManager.updateAppWidget(widgetId, remoteViews)
         }
     }
 
-    private fun getOnClickIntent(context: Context, barcode: Barcode, widgetId: Int) : PendingIntent {
-        val intent = PreviewActivity.intent(context, barcode, widgetId)
+    private fun getOnClickIntent(context: Context, barcodeEntity: BarcodeEntity) : PendingIntent {
+        val intent = PreviewActivity.intent(context, barcodeEntity)
         return PendingIntent.getActivity(context, WIDGET_REQUEST_CODE, intent, 0)
     }
 }

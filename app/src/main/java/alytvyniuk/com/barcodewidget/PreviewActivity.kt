@@ -2,21 +2,19 @@ package alytvyniuk.com.barcodewidget
 
 import alytvyniuk.com.barcodewidget.EditActivity.Companion.REQUEST_EDIT_ACTIVITY
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
-import alytvyniuk.com.barcodewidget.model.Barcode
-import android.appwidget.AppWidgetManager
+import alytvyniuk.com.barcodewidget.model.BarcodeEntity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_preview.*
-import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 class PreviewActivity : AppCompatActivity() {
 
     companion object {
-        fun intent(context: Context, barcode: Barcode, widgetId: Int): Intent {
-            return BarcodeActivityHelper.intent(PreviewActivity::class.java, context, barcode, widgetId)
+        fun intent(context: Context, barcodeEntity: BarcodeEntity): Intent {
+            return BarcodeActivityHelper.intent(PreviewActivity::class.java, context, barcodeEntity)
         }
     }
 
@@ -26,29 +24,28 @@ class PreviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preview)
         App.component().inject(this)
-        val barcode = intent.getParcelableExtra<Barcode>(BarcodeActivityHelper.KEY_BARCODE)
+        val barcode = intent.getBarcodeEntity()
         updateView(barcode)
-        val widgetId = intent.getIntExtra(BarcodeActivityHelper.KEY_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
         editButton.setOnClickListener {
-            openEditActivity(widgetId, barcode)
+            openEditActivity(barcode)
         }
     }
 
-    private fun updateView(barcode: Barcode) {
-        val bitmap = codeToImageConverter.convert(barcode)
+    private fun updateView(barcodeEntity: BarcodeEntity) {
+        val bitmap = codeToImageConverter.convert(barcodeEntity.barcode)
         barcodeImageView.setImageBitmap(bitmap)
-        dataTextView.text = barcode.value
+        dataTextView.text = barcodeEntity.barcode.value
     }
 
-    private fun openEditActivity(widgetId: Int, barcode: Barcode) {
-        val intent = EditActivity.intent(this, barcode, widgetId)
+    private fun openEditActivity(barcodeEntity: BarcodeEntity) {
+        val intent = EditActivity.intent(this, barcodeEntity)
         startActivityForResult(intent, REQUEST_EDIT_ACTIVITY)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_EDIT_ACTIVITY) {
-            val barcode = data?.getParcelableExtra<Barcode>(BarcodeActivityHelper.KEY_BARCODE)
+            val barcode = data?.getBarcodeEntity()
             if (barcode != null) {
                 updateView(barcode)
             } else {
