@@ -1,7 +1,7 @@
 package alytvyniuk.com.barcodewidget
 
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
-import alytvyniuk.com.barcodewidget.model.BarcodeEntity
+import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -13,10 +13,10 @@ import kotlinx.android.synthetic.main.barcode_list_item.view.*
 class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter)
     : RecyclerView.Adapter<BarcodeAdapter.BarcodeItemHolder>() {
 
-    private var barcodes : List<BarcodeEntity> = listOf()
+    private var barcodes : List<Barcode> = listOf()
     private var onItemClickListener : OnItemClickListener? = null
 
-    fun setBarcodes(list : List<BarcodeEntity>) {
+    fun setBarcodes(list : List<Barcode>) {
         barcodes = list
     }
 
@@ -37,9 +37,9 @@ class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter)
 
     inner class BarcodeItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-        fun bind(item: BarcodeEntity) {
-            itemView.dataTextView.text = item.barcode.value
-            val bitmap = codeToImageConverter.convert(item.barcode)
+        fun bind(item: Barcode) {
+            itemView.dataTextView.text = item.rawBarcode.value
+            val bitmap = codeToImageConverter.convert(item.rawBarcode)
             itemView.barcodeImageView.setImageBitmap(bitmap)
             itemView.setOnClickListener(this)
             if (item.widgetId.isValidWidgetId()) {
@@ -56,5 +56,5 @@ class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter)
 }
 
 interface OnItemClickListener {
-    fun onItemClicked(barcodeEntity: BarcodeEntity)
+    fun onItemClicked(barcode: Barcode)
 }

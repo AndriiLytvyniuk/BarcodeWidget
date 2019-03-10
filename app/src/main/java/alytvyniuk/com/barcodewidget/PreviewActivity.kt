@@ -2,7 +2,7 @@ package alytvyniuk.com.barcodewidget
 
 import alytvyniuk.com.barcodewidget.EditActivity.Companion.REQUEST_EDIT_ACTIVITY
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
-import alytvyniuk.com.barcodewidget.model.BarcodeEntity
+import alytvyniuk.com.barcodewidget.model.Barcode
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,8 +13,8 @@ import javax.inject.Inject
 class PreviewActivity : AppCompatActivity() {
 
     companion object {
-        fun intent(context: Context, barcodeEntity: BarcodeEntity): Intent {
-            return BarcodeActivityHelper.intent(PreviewActivity::class.java, context, barcodeEntity)
+        fun intent(context: Context, barcode: Barcode): Intent {
+            return BarcodeActivityHelper.intent(PreviewActivity::class.java, context, barcode)
         }
     }
 
@@ -31,14 +31,14 @@ class PreviewActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateView(barcodeEntity: BarcodeEntity) {
-        val bitmap = codeToImageConverter.convert(barcodeEntity.barcode)
+    private fun updateView(barcode: Barcode) {
+        val bitmap = codeToImageConverter.convert(barcode.rawBarcode)
         barcodeImageView.setImageBitmap(bitmap)
-        dataTextView.text = barcodeEntity.barcode.value
+        dataTextView.text = barcode.rawBarcode.value
     }
 
-    private fun openEditActivity(barcodeEntity: BarcodeEntity) {
-        val intent = EditActivity.intent(this, barcodeEntity)
+    private fun openEditActivity(barcode: Barcode) {
+        val intent = EditActivity.intent(this, barcode)
         startActivityForResult(intent, REQUEST_EDIT_ACTIVITY)
     }
 
@@ -49,7 +49,7 @@ class PreviewActivity : AppCompatActivity() {
             if (barcode != null) {
                 updateView(barcode)
             } else {
-                throw IllegalArgumentException("No barcode found in extra")
+                throw IllegalArgumentException("No rawBarcode found in extra")
             }
         }
     }

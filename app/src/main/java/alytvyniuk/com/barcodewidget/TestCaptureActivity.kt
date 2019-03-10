@@ -1,7 +1,7 @@
 package alytvyniuk.com.barcodewidget
 
 import alytvyniuk.com.barcodewidget.converters.*
-import alytvyniuk.com.barcodewidget.model.Barcode
+import alytvyniuk.com.barcodewidget.model.RawBarcode
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -67,19 +67,19 @@ class TestCaptureActivity : AppCompatActivity(), View.OnClickListener {
 
 
     private fun performImageToBarcodeConversion(bitmap: Bitmap) {
-        imageToCodeConverter.convertAsync(bitmap, object : AsyncConverter.ConverterListener<Barcode> {
+        imageToCodeConverter.convertAsync(bitmap, object : AsyncConverter.ConverterListener<RawBarcode> {
             override fun onError(exception: Exception) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun onResult(to: Barcode) {
+            override fun onResult(to: RawBarcode) {
                 performBarcodeToImageConversion(to)
             }
         })
     }
 
-    private fun performBarcodeToImageConversion(barcode: Barcode) {
-        codeToImageConverter.convertAsync(barcode, object : AsyncConverter.ConverterListener<Bitmap> {
+    private fun performBarcodeToImageConversion(rawBarcode: RawBarcode) {
+        codeToImageConverter.convertAsync(rawBarcode, object : AsyncConverter.ConverterListener<Bitmap> {
             override fun onError(exception: Exception) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }

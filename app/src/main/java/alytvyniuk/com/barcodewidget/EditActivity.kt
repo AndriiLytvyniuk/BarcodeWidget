@@ -2,7 +2,7 @@ package alytvyniuk.com.barcodewidget
 
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
-import alytvyniuk.com.barcodewidget.model.BarcodeEntity
+import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
 import android.app.Activity
 import android.appwidget.AppWidgetManager
@@ -23,16 +23,16 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         const val REQUEST_EDIT_ACTIVITY = 4
 
         fun intent(context: Context,
-                   barcodeEntity: BarcodeEntity,
+                   barcode: Barcode,
                    widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID): Intent {
-            return BarcodeActivityHelper.intent(EditActivity::class.java, context, barcodeEntity, widgetId)
+            return BarcodeActivityHelper.intent(EditActivity::class.java, context, barcode, widgetId)
         }
     }
 
     @Inject lateinit var barcodeDao: BarcodeDao
     @Inject lateinit var codeToImageConverter: CodeToImageConverter
     private var newWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-    private lateinit var initialBarcode: BarcodeEntity
+    private lateinit var initialBarcode: Barcode
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,20 +45,20 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         confirmButton.setOnClickListener(this)
     }
 
-    private fun initUI(barcodeEntity: BarcodeEntity) {
-        val bitmap = codeToImageConverter.convert(barcodeEntity.barcode)
+    private fun initUI(barcode: Barcode) {
+        val bitmap = codeToImageConverter.convert(barcode.rawBarcode)
         barcodeImage.setImageBitmap(bitmap)
-        dataTextView.text = barcodeEntity.barcode.value
-        formatTextView.text = barcodeEntity.barcode.format.toString()
+        dataTextView.text = barcode.rawBarcode.value
+        formatTextView.text = barcode.rawBarcode.format.toString()
         notesEditText.setText(initialBarcode.note)
     }
 
-    private fun save(barcodeEntity: BarcodeEntity) {
+    private fun save(barcode: Barcode) {
         val id = initialBarcode.id
-        if (id == BarcodeEntity.INVALID_DB_ID) {
-            barcodeDao.insert(barcodeEntity)
+        if (id == Barcode.INVALID_DB_ID) {
+            barcodeDao.insert(barcode)
         } else {
-            barcodeDao.update(barcodeEntity)
+            barcodeDao.update(barcode)
         }
     }
 
@@ -70,7 +70,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.confirmButton -> {
-                //TODO take barcode value from UI
+                //TODO take rawBarcode value from UI
                 val barcodeEntity = initialBarcode
                 barcodeEntity.note = notesEditText.text.toString()
                 barcodeEntity.widgetId = newWidgetId
@@ -88,8 +88,8 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
 object BarcodeActivityHelper {
 
-    fun <T> intent(clazz: Class<T>, context: Context, barcode: BarcodeEntity? = null,
-        widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID): Intent {
+    fun <T> intent(clazz: Class<T>, context: Context, barcode: Barcode? = null,
+                   widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID): Intent {
         val intent = Intent(context, clazz)
         if (widgetId.isValidWidgetId()) {
             intent.putExtra(KEY_WIDGET_ID, widgetId)
@@ -103,6 +103,6 @@ object BarcodeActivityHelper {
 
 fun Intent.getWidgetId() = getIntExtra(KEY_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
 
-fun Intent.getBarcodeEntity() : BarcodeEntity = getParcelableExtra(KEY_BARCODE)
+fun Intent.getBarcodeEntity() : Barcode = getParcelableExtra(KEY_BARCODE)
 
 

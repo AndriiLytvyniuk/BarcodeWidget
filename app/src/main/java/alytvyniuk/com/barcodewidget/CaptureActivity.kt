@@ -3,8 +3,8 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.EditActivity.Companion.REQUEST_EDIT_ACTIVITY
 import alytvyniuk.com.barcodewidget.converters.AsyncConverter
 import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
+import alytvyniuk.com.barcodewidget.model.RawBarcode
 import alytvyniuk.com.barcodewidget.model.Barcode
-import alytvyniuk.com.barcodewidget.model.BarcodeEntity
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
 import android.Manifest
 import android.app.Activity
@@ -135,22 +135,22 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     private fun performImageToBarcodeConversion(bitmap: Bitmap) {
-        imageToCodeConverter.convertAsync(bitmap, object : AsyncConverter.ConverterListener<Barcode> {
+        imageToCodeConverter.convertAsync(bitmap, object : AsyncConverter.ConverterListener<RawBarcode> {
             override fun onError(exception: Exception) {
                 Log.e(TAG, "Couldn't scan", exception)
                 //TODO handle
             }
 
-            override fun onResult(to: Barcode) {
+            override fun onResult(to: RawBarcode) {
                 Log.d(TAG, "Result of scan = $to")
                 onBarcodeResult(to)
             }
         })
     }
 
-    override fun onBarcodeResult(barcode: Barcode) {
-        val barcodeEntity = BarcodeEntity(barcode)
-        startActivityForResult(EditActivity.intent(this, barcodeEntity, newWidgetId), REQUEST_EDIT_ACTIVITY)
+    override fun onBarcodeResult(rawBarcode: RawBarcode) {
+        val barcode = Barcode(rawBarcode)
+        startActivityForResult(EditActivity.intent(this, barcode, newWidgetId), REQUEST_EDIT_ACTIVITY)
     }
 
     private fun getWidgetIdFromIntent() : Int {
@@ -193,7 +193,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
 
 interface BarcodeResultHandler {
 
-    fun onBarcodeResult(barcode: Barcode)
+    fun onBarcodeResult(rawBarcode: RawBarcode)
 }
 
 fun Context.hasCameraPermission() = ContextCompat

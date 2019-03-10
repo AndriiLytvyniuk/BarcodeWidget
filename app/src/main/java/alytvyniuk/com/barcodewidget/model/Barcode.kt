@@ -1,18 +1,27 @@
 package alytvyniuk.com.barcodewidget.model
 
+import android.appwidget.AppWidgetManager
 import android.os.Parcel
 import android.os.Parcelable
 
-data class Barcode(val format : Format, val value: String = "") : Parcelable {
+data class Barcode(
+    var rawBarcode: RawBarcode,
+    var widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID,
+    var id: Int = INVALID_DB_ID,
+    var note: String = "") : Parcelable{
 
-    constructor(parcel: Parcel) : this (
-        Format.valueOf(parcel.readString()!!),
+    constructor(parcel: Parcel) : this(
+        parcel.readParcelable(RawBarcode::class.java.classLoader)!!,
+        parcel.readInt(),
+        parcel.readInt(),
         parcel.readString()!!
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(format.toString())
-        parcel.writeString(value)
+        parcel.writeParcelable(rawBarcode, flags)
+        parcel.writeInt(widgetId)
+        parcel.writeInt(id)
+        parcel.writeString(note)
     }
 
     override fun describeContents(): Int {
@@ -20,6 +29,7 @@ data class Barcode(val format : Format, val value: String = "") : Parcelable {
     }
 
     companion object CREATOR : Parcelable.Creator<Barcode> {
+        const val INVALID_DB_ID = 0
         override fun createFromParcel(parcel: Parcel): Barcode {
             return Barcode(parcel)
         }
@@ -28,25 +38,6 @@ data class Barcode(val format : Format, val value: String = "") : Parcelable {
             return arrayOfNulls(size)
         }
     }
-
-    override fun toString(): String {
-        return "Barcode(format=$format, value='$value')"
-    }
 }
 
-enum class Format {
-    UNKNOWN,
-    QR_CODE,
-    AZTEC,
-    CODABAR,
-    CODE_39,
-    CODE_93,
-    CODE_128,
-    DATA_MATRIX,
-    EAN_8,
-    EAN_13,
-    PDF_417,
-    UPC_A,
-    UPC_E,
-    ITF
-}
+fun Int.isValidWidgetId() = this != AppWidgetManager.INVALID_APPWIDGET_ID

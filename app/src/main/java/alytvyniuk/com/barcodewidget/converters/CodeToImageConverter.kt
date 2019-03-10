@@ -1,7 +1,7 @@
 package alytvyniuk.com.barcodewidget.converters
 
 import alytvyniuk.com.barcodewidget.R
-import alytvyniuk.com.barcodewidget.model.Barcode
+import alytvyniuk.com.barcodewidget.model.RawBarcode
 import alytvyniuk.com.barcodewidget.model.Format
 import android.content.Context
 import android.graphics.Bitmap
@@ -13,22 +13,22 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 
 private const val IMAGE_SIZE = 200
 
-abstract class CodeToImageConverter(looper: Looper) : AsyncConverter<Barcode, Bitmap>(looper) {
+abstract class CodeToImageConverter(looper: Looper) : AsyncConverter<RawBarcode, Bitmap>(looper) {
 
-    abstract fun convert(barcode: Barcode) : Bitmap
+    abstract fun convert(rawBarcode: RawBarcode) : Bitmap
 }
 
 class ZXingCodeToImageConverter(looper: Looper) : CodeToImageConverter(looper) {
 
-    override fun convert(barcode: Barcode): Bitmap {
+    override fun convert(rawBarcode: RawBarcode): Bitmap {
         val multiFormatWriter = MultiFormatWriter()
-        val format = mapFormat(barcode.format)
-        val bitMatrix = multiFormatWriter.encode(barcode.value, format, IMAGE_SIZE, IMAGE_SIZE)
+        val format = mapFormat(rawBarcode.format)
+        val bitMatrix = multiFormatWriter.encode(rawBarcode.value, format, IMAGE_SIZE, IMAGE_SIZE)
         val barcodeEncoder = BarcodeEncoder()
         return barcodeEncoder.createBitmap(bitMatrix)
     }
 
-    override fun performConversion(from: Barcode, id : Int) {
+    override fun performConversion(from: RawBarcode, id : Int) {
         val bitmap = convert(from)
         sendResult(bitmap, id)
     }
@@ -55,11 +55,11 @@ class ZXingCodeToImageConverter(looper: Looper) : CodeToImageConverter(looper) {
 class StubCodeToImageConverter(looper: Looper, context: Context) : CodeToImageConverter(looper) {
 
     private val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.test_qr_code)
-    override fun convert(barcode: Barcode): Bitmap {
+    override fun convert(rawBarcode: RawBarcode): Bitmap {
         return bitmap
     }
 
-    override fun performConversion(from: Barcode, id: Int) {
+    override fun performConversion(from: RawBarcode, id: Int) {
         sendResult(bitmap, id)
     }
 

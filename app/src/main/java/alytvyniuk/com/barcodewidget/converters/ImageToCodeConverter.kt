@@ -1,6 +1,6 @@
 package alytvyniuk.com.barcodewidget.converters
 
-import alytvyniuk.com.barcodewidget.model.Barcode
+import alytvyniuk.com.barcodewidget.model.RawBarcode
 import alytvyniuk.com.barcodewidget.model.Format
 import android.graphics.Bitmap
 import android.os.Looper
@@ -8,13 +8,13 @@ import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
 
 private const val TAG = "ImageToCode"
-abstract class ImageToCodeConverter (looper: Looper) : AsyncConverter<Bitmap, Barcode>(looper)
+abstract class ImageToCodeConverter (looper: Looper) : AsyncConverter<Bitmap, RawBarcode>(looper)
 
 class ZxingImageToCodeConverter(looper: Looper) : ImageToCodeConverter(looper) {
 
     companion object {
         fun zxingBarcodeToBarcode(zxingResult: Result) =
-            Barcode(mapFormat(zxingResult.barcodeFormat), zxingResult.text)
+            RawBarcode(mapFormat(zxingResult.barcodeFormat), zxingResult.text)
 
         private fun mapFormat(zxingFormat: BarcodeFormat) =
             when (zxingFormat) {
@@ -54,6 +54,6 @@ class ZxingImageToCodeConverter(looper: Looper) : ImageToCodeConverter(looper) {
 
 class StubImageToCodeConverter(looper: Looper) : ImageToCodeConverter(looper) {
     override fun performConversion(from: Bitmap, id: Int) {
-        sendResult(Barcode(Format.QR_CODE, "Andrii"), id)
+        sendResult(RawBarcode(Format.QR_CODE, "Andrii"), id)
     }
 }

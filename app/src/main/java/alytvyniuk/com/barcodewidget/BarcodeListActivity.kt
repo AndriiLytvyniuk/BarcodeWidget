@@ -2,7 +2,7 @@ package alytvyniuk.com.barcodewidget
 
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
-import alytvyniuk.com.barcodewidget.model.BarcodeEntity
+import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
 import android.app.Activity
 import android.appwidget.AppWidgetManager
@@ -46,11 +46,11 @@ class BarcodeListActivity : AppCompatActivity(), OnItemClickListener {
         updateAdapter()
     }
 
-    override fun onItemClicked(barcodeEntity: BarcodeEntity) {
+    override fun onItemClicked(barcode: Barcode) {
         val widgetId : Int = intent.getWidgetId()
-        val nextIntent = EditActivity.intent(this, barcodeEntity, widgetId)
+        val nextIntent = EditActivity.intent(this, barcode, widgetId)
         if (widgetId.isValidWidgetId()) {
-            if (barcodeEntity.widgetId.isValidWidgetId()) {
+            if (barcode.widgetId.isValidWidgetId()) {
                 Toast.makeText(this, R.string.barcode_is_reserved, Toast.LENGTH_LONG).show()
             } else {
                 startActivityForResult(nextIntent, REQUEST_UPDATE_WIDGET)

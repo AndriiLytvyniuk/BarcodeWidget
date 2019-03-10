@@ -1,9 +1,9 @@
 package alytvyniuk.com.barcodewidget.converters
 
-import alytvyniuk.com.barcodewidget.model.Barcode
+import alytvyniuk.com.barcodewidget.model.RawBarcode
 import android.graphics.Bitmap
 
 interface BarcodeToBitmap {
 
-    fun convert(barcode: Barcode) : Bitmap
+    fun convert(rawBarcode: RawBarcode) : Bitmap
 }

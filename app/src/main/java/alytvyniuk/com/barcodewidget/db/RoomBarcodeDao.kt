@@ -9,14 +9,14 @@ import androidx.room.Update
 interface RoomBarcodeDao {
 
     @Insert
-    fun insert(barcode: RoomBarcodeEntity)
+    fun insert(barcode: RoomBarcode)
 
-    @Query("SELECT * FROM RoomBarcodeEntity WHERE widgetId = :widgetId")
-    fun loadBarcodeEntity(widgetId: Int) : RoomBarcodeEntity?
+    @Query("SELECT * FROM RoomBarcode WHERE widgetId = :widgetId")
+    fun loadBarcodeEntity(widgetId: Int) : RoomBarcode?
 
-    @Query("SELECT * FROM RoomBarcodeEntity")
-    fun loadAll() : List<RoomBarcodeEntity>
+    @Query("SELECT * FROM RoomBarcode")
+    fun loadAll() : List<RoomBarcode>
 
     @Update
-    fun update(barcode: RoomBarcodeEntity)
+    fun update(barcode: RoomBarcode)
 }
