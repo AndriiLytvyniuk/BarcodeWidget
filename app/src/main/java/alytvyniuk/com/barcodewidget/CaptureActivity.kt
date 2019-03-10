@@ -4,6 +4,7 @@ import alytvyniuk.com.barcodewidget.EditActivity.Companion.REQUEST_EDIT_ACTIVITY
 import alytvyniuk.com.barcodewidget.converters.AsyncConverter
 import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
+import alytvyniuk.com.barcodewidget.model.isValidWidgetId
 import android.Manifest
 import android.app.Activity
 import android.appwidget.AppWidgetManager
@@ -25,6 +26,7 @@ import javax.inject.Inject
 private const val TAG = "BarcodeCaptureActivity"
 private const val REQUEST_IMAGE_CAPTURE = 1
 private const val REQUEST_GALLERY = 2
+private const val REQUEST_LIST_ACTIVITY = 3
 private const val REQUEST_CAMERA_PERMISSION_PHOTO = 10
 private const val REQUEST_CAMERA_PERMISSION_ON_RESUME = 11
 
@@ -40,9 +42,8 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         setSupportActionBar(toolbar)
         App.component().inject(this)
         widgetId = getWidgetIdFromIntent()
-        if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            //TODO error
-        }
+        updateWidgetTextView.visibility =
+            if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) View.GONE else View.VISIBLE
 
         photoButton.setOnClickListener(this)
         galleryButton.setOnClickListener(this)
@@ -53,8 +54,12 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         when (v?.id) {
             R.id.photoButton -> dispatchTakePictureIntent()
             R.id.galleryButton -> dispatchGalleryIntent()
-            R.id.savedButton -> startActivity(BarcodeListActivity.intent(this))
+            R.id.savedButton -> startSavedBarcodesActivity()
         }
+    }
+
+    private fun startSavedBarcodesActivity() {
+        startActivityForResult(BarcodeListActivity.intent(this, widgetId), REQUEST_LIST_ACTIVITY)
     }
 
     private fun dispatchTakePictureIntent() {
@@ -79,7 +84,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         when (requestCode) {
             REQUEST_IMAGE_CAPTURE -> handleImageCaptureResult(resultCode)
             REQUEST_GALLERY -> handleGalleryResult(resultCode, data)
-            REQUEST_EDIT_ACTIVITY -> handleEditActivityResult(resultCode)
+            REQUEST_EDIT_ACTIVITY, REQUEST_LIST_ACTIVITY -> handleEditActivityResult(resultCode)
         }
     }
 
@@ -120,12 +125,10 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     private fun handleEditActivityResult(resultCode: Int) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                Log.d(TAG, "Widget for id $widgetId was set up successfully")
-                val resultValue = Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
-                setResult(Activity.RESULT_OK, resultValue)
-            }
+        if (resultCode == Activity.RESULT_OK && widgetId.isValidWidgetId()) {
+            Log.d(TAG, "Widget for id $widgetId was set up successfully")
+            val resultValue = Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+            setResult(Activity.RESULT_OK, resultValue)
             finish()
         }
     }

@@ -6,8 +6,8 @@ import android.os.Parcelable
 data class Barcode(val format : Format, val value: String = "") : Parcelable {
 
     constructor(parcel: Parcel) : this (
-        Format.valueOf(parcel.readString()),
-        parcel.readString()
+        Format.valueOf(parcel.readString()!!),
+        parcel.readString()!!
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

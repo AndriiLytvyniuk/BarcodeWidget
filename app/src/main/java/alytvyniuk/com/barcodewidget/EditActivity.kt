@@ -18,7 +18,7 @@ import javax.inject.Inject
 class EditActivity : AppCompatActivity() {
 
     companion object {
-        const val REQUEST_EDIT_ACTIVITY = 3
+        const val REQUEST_EDIT_ACTIVITY = 4
 
         fun intent(context: Context, barcode: Barcode, widgetId: Int): Intent {
             return BarcodeActivityHelper.intent(EditActivity::class.java, context, barcode, widgetId)
@@ -60,12 +60,16 @@ object BarcodeActivityHelper {
     const val KEY_WIDGET_ID = "KEY_WIDGET_ID"
     const val KEY_BARCODE = "KEY_BARCODE"
 
-    fun <T> intent(
-        clazz: Class<T>,
-        context: Context,
-        barcode: Barcode,
-        widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
-    ) = Intent(context, clazz).putExtra(KEY_BARCODE, barcode).putExtra(KEY_WIDGET_ID, widgetId)
+    fun <T> intent(clazz: Class<T>, context: Context, barcode: Barcode? = null,
+        widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID): Intent {
+        val intent = Intent(context, clazz).putExtra(KEY_WIDGET_ID, widgetId)
+        if (barcode != null) {
+            intent.putExtra(KEY_BARCODE, barcode)
+        }
+        return intent
+    }
 }
+
+fun Intent.getWidgetId() = getIntExtra(KEY_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
 
 

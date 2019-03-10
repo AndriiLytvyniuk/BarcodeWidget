@@ -8,11 +8,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Looper
 import com.google.zxing.BarcodeFormat
-import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.journeyapps.barcodescanner.BarcodeEncoder
-import java.lang.IllegalArgumentException
 
 private const val IMAGE_SIZE = 200
 
