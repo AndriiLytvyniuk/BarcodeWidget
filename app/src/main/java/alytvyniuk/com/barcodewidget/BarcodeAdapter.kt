@@ -1,5 +1,6 @@
 package alytvyniuk.com.barcodewidget
 
+import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.model.BarcodeEntity
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
 import android.graphics.Color
@@ -9,7 +10,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.barcode_list_item.view.*
 
-class BarcodeAdapter : RecyclerView.Adapter<BarcodeAdapter.BarcodeItemHolder>() {
+class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter)
+    : RecyclerView.Adapter<BarcodeAdapter.BarcodeItemHolder>() {
 
     private var barcodes : List<BarcodeEntity> = listOf()
     private var onItemClickListener : OnItemClickListener? = null
@@ -37,6 +39,8 @@ class BarcodeAdapter : RecyclerView.Adapter<BarcodeAdapter.BarcodeItemHolder>() 
 
         fun bind(item: BarcodeEntity) {
             itemView.dataTextView.text = item.barcode.value
+            val bitmap = codeToImageConverter.convert(item.barcode)
+            itemView.barcodeImageView.setImageBitmap(bitmap)
             itemView.setOnClickListener(this)
             if (item.widgetId.isValidWidgetId()) {
                 itemView.background = null

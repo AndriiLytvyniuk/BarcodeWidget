@@ -1,5 +1,6 @@
 package alytvyniuk.com.barcodewidget
 
+import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.BarcodeEntity
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
@@ -28,6 +29,9 @@ class BarcodeListActivity : AppCompatActivity(), OnItemClickListener {
 
     @Inject
     lateinit var barcodeDao: BarcodeDao
+    @Inject
+    lateinit var codeToImageConverter: CodeToImageConverter
+    private lateinit var adapter : BarcodeAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +41,15 @@ class BarcodeListActivity : AppCompatActivity(), OnItemClickListener {
         barcodeListView.layoutManager = LinearLayoutManager(this)
         barcodeListView.addItemDecoration(
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        adapter = BarcodeAdapter(codeToImageConverter)
+        barcodeListView.adapter = adapter
         updateAdapter()
     }
 
     override fun onItemClicked(barcodeEntity: BarcodeEntity) {
         val widgetId : Int = intent.getWidgetId()
         val nextIntent = EditActivity.intent(this, barcodeEntity.barcode,
-            barcodeEntity.widgetId, barcodeEntity.id)
+            widgetId, barcodeEntity.id)
         if (widgetId.isValidWidgetId()) {
             if (barcodeEntity.widgetId.isValidWidgetId()) {
                 Toast.makeText(this, R.string.barcode_is_reserved, Toast.LENGTH_LONG).show()
@@ -57,8 +63,6 @@ class BarcodeListActivity : AppCompatActivity(), OnItemClickListener {
 
     private fun updateAdapter() {
         val barcodes = barcodeDao.loadAll()
-        val adapter = BarcodeAdapter()
-        barcodeListView.adapter = adapter
         adapter.setBarcodes(barcodes)
         adapter.setOnItemClickListener(this)
     }

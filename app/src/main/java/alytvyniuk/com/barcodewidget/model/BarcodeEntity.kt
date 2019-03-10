@@ -8,7 +8,7 @@ data class BarcodeEntity(
     var id: Int = INVALID_DB_ID) {
 
     companion object {
-        const val INVALID_DB_ID = -1
+        const val INVALID_DB_ID = 0
     }
 }
 
