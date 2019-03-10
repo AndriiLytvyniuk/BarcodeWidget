@@ -3,6 +3,7 @@ package alytvyniuk.com.barcodewidget.db
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface RoomBarcodeDao {
@@ -15,4 +16,7 @@ interface RoomBarcodeDao {
 
     @Query("SELECT * FROM RoomBarcodeEntity")
     fun loadAll() : List<RoomBarcodeEntity>
+
+    @Update
+    fun update(barcode: RoomBarcodeEntity)
 }

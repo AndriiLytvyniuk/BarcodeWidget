@@ -42,7 +42,8 @@ class BarcodeListActivity : AppCompatActivity(), OnItemClickListener {
 
     override fun onItemClicked(barcodeEntity: BarcodeEntity) {
         val widgetId : Int = intent.getWidgetId()
-        val nextIntent = EditActivity.intent(this, barcodeEntity.barcode, barcodeEntity.widgetId)
+        val nextIntent = EditActivity.intent(this, barcodeEntity.barcode,
+            barcodeEntity.widgetId, barcodeEntity.id)
         if (widgetId.isValidWidgetId()) {
             if (barcodeEntity.widgetId.isValidWidgetId()) {
                 Toast.makeText(this, R.string.barcode_is_reserved, Toast.LENGTH_LONG).show()

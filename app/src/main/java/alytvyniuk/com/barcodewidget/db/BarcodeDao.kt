@@ -7,10 +7,10 @@ interface BarcodeDao {
     fun insert(barcodeEntity: BarcodeEntity)
     fun loadBarcodeEntity(widgetId: Int) : BarcodeEntity?
     fun loadAll() : List<BarcodeEntity>
+    fun update(barcodeEntity: BarcodeEntity)
 }
 
 class RoomBarcodeDaoImpl @Inject constructor(private val roomBarcodeDao: RoomBarcodeDao) : BarcodeDao {
-
     override fun insert(barcodeEntity: BarcodeEntity) {
         val roomEntity = RoomBarcodeEntity(barcodeEntity)
         roomBarcodeDao.insert(roomEntity)
@@ -24,6 +24,11 @@ class RoomBarcodeDaoImpl @Inject constructor(private val roomBarcodeDao: RoomBar
     override fun loadAll() : List<BarcodeEntity> {
         val entities = roomBarcodeDao.loadAll()
         return entities.map { it.toBarcodeEntity() }
+    }
+
+    override fun update(barcodeEntity: BarcodeEntity) {
+        val roomEntity = RoomBarcodeEntity(barcodeEntity)
+        roomBarcodeDao.update(roomEntity)
     }
 }
 
