@@ -4,6 +4,7 @@ import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
 import android.graphics.Color
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,15 +39,18 @@ class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter)
     inner class BarcodeItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         fun bind(item: Barcode) {
+            itemView.setOnClickListener(this)
             itemView.dataTextView.text = item.rawBarcode.value
             val bitmap = codeToImageConverter.convert(item.rawBarcode)
             itemView.barcodeImageView.setImageBitmap(bitmap)
-            itemView.setOnClickListener(this)
-            if (item.widgetId.isValidWidgetId()) {
-                itemView.background = null
+            if (TextUtils.isEmpty(item.title)) {
+                itemView.titleTextView.visibility = View.GONE
             } else {
-                itemView.setBackgroundColor(Color.RED)
+                itemView.titleTextView.visibility = View.VISIBLE
+                itemView.titleTextView.text = item.title
             }
+            itemView.availabilityIndicatorView.visibility =
+                if (item.widgetId.isValidWidgetId()) View.VISIBLE else View.GONE
         }
 
         override fun onClick(v: View?) {
