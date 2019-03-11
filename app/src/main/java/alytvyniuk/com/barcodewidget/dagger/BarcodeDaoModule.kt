@@ -17,11 +17,4 @@ class BarcodeDaoModule {
     fun providesBarcodeDao(roomBarcodeDao: RoomBarcodeDao) : BarcodeDao {
         return RoomBarcodeDaoImpl(roomBarcodeDao)
     }
-
-//    @Provides
-//    @Singleton
-//    @NonNull
-//    fun providesBarcodeDao() : BarcodeDao {
-//        return StubDao()
-//    }
 }
