@@ -13,15 +13,15 @@ data class RoomBarcode (@ColumnInfo val widgetId : Int = AppWidgetManager.INVALI
                         @ColumnInfo val barcodeFormat : String,
                         @ColumnInfo val data : String,
                         @PrimaryKey(autoGenerate = true) var id: Int = 0,
-                        @ColumnInfo val note : String = "") {
+                        @ColumnInfo val title : String = "") {
 
 
     constructor(barcode: Barcode) : this(barcode.widgetId,
-        barcode.rawBarcode.format.toString(), barcode.rawBarcode.value, barcode.id, barcode.note)
+        barcode.rawBarcode.format.toString(), barcode.rawBarcode.value, barcode.id, barcode.title)
 
     fun toBarcodeEntity() : Barcode {
         val barcodeFormat = Format.valueOf(barcodeFormat)
         val rawBarcode = RawBarcode(barcodeFormat, data)
-        return Barcode(rawBarcode, widgetId, id, note)
+        return Barcode(rawBarcode, widgetId, id, title)
     }
 }

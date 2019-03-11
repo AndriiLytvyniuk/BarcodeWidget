@@ -8,7 +8,7 @@ data class Barcode(
     var rawBarcode: RawBarcode,
     var widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID,
     var id: Int = INVALID_DB_ID,
-    var note: String = "") : Parcelable{
+    var title: String = "") : Parcelable{
 
     constructor(parcel: Parcel) : this(
         parcel.readParcelable(RawBarcode::class.java.classLoader)!!,
@@ -21,7 +21,7 @@ data class Barcode(
         parcel.writeParcelable(rawBarcode, flags)
         parcel.writeInt(widgetId)
         parcel.writeInt(id)
-        parcel.writeString(note)
+        parcel.writeString(title)
     }
 
     override fun describeContents(): Int {

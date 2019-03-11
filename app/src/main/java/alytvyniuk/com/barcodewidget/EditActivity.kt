@@ -50,7 +50,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         barcodeImage.setImageBitmap(bitmap)
         dataTextView.text = barcode.rawBarcode.value
         formatTextView.text = barcode.rawBarcode.format.toString()
-        notesEditText.setText(initialBarcode.note)
+        notesEditText.setText(initialBarcode.title)
     }
 
     private fun save(barcode: Barcode) {
@@ -72,7 +72,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
             R.id.confirmButton -> {
                 //TODO take rawBarcode value from UI
                 val barcodeEntity = initialBarcode
-                barcodeEntity.note = notesEditText.text.toString()
+                barcodeEntity.title = notesEditText.text.toString()
                 barcodeEntity.widgetId = newWidgetId
                 save(barcodeEntity)
                 if (newWidgetId.isValidWidgetId()) {
