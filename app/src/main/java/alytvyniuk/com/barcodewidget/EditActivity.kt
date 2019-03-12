@@ -8,6 +8,7 @@ import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     @Inject lateinit var codeToImageConverter: CodeToImageConverter
     private var newWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private lateinit var initialBarcode: Barcode
+    private var color : Int = Color.TRANSPARENT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +43,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         App.component().inject(this)
         newWidgetId = intent.getWidgetId()
         initialBarcode = intent.getBarcodeEntity()
+        color = initialBarcode.color ?: getRandomColor()
         initUI(initialBarcode)
         confirmButton.setOnClickListener(this)
     }
@@ -51,11 +54,12 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         dataTextView.text = barcode.rawBarcode.value
         formatTextView.text = barcode.rawBarcode.format.toString()
         notesEditText.setText(initialBarcode.title)
+        colorFrameView.setBackgroundColor(color)
     }
 
     private fun save(barcode: Barcode) {
         val id = initialBarcode.id
-        if (id == Barcode.INVALID_DB_ID) {
+        if (id == BarcodeDao.INVALID_DB_ID) {
             barcodeDao.insert(barcode)
         } else {
             barcodeDao.update(barcode)
@@ -71,19 +75,23 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         when (v.id) {
             R.id.confirmButton -> {
                 //TODO take rawBarcode value from UI
-                val barcodeEntity = initialBarcode
-                barcodeEntity.title = notesEditText.text.toString()
-                barcodeEntity.widgetId = newWidgetId
-                save(barcodeEntity)
+                val barcode = initialBarcode
+                barcode.title = notesEditText.text.toString()
+                barcode.widgetId = newWidgetId
+                barcode.color = color
+                save(barcode)
                 if (newWidgetId.isValidWidgetId()) {
                     updateWidgetProvider(newWidgetId)
                 }
-                val result = Intent().putExtra(KEY_BARCODE, barcodeEntity)
+                val result = Intent().putExtra(KEY_BARCODE, barcode)
                 setResult(Activity.RESULT_OK, result)
                 finish()
             }
         }
     }
+
+    //TODO implement
+    private fun getRandomColor() = Color.GREEN
 }
 
 object BarcodeActivityHelper {

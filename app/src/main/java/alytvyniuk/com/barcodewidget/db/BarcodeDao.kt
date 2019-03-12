@@ -4,6 +4,9 @@ import alytvyniuk.com.barcodewidget.model.Barcode
 import javax.inject.Inject
 
 interface BarcodeDao {
+    companion object {
+        const val INVALID_DB_ID = 0
+    }
     fun insert(barcode: Barcode)
     fun loadBarcodeEntity(widgetId: Int) : Barcode?
     fun loadAll() : List<Barcode>

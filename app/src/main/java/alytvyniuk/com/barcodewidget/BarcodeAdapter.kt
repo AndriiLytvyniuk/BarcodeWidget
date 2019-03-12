@@ -44,13 +44,14 @@ class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter)
             val bitmap = codeToImageConverter.convert(item.rawBarcode)
             itemView.barcodeImageView.setImageBitmap(bitmap)
             if (TextUtils.isEmpty(item.title)) {
-                itemView.titleTextView.visibility = View.GONE
+                itemView.titleTextView.visibility = View.INVISIBLE
             } else {
                 itemView.titleTextView.visibility = View.VISIBLE
                 itemView.titleTextView.text = item.title
             }
             itemView.availabilityIndicatorView.visibility =
-                if (item.widgetId.isValidWidgetId()) View.VISIBLE else View.GONE
+                if (item.widgetId.isValidWidgetId()) View.INVISIBLE else View.VISIBLE
+            itemView.frameView.setBackgroundColor(item.color ?: Color.TRANSPARENT)
         }
 
         override fun onClick(v: View?) {

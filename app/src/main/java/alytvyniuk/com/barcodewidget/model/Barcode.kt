@@ -1,5 +1,6 @@
 package alytvyniuk.com.barcodewidget.model
 
+import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import android.appwidget.AppWidgetManager
 import android.os.Parcel
 import android.os.Parcelable
@@ -7,14 +8,16 @@ import android.os.Parcelable
 data class Barcode(
     var rawBarcode: RawBarcode,
     var widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID,
-    var id: Int = INVALID_DB_ID,
-    var title: String = "") : Parcelable{
-
+    var id: Int = BarcodeDao.INVALID_DB_ID,
+    var title: String = "",
+    var color: Int? = null
+) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readParcelable(RawBarcode::class.java.classLoader)!!,
+        parcel.readParcelable(RawBarcode::class.java.classLoader),
         parcel.readInt(),
         parcel.readInt(),
-        parcel.readString()!!
+        parcel.readString(),
+        parcel.readValue(Int::class.java.classLoader) as? Int
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -22,6 +25,7 @@ data class Barcode(
         parcel.writeInt(widgetId)
         parcel.writeInt(id)
         parcel.writeString(title)
+        parcel.writeValue(color)
     }
 
     override fun describeContents(): Int {
@@ -29,7 +33,6 @@ data class Barcode(
     }
 
     companion object CREATOR : Parcelable.Creator<Barcode> {
-        const val INVALID_DB_ID = 0
         override fun createFromParcel(parcel: Parcel): Barcode {
             return Barcode(parcel)
         }
@@ -38,6 +41,7 @@ data class Barcode(
             return arrayOfNulls(size)
         }
     }
+
 }
 
 fun Int.isValidWidgetId() = this != AppWidgetManager.INVALID_APPWIDGET_ID

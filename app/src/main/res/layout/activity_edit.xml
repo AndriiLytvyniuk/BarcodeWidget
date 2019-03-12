@@ -26,16 +26,32 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <View
+            android:id="@+id/colorFrameView"
+            tools:background="@android:color/holo_green_dark"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayout2"/>
+
     <ImageView
             android:id="@+id/barcodeImage"
             android:src="@drawable/test_qr_code"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
-            android:layout_marginTop="24dp"
-            app:layout_constraintDimensionRatio="1"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayout2"
-            app:layout_constraintEnd_toStartOf="@+id/guideline3"/>
+            app:layout_constraintStart_toStartOf="@+id/colorFrameView"
+            app:layout_constraintEnd_toEndOf="@+id/colorFrameView"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="@+id/colorFrameView"
+            app:layout_constraintBottom_toBottomOf="@+id/colorFrameView"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/confirmButton"
@@ -55,10 +71,10 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_small_title"
             android:id="@+id/titleNotesTextView"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/barcodeImage"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="32dp"/>
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/colorFrameView"/>
 
     <EditText
             android:hint="Set title"

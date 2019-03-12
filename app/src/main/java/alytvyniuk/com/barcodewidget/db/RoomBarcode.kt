@@ -9,19 +9,22 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class RoomBarcode (@ColumnInfo val widgetId : Int = AppWidgetManager.INVALID_APPWIDGET_ID,
-                        @ColumnInfo val barcodeFormat : String,
-                        @ColumnInfo val data : String,
-                        @PrimaryKey(autoGenerate = true) var id: Int = 0,
-                        @ColumnInfo val title : String = "") {
+data class RoomBarcode(
+    @ColumnInfo val widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID,
+    @ColumnInfo val barcodeFormat: String,
+    @ColumnInfo val data: String,
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
+    @ColumnInfo val title: String = "",
+    @ColumnInfo val color: Int? = null
+) {
+    constructor(barcode: Barcode) : this(
+        barcode.widgetId,
+        barcode.rawBarcode.format.toString(), barcode.rawBarcode.value, barcode.id, barcode.title, barcode.color
+    )
 
-
-    constructor(barcode: Barcode) : this(barcode.widgetId,
-        barcode.rawBarcode.format.toString(), barcode.rawBarcode.value, barcode.id, barcode.title)
-
-    fun toBarcodeEntity() : Barcode {
+    fun toBarcodeEntity(): Barcode {
         val barcodeFormat = Format.valueOf(barcodeFormat)
         val rawBarcode = RawBarcode(barcodeFormat, data)
-        return Barcode(rawBarcode, widgetId, id, title)
+        return Barcode(rawBarcode, widgetId, id, title, color)
     }
 }
