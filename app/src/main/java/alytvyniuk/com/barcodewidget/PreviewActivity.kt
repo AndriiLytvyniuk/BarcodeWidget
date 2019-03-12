@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_preview.*
+import kotlinx.android.synthetic.main.frame_image.*
 import javax.inject.Inject
 
 class PreviewActivity : AppCompatActivity() {
@@ -35,6 +36,7 @@ class PreviewActivity : AppCompatActivity() {
         val bitmap = codeToImageConverter.convert(barcode.rawBarcode)
         barcodeImageView.setImageBitmap(bitmap)
         dataTextView.text = barcode.rawBarcode.value
+        titleTextView.text = barcode.title
     }
 
     private fun openEditActivity(barcode: Barcode) {
