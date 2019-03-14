@@ -1,4 +1,4 @@
-package alytvyniuk.com.barcodewidget.dagger;
+package alytvyniuk.com.barcodewidget.dagger
 
 import android.os.Looper
 import androidx.annotation.NonNull

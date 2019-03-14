@@ -7,9 +7,10 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [ImageToCodeConverterModule::class,
+        ImageToCodeConverterModule::class,
         CodeToImageConverterModule::class,
-        FileStorageModule::class,
-            BarcodeDaoModule::class]
+        BarcodeDaoModule::class,
+        FileStorageModule::class]
 )
 interface AppComponent {
 

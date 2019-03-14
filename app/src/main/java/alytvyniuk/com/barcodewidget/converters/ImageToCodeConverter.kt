@@ -6,11 +6,14 @@ import android.graphics.Bitmap
 import android.os.Looper
 import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
+import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val TAG = "ImageToCode"
 abstract class ImageToCodeConverter (looper: Looper) : AsyncConverter<Bitmap, RawBarcode>(looper)
 
-class ZxingImageToCodeConverter(looper: Looper) : ImageToCodeConverter(looper) {
+@Singleton
+class ZxingImageToCodeConverter @Inject constructor(looper: Looper) : ImageToCodeConverter(looper) {
 
     companion object {
         fun zxingBarcodeToBarcode(zxingResult: Result) =

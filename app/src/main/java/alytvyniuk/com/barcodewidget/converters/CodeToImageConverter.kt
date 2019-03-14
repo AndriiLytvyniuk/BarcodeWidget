@@ -10,6 +10,8 @@ import android.os.Looper
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val IMAGE_SIZE = 200
 
@@ -18,7 +20,8 @@ abstract class CodeToImageConverter(looper: Looper) : AsyncConverter<RawBarcode,
     abstract fun convert(rawBarcode: RawBarcode) : Bitmap
 }
 
-class ZXingCodeToImageConverter(looper: Looper) : CodeToImageConverter(looper) {
+@Singleton
+class ZXingCodeToImageConverter @Inject constructor(looper: Looper) : CodeToImageConverter(looper) {
 
     override fun convert(rawBarcode: RawBarcode): Bitmap {
         val multiFormatWriter = MultiFormatWriter()
