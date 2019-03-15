@@ -9,6 +9,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.util.Log
 import android.widget.RemoteViews
 import javax.inject.Inject
@@ -46,8 +47,9 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
         Log.d(TAG, "Update widget for id $widgetId, rawBarcode = $barcode")
         if (barcode != null) {
             val bitmap = codeToImageConverter.convert(barcode.rawBarcode)
-            remoteViews.setBitmap(R.id.widget_image, "setImageBitmap", bitmap)
-            remoteViews.setOnClickPendingIntent(R.id.widget_image, getOnClickIntent(context, barcode))
+            remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmap)
+            remoteViews.setInt(R.id.imageFrame, "setBackgroundColor", barcode.color ?: Color.TRANSPARENT)
+            remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
             appWidgetManager.updateAppWidget(widgetId, remoteViews)
         }
     }
