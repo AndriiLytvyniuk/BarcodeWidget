@@ -12,7 +12,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.util.Log
 import android.widget.RemoteViews
+import androidx.core.app.TaskStackBuilder
 import javax.inject.Inject
+
+
 
 private const val TAG = "BarcodeWidgetProvider"
 private const val WIDGET_REQUEST_CODE = 2
@@ -55,7 +58,10 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
     }
 
     private fun getOnClickIntent(context: Context, barcode: Barcode) : PendingIntent {
+        val stackBuilder = TaskStackBuilder.create(context)
         val intent = PreviewActivity.intent(context, barcode)
-        return PendingIntent.getActivity(context, WIDGET_REQUEST_CODE, intent, 0)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        stackBuilder.addNextIntent(intent)
+        return stackBuilder.getPendingIntent(WIDGET_REQUEST_CODE, PendingIntent.FLAG_UPDATE_CURRENT)!!
     }
 }
