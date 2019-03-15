@@ -26,6 +26,7 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
     @Inject lateinit var barcodeDao: BarcodeDao
 
     override fun onReceive(context: Context, intent: Intent) {
+        App.component().inject(this)
         super.onReceive(context, intent)
         if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
             Log.d(TAG, "onReceive ${Intent.ACTION_BOOT_COMPLETED}")
@@ -38,7 +39,6 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         Log.d(TAG, "onUpdate ${appWidgetIds.size}")
-        App.component().inject(this)
         for (widgetId in appWidgetIds) {
             updateWidget(context, appWidgetManager, widgetId)
         }
@@ -63,5 +63,16 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         stackBuilder.addNextIntent(intent)
         return stackBuilder.getPendingIntent(WIDGET_REQUEST_CODE, PendingIntent.FLAG_UPDATE_CURRENT)!!
+    }
+
+    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
+        super.onDeleted(context, appWidgetIds)
+        Log.d(TAG, "onDeleted: ${appWidgetIds.contentToString()}")
+        for (widgetId in appWidgetIds) {
+            val res = barcodeDao.eraseWidgetId(widgetId)
+            if (res != 1) {
+                Log.e(TAG, "Incorrect widget delete. Deleted: $res")
+            }
+        }
     }
 }

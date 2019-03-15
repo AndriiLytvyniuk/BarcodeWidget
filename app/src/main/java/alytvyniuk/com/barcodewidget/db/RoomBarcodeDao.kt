@@ -1,5 +1,6 @@
 package alytvyniuk.com.barcodewidget.db
 
+import android.appwidget.AppWidgetManager
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -19,4 +20,7 @@ interface RoomBarcodeDao {
 
     @Update
     fun update(barcode: RoomBarcode)
+
+    @Query("UPDATE RoomBarcode SET widgetId = ${AppWidgetManager.INVALID_APPWIDGET_ID} WHERE widgetId = :widgetId")
+    fun eraseWidgetId(widgetId: Int) : Int
 }
