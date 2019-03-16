@@ -14,9 +14,10 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_edit.*
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
-private const val TAG = "CaptureActivity"
+private const val TAG = "EditActivity"
 private const val KEY_WIDGET_ID = "KEY_WIDGET_ID"
 private const val KEY_BARCODE = "KEY_BARCODE"
 
@@ -43,11 +44,23 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_edit)
         setSupportActionBar(toolbar)
         App.component().inject(this)
-        newWidgetId = intent.getWidgetId()
         initialBarcode = intent.getBarcodeEntity()
+        initWidgetId()
         color = initialBarcode.color ?: getRandomColor()
         initUI(initialBarcode)
         confirmButton.setOnClickListener(this)
+    }
+
+    private fun initWidgetId() {
+        newWidgetId = intent.getWidgetId()
+        if (initialBarcode.widgetId.isValidWidgetId()) {
+            if (newWidgetId.isValidWidgetId()) {
+                throw IllegalStateException("Can't reuse record of existing barcode. " +
+                        "From intent=$newWidgetId, from barcode=${initialBarcode.widgetId}")
+            } else {
+                newWidgetId = initialBarcode.widgetId
+            }
+        }
     }
 
     private fun initUI(barcode: Barcode) {

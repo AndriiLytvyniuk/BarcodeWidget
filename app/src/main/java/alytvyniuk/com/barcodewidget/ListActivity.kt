@@ -71,6 +71,7 @@ class ListActivity : AppCompatActivity(), OnItemClickListener {
         Log.d(TAG, "updateAdapter: ${barcodes.size}")
         adapter.setBarcodes(barcodes)
         adapter.setOnItemClickListener(this)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -42,7 +42,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         setContentView(R.layout.activity_capture)
         setSupportActionBar(toolbar)
         App.component().inject(this)
-        newWidgetId = getWidgetIdFromIntent()
+        newWidgetId = getWidgetIdFromIntent(intent)
         updateWidgetTextView.visibility =
             if (newWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) View.GONE else View.VISIBLE
 
@@ -81,6 +81,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d(TAG, "onActivityResult: $requestCode, $resultCode")
         super.onActivityResult(requestCode, resultCode, intent)
         when (requestCode) {
             REQUEST_IMAGE_CAPTURE -> handleImageCaptureResult(resultCode)
@@ -153,8 +154,8 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         startActivityForResult(EditActivity.intent(this, barcode, newWidgetId), REQUEST_EDIT_ACTIVITY)
     }
 
-    private fun getWidgetIdFromIntent() : Int {
-        val intent = intent
+    //TODO add test
+    private fun getWidgetIdFromIntent(intent: Intent) : Int {
         val extras = intent.extras
         if (extras != null) {
             return extras.getInt(
