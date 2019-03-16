@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.activity_capture.*
 import javax.inject.Inject
 
 
-private const val TAG = "BarcodeCaptureActivity"
+private const val TAG = "CaptureActivity"
 private const val REQUEST_IMAGE_CAPTURE = 1
 private const val REQUEST_GALLERY = 2
 private const val REQUEST_LIST_ACTIVITY = 3
@@ -60,7 +60,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     private fun startSavedBarcodesActivity() {
-        startActivityForResult(BarcodeListActivity.intent(this, newWidgetId), REQUEST_LIST_ACTIVITY)
+        startActivityForResult(ListActivity.intent(this, newWidgetId), REQUEST_LIST_ACTIVITY)
     }
 
     private fun dispatchTakePictureIntent() {

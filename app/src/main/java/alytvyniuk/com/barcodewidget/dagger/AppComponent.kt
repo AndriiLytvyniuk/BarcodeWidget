@@ -18,5 +18,5 @@ interface AppComponent {
     fun inject(barcodeWidgetProvider: BarcodeWidgetProvider)
     fun inject(editActivity: EditActivity)
     fun inject(previewActivity: PreviewActivity)
-    fun inject(barcodeListActivity: BarcodeListActivity)
+    fun inject(listActivity: ListActivity)
 }

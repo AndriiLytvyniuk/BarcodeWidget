@@ -32,6 +32,10 @@ data class Barcode(
         return 0
     }
 
+    override fun toString(): String {
+        return "Barcode(rawBarcode=$rawBarcode, widgetId=$widgetId, id=$id, title='$title', color=$color)"
+    }
+
     companion object CREATOR : Parcelable.Creator<Barcode> {
         override fun createFromParcel(parcel: Parcel): Barcode {
             return Barcode(parcel)

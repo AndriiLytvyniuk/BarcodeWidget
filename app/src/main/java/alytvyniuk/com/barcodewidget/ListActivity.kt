@@ -9,6 +9,7 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -16,14 +17,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_barcode_list.*
 import javax.inject.Inject
 
+private const val TAG = "ListActivity"
 private const val REQUEST_UPDATE_WIDGET = 1
 private const val REQUEST_SHOW = 2
 
-class BarcodeListActivity : AppCompatActivity(), OnItemClickListener {
+class ListActivity : AppCompatActivity(), OnItemClickListener {
 
     companion object {
         fun intent(context: Context, widgetId : Int = AppWidgetManager.INVALID_APPWIDGET_ID) : Intent {
-            return BarcodeActivityHelper.intent(BarcodeListActivity::class.java, context, widgetId = widgetId)
+            return BarcodeActivityHelper.intent(ListActivity::class.java, context, widgetId = widgetId)
         }
     }
 
@@ -43,6 +45,10 @@ class BarcodeListActivity : AppCompatActivity(), OnItemClickListener {
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         adapter = BarcodeAdapter(codeToImageConverter)
         barcodeListView.adapter = adapter
+    }
+
+    override fun onResume() {
+        super.onResume()
         updateAdapter()
     }
 
@@ -62,6 +68,7 @@ class BarcodeListActivity : AppCompatActivity(), OnItemClickListener {
 
     private fun updateAdapter() {
         val barcodes = barcodeDao.loadAll()
+        Log.d(TAG, "updateAdapter: ${barcodes.size}")
         adapter.setBarcodes(barcodes)
         adapter.setOnItemClickListener(this)
     }
@@ -74,7 +81,6 @@ class BarcodeListActivity : AppCompatActivity(), OnItemClickListener {
                     setResult(Activity.RESULT_OK)
                     finish()
                 }
-                REQUEST_SHOW -> updateAdapter()
             }
         }
     }

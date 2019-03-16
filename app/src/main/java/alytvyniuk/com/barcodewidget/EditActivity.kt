@@ -10,11 +10,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_edit.*
 import javax.inject.Inject
 
+private const val TAG = "CaptureActivity"
 private const val KEY_WIDGET_ID = "KEY_WIDGET_ID"
 private const val KEY_BARCODE = "KEY_BARCODE"
 
@@ -60,8 +62,10 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     private fun save(barcode: Barcode) {
         val id = initialBarcode.id
         if (id == BarcodeDao.INVALID_DB_ID) {
+            Log.d(TAG, "Save new barcode: $barcode")
             barcodeDao.insert(barcode)
         } else {
+            Log.d(TAG, "Update barcode: $barcode")
             barcodeDao.update(barcode)
         }
     }
