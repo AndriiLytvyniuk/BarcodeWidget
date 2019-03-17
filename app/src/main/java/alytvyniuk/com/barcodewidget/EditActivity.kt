@@ -13,13 +13,16 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_edit.*
 import java.lang.IllegalStateException
 import javax.inject.Inject
+import kotlin.random.Random
 
 private const val TAG = "EditActivity"
 private const val KEY_WIDGET_ID = "KEY_WIDGET_ID"
 private const val KEY_BARCODE = "KEY_BARCODE"
+private const val COLORS_NUMBER = 12
 
 class EditActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -107,8 +110,11 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    //TODO implement
-    private fun getRandomColor() = Color.GREEN
+    private fun getRandomColor() : Int {
+        val number = Random.nextInt(COLORS_NUMBER)
+        val colorId = resources.getIdentifier("choice_color_$number", "color", packageName)
+        return ContextCompat.getColor(this, colorId)
+    }
 }
 
 object BarcodeActivityHelper {
