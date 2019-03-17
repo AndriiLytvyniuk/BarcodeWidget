@@ -9,10 +9,13 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.RemoteViews
+import androidx.annotation.VisibleForTesting
 import androidx.core.app.TaskStackBuilder
 import javax.inject.Inject
 
@@ -21,7 +24,7 @@ import javax.inject.Inject
 private const val TAG = "BarcodeWidgetProvider"
 private const val WIDGET_REQUEST_CODE = 2
 
-class BarcodeWidgetProvider : AppWidgetProvider() {
+open class BarcodeWidgetProvider : AppWidgetProvider() {
 
     @Inject lateinit var codeToImageConverter: CodeToImageConverter
     @Inject lateinit var barcodeDao: BarcodeDao
@@ -41,11 +44,12 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         Log.d(TAG, "onUpdate ${appWidgetIds.size}")
         for (widgetId in appWidgetIds) {
-            updateWidget(context, appWidgetManager, widgetId)
+            val options = appWidgetManager.getAppWidgetOptions(widgetId)
+            updateWidget(context, appWidgetManager, widgetId, options)
         }
     }
 
-    private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId : Int) {
+    private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId : Int, options: Bundle) {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
         val barcode = barcodeDao.loadBarcodeEntity(widgetId)
         Log.d(TAG, "Update widget for id $widgetId, rawBarcode = $barcode")
@@ -54,9 +58,32 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
             remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmap)
             remoteViews.setInt(R.id.widgetImageView, "setBackgroundColor", barcode.color ?: Color.TRANSPARENT)
             remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
+            val width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
+            val height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
+            val padding1 = width / 3
+            remoteViews.setViewPadding(R.id.imageFrame, padding1, 0, 0, 0)
             appWidgetManager.updateAppWidget(widgetId, remoteViews)
         }
     }
+
+    fun setFramePaddings(remoteViews: RemoteViews, b: Bitmap, options: Bundle) {
+        val width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
+        val height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
+    }
+
+    @VisibleForTesting
+    fun setFramePaddings(remoteViews: RemoteViews, bitmapWidth: Int, bitmapHeight: Int, widgetWidth: Int, widgetHeight: Int) {
+        val bitmapRatio = bitmapWidth.toFloat() / bitmapHeight
+        val widgetRatio = widgetWidth.toFloat() / widgetHeight
+        if (bitmapRatio < widgetRatio) {
+            val diff = bitmapRatio / widgetRatio
+            val size = Math.round(widgetWidth * diff)
+            val left = (widgetWidth - size) / 2
+            val right = widgetWidth - left - size
+            remoteViews.setViewPadding(R.id.imageFrame, left, 0, right, 0)
+        }
+    }
+
 
     private fun getOnClickIntent(context: Context, barcode: Barcode) : PendingIntent {
         val stackBuilder = TaskStackBuilder.create(context)
@@ -81,5 +108,8 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
                                            appWidgetId: Int, newOptions: Bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         Log.d(TAG, "onAppWidgetOptionsChanged: widgetId=$appWidgetId, options=$newOptions")
+        val width = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
+        val height = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
+        Log.d(TAG, "onAppWidgetOptionsChanged: $width $height")
     }
 }
