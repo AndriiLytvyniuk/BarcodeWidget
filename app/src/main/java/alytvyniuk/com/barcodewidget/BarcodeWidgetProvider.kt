@@ -60,19 +60,14 @@ open class BarcodeWidgetProvider : AppWidgetProvider() {
             remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
             val width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
             val height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
-            val padding1 = width / 3
-            remoteViews.setViewPadding(R.id.imageFrame, padding1, 0, 0, 0)
+            setFramePaddings(remoteViews, bitmap.width, bitmap.height, width, height)
             appWidgetManager.updateAppWidget(widgetId, remoteViews)
         }
     }
 
-    fun setFramePaddings(remoteViews: RemoteViews, b: Bitmap, options: Bundle) {
-        val width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
-        val height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
-    }
-
     @VisibleForTesting
     fun setFramePaddings(remoteViews: RemoteViews, bitmapWidth: Int, bitmapHeight: Int, widgetWidth: Int, widgetHeight: Int) {
+        Log.d(TAG, "setFramePaddings: bitmapWidth=$bitmapWidth, bitmapHeight=$bitmapHeight, widgetWidth=$widgetWidth, widgetHeight=$widgetHeight")
         val bitmapRatio = bitmapWidth.toFloat() / bitmapHeight
         val widgetRatio = widgetWidth.toFloat() / widgetHeight
         if (bitmapRatio < widgetRatio) {
@@ -108,8 +103,6 @@ open class BarcodeWidgetProvider : AppWidgetProvider() {
                                            appWidgetId: Int, newOptions: Bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         Log.d(TAG, "onAppWidgetOptionsChanged: widgetId=$appWidgetId, options=$newOptions")
-        val width = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
-        val height = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
-        Log.d(TAG, "onAppWidgetOptionsChanged: $width $height")
+        updateWidget(context, appWidgetManager, appWidgetId, newOptions)
     }
 }

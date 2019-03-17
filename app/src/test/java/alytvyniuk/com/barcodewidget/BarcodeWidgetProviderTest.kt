@@ -12,10 +12,10 @@ class BarcodeWidgetProviderTest {
 
     @Test
     fun setFramePaddings() {
-        val bitmapWidth = 18
-        val bitmapHeight = 5
-        val widgetWidth = 127
-        val widgetHeight = 2
+        val bitmapWidth = 200
+        val bitmapHeight = 200
+        val widgetWidth = 337
+        val widgetHeight = 82
         val remoteViews = mock<RemoteViews> {
             on {
                 setViewPadding(any(), any(), any(), any(), any())
