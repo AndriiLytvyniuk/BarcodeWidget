@@ -10,6 +10,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.TaskStackBuilder
@@ -51,7 +52,7 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
         if (barcode != null) {
             val bitmap = codeToImageConverter.convert(barcode.rawBarcode)
             remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmap)
-            remoteViews.setInt(R.id.imageFrame, "setBackgroundColor", barcode.color ?: Color.TRANSPARENT)
+            remoteViews.setInt(R.id.widgetImageView, "setBackgroundColor", barcode.color ?: Color.TRANSPARENT)
             remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
             appWidgetManager.updateAppWidget(widgetId, remoteViews)
         }
@@ -74,5 +75,11 @@ class BarcodeWidgetProvider : AppWidgetProvider() {
                 Log.e(TAG, "Incorrect widget delete. Deleted: $res")
             }
         }
+    }
+
+    override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager,
+                                           appWidgetId: Int, newOptions: Bundle) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        Log.d(TAG, "onAppWidgetOptionsChanged: widgetId=$appWidgetId, options=$newOptions")
     }
 }
