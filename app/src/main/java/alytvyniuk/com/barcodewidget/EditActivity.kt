@@ -11,6 +11,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -114,6 +116,24 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         val number = Random.nextInt(COLORS_NUMBER)
         val colorId = resources.getIdentifier("choice_color_$number", "color", packageName)
         return ContextCompat.getColor(this, colorId)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_delete, menu)
+        if (newWidgetId.isValidWidgetId()) {
+            menu.findItem(R.id.delete).isVisible = false
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.delete -> {
+                barcodeDao.delete(initialBarcode)
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
 

@@ -13,6 +13,7 @@ interface BarcodeDao {
     fun loadAll() : List<Barcode>
     fun update(barcode: Barcode)
     fun eraseWidgetId(widgetId: Int) : Int
+    fun delete(barcode: Barcode) : Int
 }
 
 @Singleton
@@ -38,7 +39,10 @@ class RoomBarcodeDaoImpl @Inject constructor(private val roomBarcodeDao: RoomBar
         roomBarcodeDao.update(roomEntity)
     }
 
-    override fun eraseWidgetId(widgetId: Int): Int {
-        return roomBarcodeDao.eraseWidgetId(widgetId)
+    override fun eraseWidgetId(widgetId: Int) = roomBarcodeDao.eraseWidgetId(widgetId)
+
+    override fun delete(barcode: Barcode) : Int {
+        val roomEntity = RoomBarcode(barcode)
+        return roomBarcodeDao.delete(roomEntity)
     }
 }
