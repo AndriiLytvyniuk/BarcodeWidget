@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.util.Log
 import android.widget.RemoteViews
@@ -49,11 +50,11 @@ open class BarcodeWidgetProvider : AppWidgetProvider() {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
         val barcode = barcodeDao.loadBarcodeEntity(widgetId)
         Log.d(TAG, "Update widget for id $widgetId, rawBarcode = $barcode")
-        barcode.let {
+        barcode?.let {
             val bitmap = codeToImageConverter.convert(barcode.rawBarcode)
             remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmap)
             remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
-            val frameBitmap = createFrameBitmap(bitmap.width, bitmap.height, barcode.color)
+            val frameBitmap = createFrameBitmap(bitmap.width, bitmap.height, barcode.color ?: Color.TRANSPARENT)
             remoteViews.setBitmap(R.id.frameImageView, "setImageBitmap", frameBitmap)
             appWidgetManager.updateAppWidget(widgetId, remoteViews)
         }
