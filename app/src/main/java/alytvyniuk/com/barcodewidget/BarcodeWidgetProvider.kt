@@ -10,15 +10,12 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
-import android.os.Bundle
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.util.Log
-import android.widget.ImageView
 import android.widget.RemoteViews
-import androidx.annotation.VisibleForTesting
 import androidx.core.app.TaskStackBuilder
 import javax.inject.Inject
-
 
 
 private const val TAG = "BarcodeWidgetProvider"
@@ -44,41 +41,35 @@ open class BarcodeWidgetProvider : AppWidgetProvider() {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         Log.d(TAG, "onUpdate ${appWidgetIds.size}")
         for (widgetId in appWidgetIds) {
-            val options = appWidgetManager.getAppWidgetOptions(widgetId)
-            updateWidget(context, appWidgetManager, widgetId, options)
+            updateWidget(context, appWidgetManager, widgetId)
         }
     }
 
-    private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId : Int, options: Bundle) {
+    private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId : Int) {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
         val barcode = barcodeDao.loadBarcodeEntity(widgetId)
         Log.d(TAG, "Update widget for id $widgetId, rawBarcode = $barcode")
-        if (barcode != null) {
+        barcode.let {
             val bitmap = codeToImageConverter.convert(barcode.rawBarcode)
             remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmap)
-            remoteViews.setInt(R.id.widgetImageView, "setBackgroundColor", barcode.color ?: Color.TRANSPARENT)
             remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
-            val width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
-            val height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
-            setFramePaddings(remoteViews, bitmap.width, bitmap.height, width, height)
+            val frameBitmap = createFrameBitmap(bitmap.width, bitmap.height, barcode.color)
+            remoteViews.setBitmap(R.id.frameImageView, "setImageBitmap", frameBitmap)
             appWidgetManager.updateAppWidget(widgetId, remoteViews)
         }
     }
 
-    @VisibleForTesting
-    fun setFramePaddings(remoteViews: RemoteViews, bitmapWidth: Int, bitmapHeight: Int, widgetWidth: Int, widgetHeight: Int) {
-        Log.d(TAG, "setFramePaddings: bitmapWidth=$bitmapWidth, bitmapHeight=$bitmapHeight, widgetWidth=$widgetWidth, widgetHeight=$widgetHeight")
-        val bitmapRatio = bitmapWidth.toFloat() / bitmapHeight
-        val widgetRatio = widgetWidth.toFloat() / widgetHeight
-        if (bitmapRatio < widgetRatio) {
-            val diff = bitmapRatio / widgetRatio
-            val size = Math.round(widgetWidth * diff)
-            val left = (widgetWidth - size) / 2
-            val right = widgetWidth - left - size
-            remoteViews.setViewPadding(R.id.imageFrame, left, 0, right, 0)
-        }
+    /**
+     * This is the only way to create stable frame around ImageView with same ratio
+     */
+    private fun createFrameBitmap(width: Int, height: Int, color: Int): Bitmap {
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val paint = Paint()
+        paint.color = color
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        return bitmap
     }
-
 
     private fun getOnClickIntent(context: Context, barcode: Barcode) : PendingIntent {
         val stackBuilder = TaskStackBuilder.create(context)
@@ -97,12 +88,5 @@ open class BarcodeWidgetProvider : AppWidgetProvider() {
                 Log.e(TAG, "Incorrect widget delete. Deleted: $res")
             }
         }
-    }
-
-    override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager,
-                                           appWidgetId: Int, newOptions: Bundle) {
-        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
-        Log.d(TAG, "onAppWidgetOptionsChanged: widgetId=$appWidgetId, options=$newOptions")
-        updateWidget(context, appWidgetManager, appWidgetId, newOptions)
     }
 }

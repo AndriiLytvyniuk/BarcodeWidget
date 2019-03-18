@@ -4,7 +4,7 @@ import android.widget.RemoteViews
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.stubbing.Answer
 
@@ -14,8 +14,8 @@ class BarcodeWidgetProviderTest {
     fun setFramePaddings() {
         val bitmapWidth = 200
         val bitmapHeight = 200
-        val widgetWidth = 337
-        val widgetHeight = 82
+        val widgetWidth = 1191
+        val widgetHeight = 472
         val remoteViews = mock<RemoteViews> {
             on {
                 setViewPadding(any(), any(), any(), any(), any())
