@@ -28,7 +28,6 @@ class CaptureActivityTest {
         launchFromHome()
         onView(withId(R.id.savedButton)).check(matches(isCompletelyDisplayed()))
         onView(withId(R.id.galleryButton)).check(matches(isCompletelyDisplayed()))
-        onView(withId(R.id.photoButton)).check(matches(isCompletelyDisplayed()))
     }
 
     @Test

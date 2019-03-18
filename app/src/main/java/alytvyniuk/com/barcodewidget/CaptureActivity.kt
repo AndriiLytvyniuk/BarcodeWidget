@@ -13,6 +13,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -26,16 +27,14 @@ import javax.inject.Inject
 
 
 private const val TAG = "CaptureActivity"
-private const val REQUEST_IMAGE_CAPTURE = 1
 private const val REQUEST_GALLERY = 2
 private const val REQUEST_LIST_ACTIVITY = 3
-private const val REQUEST_CAMERA_PERMISSION_PHOTO = 10
 private const val REQUEST_CAMERA_PERMISSION_ON_RESUME = 11
 
 class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResultHandler {
 
-    @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
-    @Inject lateinit var fileStorage: FileStorage
+    @Inject
+    lateinit var imageToCodeConverter: ImageToCodeConverter
     @VisibleForTesting
     var newWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
@@ -48,14 +47,12 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         updateWidgetTextView.visibility =
             if (newWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) View.GONE else View.VISIBLE
 
-        photoButton.setOnClickListener(this)
         galleryButton.setOnClickListener(this)
         savedButton.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.photoButton -> dispatchTakePictureIntent()
             R.id.galleryButton -> dispatchGalleryIntent()
             R.id.savedButton -> startSavedBarcodesActivity()
         }
@@ -63,18 +60,6 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
 
     private fun startSavedBarcodesActivity() {
         startActivityForResult(ListActivity.intent(this, newWidgetId), REQUEST_LIST_ACTIVITY)
-    }
-
-    private fun dispatchTakePictureIntent() {
-        if (!hasCameraPermission()) {
-            requestCameraPermission(this, REQUEST_CAMERA_PERMISSION_PHOTO)
-        } else {
-            fileStorage.eraseImageTempFile()
-            val uri = fileStorage.getImageTempFileUri()
-            val requestIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                .putExtra(MediaStore.EXTRA_OUTPUT, uri)
-            startActivityForResult(requestIntent, REQUEST_IMAGE_CAPTURE)
-        }
     }
 
     private fun dispatchGalleryIntent() {
@@ -86,32 +71,15 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         Log.d(TAG, "onActivityResult: $requestCode, $resultCode")
         super.onActivityResult(requestCode, resultCode, intent)
         when (requestCode) {
-            REQUEST_IMAGE_CAPTURE -> handleImageCaptureResult(resultCode)
             REQUEST_GALLERY -> handleGalleryResult(resultCode, data)
             REQUEST_EDIT_ACTIVITY, REQUEST_LIST_ACTIVITY -> handleEditActivityResult(resultCode)
-        }
-    }
-
-    private fun handleImageCaptureResult(resultCode: Int) {
-        if (resultCode == Activity.RESULT_OK) {
-            val bitmap = fileStorage.getScaledBitmap()
-            //TODO refactor
-            if (bitmap != null) {
-                performImageToBarcodeConversion(bitmap)
-            } else {
-                // TODO error message
-                Log.e(TAG, "Couldn't get bitmap from photo image")
-            }
-        } else {
-            // TODO error message
-            Log.e(TAG, "Couldn't get photo image")
         }
     }
 
     private fun handleGalleryResult(resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             if (data != null && data.data != null) {
-                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, data.data)
+                val bitmap = getBitmapForImageUri(data.data)
                 if (bitmap != null) {
                     performImageToBarcodeConversion(bitmap)
                 } else {
@@ -176,16 +144,6 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) &&
-            permissions.isNotEmpty() && permissions[0] == Manifest.permission.CAMERA) {
-            when (requestCode) {
-                REQUEST_CAMERA_PERMISSION_PHOTO -> dispatchTakePictureIntent()
-            }
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         if (!hasCameraPermission()) {
@@ -201,3 +159,6 @@ interface BarcodeResultHandler {
 
 fun Context.hasCameraPermission() = ContextCompat
     .checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+
+fun Context.getBitmapForImageUri(uri: Uri): Bitmap? =
+    MediaStore.Images.Media.getBitmap(contentResolver, uri)

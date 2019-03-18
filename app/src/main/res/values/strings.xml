@@ -4,4 +4,5 @@
     <string name="confirm">OK</string>
     <string name="barcode_is_reserved">This code is already reserved</string>
     <string name="delete">Delete</string>
+    <string name="initialize_widget">Choose barcode for your widget</string>
 </resources>

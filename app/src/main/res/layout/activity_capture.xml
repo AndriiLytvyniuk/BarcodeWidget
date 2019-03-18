@@ -16,8 +16,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.52"
-            android:id="@+id/fragment"
-    />
+            android:id="@+id/fragment"/>
 
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
@@ -38,20 +37,6 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/photoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            app:srcCompat="@android:drawable/ic_menu_camera"
-            app:layout_constraintStart_toEndOf="@+id/galleryButton"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toTopOf="@+id/galleryButton"
-            app:layout_constraintBottom_toBottomOf="@+id/galleryButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintHorizontal_bias="0.5"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/galleryButton"
             android:layout_width="88dp"
             android:layout_height="wrap_content"
@@ -61,7 +46,7 @@
             android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/savedButton"
             app:layout_constraintTop_toTopOf="@+id/savedButton"
-            app:layout_constraintEnd_toStartOf="@+id/photoButton"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -77,7 +62,7 @@
             app:layout_constraintEnd_toStartOf="@+id/galleryButton"
             app:layout_constraintHorizontal_bias="0.5"/>
     <TextView
-            android:text="Initialize Widget"
+            android:text="@string/initialize_widget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/updateWidgetTextView"
