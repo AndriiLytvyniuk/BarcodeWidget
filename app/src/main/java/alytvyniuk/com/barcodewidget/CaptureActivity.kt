@@ -17,6 +17,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -35,7 +36,8 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
 
     @Inject lateinit var imageToCodeConverter: ImageToCodeConverter
     @Inject lateinit var fileStorage: FileStorage
-    private var newWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
+    @VisibleForTesting
+    var newWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
