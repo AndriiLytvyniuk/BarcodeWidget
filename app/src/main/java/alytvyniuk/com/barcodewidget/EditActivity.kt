@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_edit.*
@@ -142,6 +143,12 @@ object BarcodeActivityHelper {
     fun <T> intent(clazz: Class<T>, context: Context, barcode: Barcode? = null,
                    widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID): Intent {
         val intent = Intent(context, clazz)
+        return appendExtras(intent, barcode, widgetId)
+    }
+
+    @VisibleForTesting
+    fun appendExtras(intent: Intent, barcode: Barcode? = null,
+                     widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID) : Intent {
         if (widgetId.isValidWidgetId()) {
             intent.putExtra(KEY_WIDGET_ID, widgetId)
         }

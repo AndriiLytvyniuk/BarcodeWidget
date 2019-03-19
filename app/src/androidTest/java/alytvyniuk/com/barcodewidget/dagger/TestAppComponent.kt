@@ -6,9 +6,12 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-    modules = [MainLooperModule::class]
+    modules = [MainLooperModule::class,
+        TestBarcodeDaoModule::class,
+        CodeToImageConverterModule::class,
+        ImageToCodeConverterModule::class]
 )
-interface TestAppComponent {
+interface TestAppComponent : AppComponent {
 
     fun inject(asyncConverterTest: AsyncConverterTest)
 }
