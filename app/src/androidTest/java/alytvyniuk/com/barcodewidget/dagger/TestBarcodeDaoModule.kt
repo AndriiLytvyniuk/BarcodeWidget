@@ -25,7 +25,7 @@ class TestBarcodeDaoModule {
 
             override fun loadAll(): List<Barcode> {
                 return listOf(Barcode(RawBarcode(Format.QR_CODE, "first")),
-                    Barcode(RawBarcode(Format.CODABAR, "second")),
+                    Barcode(RawBarcode(Format.CODABAR, "1345")),
                     Barcode(RawBarcode(Format.DATA_MATRIX, "third")))
             }
 
