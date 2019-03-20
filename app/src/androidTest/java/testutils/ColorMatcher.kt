@@ -1,4 +1,4 @@
-package alytvyniuk.com.barcodewidget
+package testutils
 
 import android.graphics.drawable.ColorDrawable
 import android.view.View
