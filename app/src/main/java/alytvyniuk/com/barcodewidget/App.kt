@@ -9,7 +9,7 @@ open class App : Application() {
 
     companion object {
 
-        lateinit var component: AppComponent
+        lateinit var component: AppComponent private set
 
         fun component() = component
     }

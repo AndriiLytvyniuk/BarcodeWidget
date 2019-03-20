@@ -13,35 +13,45 @@ class TestBarcodeDaoModule {
 
     @Provides
     @Singleton
-    fun providesBarcodeDaoMock() : BarcodeDao {
-        return object : BarcodeDao {
-            override fun insert(barcode: Barcode) {
+    fun providesBarcodeDaoMock(): BarcodeDao {
+        return BarcodeDaoMock()
+    }
+}
 
-            }
+class BarcodeDaoMock : BarcodeDao {
 
-            override fun loadBarcodeEntity(widgetId: Int): Barcode? {
-                return Barcode(RawBarcode(Format.QR_CODE, "first"))
-            }
+    companion object {
+        private val barcodes = mutableListOf<Barcode>()
 
-            override fun loadAll(): List<Barcode> {
-                return listOf(Barcode(RawBarcode(Format.QR_CODE, "first")),
-                    Barcode(RawBarcode(Format.CODABAR, "1345")),
-                    Barcode(RawBarcode(Format.DATA_MATRIX, "third")))
-            }
-
-            override fun update(barcode: Barcode) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun eraseWidgetId(widgetId: Int): Int {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun delete(barcode: Barcode): Int {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
+        fun setTestBarcodes(barcodes: List<Barcode>) {
+            this.barcodes.clear()
+            this.barcodes.addAll(barcodes)
         }
+    }
+
+
+    override fun insert(barcode: Barcode) {
+        barcodes.add(barcode)
+    }
+
+    override fun loadBarcodeEntity(widgetId: Int): Barcode? {
+        return if (barcodes.isEmpty()) null else barcodes[0]
+    }
+
+    override fun loadAll(): List<Barcode> {
+        return barcodes
+    }
+
+    override fun update(barcode: Barcode) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun eraseWidgetId(widgetId: Int): Int {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun delete(barcode: Barcode): Int {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
 
