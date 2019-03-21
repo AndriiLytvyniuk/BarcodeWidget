@@ -2,26 +2,26 @@ package alytvyniuk.com.barcodewidget
 
 import android.appwidget.AppWidgetManager
 import android.content.Intent
+import androidx.test.core.app.ActivityScenario
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.rule.ActivityTestRule
 import org.hamcrest.CoreMatchers.not
 import org.junit.Assert.assertEquals
-import org.junit.Rule
 import org.junit.Test
 
 private const val WIDGET_ID = 1
 class CaptureActivityTest {
 
-    @get:Rule
-    val rule = ActivityTestRule<CaptureActivity>(CaptureActivity::class.java, false, false)
-
     private fun launchFromHome() =
-        rule.launchActivity(Intent())
+        ActivityScenario.launch<CaptureActivity>(CaptureActivity::class.java)
 
-    private fun launchFromWidget() =
-        rule.launchActivity(Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, WIDGET_ID))
+    private fun launchFromWidget() : ActivityScenario<CaptureActivity> {
+        val intent = Intent(ApplicationProvider.getApplicationContext(), CaptureActivity::class.java)
+            .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, WIDGET_ID)
+        return ActivityScenario.launch<CaptureActivity>(intent)
+    }
 
     @Test
     fun checkButtonsVisibility() {
@@ -32,14 +32,16 @@ class CaptureActivityTest {
 
     @Test
     fun checkWidgetIdFieldFromWidget() {
-        val activity = launchFromWidget()
-        assertEquals(activity.newWidgetId, WIDGET_ID)
+        launchFromWidget().onActivity { activity ->
+            assertEquals(activity.newWidgetId, WIDGET_ID)
+        }
     }
 
     @Test
     fun checkWidgetIdFieldFromHome() {
-        val activity = launchFromHome()
-        assertEquals(activity.newWidgetId, AppWidgetManager.INVALID_APPWIDGET_ID)
+        launchFromHome().onActivity { activity ->
+            assertEquals(activity.newWidgetId, AppWidgetManager.INVALID_APPWIDGET_ID)
+        }
     }
 
     @Test

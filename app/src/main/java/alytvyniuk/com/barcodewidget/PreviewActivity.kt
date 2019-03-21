@@ -25,7 +25,7 @@ class PreviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preview)
         App.component().inject(this)
-        val barcode = intent.getBarcodeEntity()
+        val barcode = intent.getBarcode()
         updateView(barcode)
         editButton.setOnClickListener {
             openEditActivity(barcode)
@@ -48,7 +48,7 @@ class PreviewActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_EDIT_ACTIVITY) {
-            val barcode = data?.getBarcodeEntity()
+            val barcode = data?.getBarcode()
             if (barcode != null) {
                 updateView(barcode)
             } else {

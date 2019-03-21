@@ -32,6 +32,10 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
         const val REQUEST_EDIT_ACTIVITY = 4
 
+        /**
+         * If @param barcode and widgetId are valid, means edit.
+         * If barcode is valid, and widgetId is not, means create new and save
+         */
         fun intent(context: Context,
                    barcode: Barcode,
                    widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID): Intent {
@@ -50,7 +54,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_edit)
         setSupportActionBar(toolbar)
         App.component().inject(this)
-        initialBarcode = intent.getBarcodeEntity()
+        initialBarcode = intent.getBarcode()
         initWidgetId()
         color = initialBarcode.color ?: getRandomColor()
         initUI(initialBarcode)
@@ -74,7 +78,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
         barcodeImage.setImageBitmap(bitmap)
         dataTextView.text = barcode.rawBarcode.value
         formatTextView.text = barcode.rawBarcode.format.toString()
-        notesEditText.setText(initialBarcode.title)
+        titleEditText.setText(initialBarcode.title)
         colorFrameView.setBackgroundColor(color)
     }
 
@@ -99,7 +103,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
             R.id.confirmButton -> {
                 //TODO take rawBarcode value from UI
                 val barcode = initialBarcode
-                barcode.title = notesEditText.text.toString()
+                barcode.title = titleEditText.text.toString()
                 barcode.widgetId = newWidgetId
                 barcode.color = color
                 save(barcode)
@@ -161,6 +165,6 @@ object BarcodeActivityHelper {
 
 fun Intent.getWidgetId() = getIntExtra(KEY_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
 
-fun Intent.getBarcodeEntity() : Barcode = getParcelableExtra(KEY_BARCODE)
+fun Intent.getBarcode() : Barcode = getParcelableExtra(KEY_BARCODE)
 
 
