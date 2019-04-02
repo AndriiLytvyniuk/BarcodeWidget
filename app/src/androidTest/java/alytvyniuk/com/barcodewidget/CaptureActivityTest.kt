@@ -55,4 +55,23 @@ class CaptureActivityTest {
         launchFromHome()
         onView(withId(R.id.updateWidgetTextView)).check(matches(not(isDisplayed())))
     }
+
+    @Test
+    fun getWidgetIdFromIntentTestWithoutId() {
+        launchFromHome().onActivity { activity ->
+            val idFromIntent = activity.getWidgetIdFromIntent(Intent())
+            assertEquals(AppWidgetManager.INVALID_APPWIDGET_ID, idFromIntent)
+        }
+    }
+
+    @Test
+    fun getWidgetIdFromIntentTestWith() {
+        launchFromHome().onActivity { activity ->
+            val testActivity = CaptureActivity()
+            val widgetId = 5
+            val intent = Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+            val idFromIntent = testActivity.getWidgetIdFromIntent(intent)
+            assertEquals(widgetId, idFromIntent)
+        }
+    }
 }

@@ -10,8 +10,8 @@ import org.mockito.stubbing.Answer
 
 class BarcodeWidgetProviderTest {
 
-    @Test
-    fun setFramePaddings() {
+//    @Test
+//    fun setFramePaddings() {
 //        val bitmapWidth = 200
 //        val bitmapHeight = 200
 //        val widgetWidth = 1191

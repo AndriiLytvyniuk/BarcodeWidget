@@ -49,6 +49,9 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
 
         galleryButton.setOnClickListener(this)
         savedButton.setOnClickListener(this)
+        if (Intent.ACTION_VIEW == intent.action) {
+            handleViewImage()
+        }
     }
 
     override fun onClick(v: View?) {
@@ -73,6 +76,21 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         when (requestCode) {
             REQUEST_GALLERY -> handleGalleryResult(resultCode, data)
             REQUEST_EDIT_ACTIVITY, REQUEST_LIST_ACTIVITY -> handleEditActivityResult(resultCode)
+        }
+    }
+
+    private fun handleViewImage() {
+        if (intent.data != null) {
+            val bitmap = getBitmapForImageUri(intent.data)
+            if (bitmap != null) {
+                performImageToBarcodeConversion(bitmap)
+            } else {
+                // TODO error message
+                Log.e(TAG, "Couldn't get bitmap from ACTION_VIEW")
+            }
+        } else {
+            // TODO error message
+            Log.e(TAG, "Couldn't get image from ACTION_VIEW null uri")
         }
     }
 
@@ -124,8 +142,8 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         startActivityForResult(EditActivity.intent(this, barcode, newWidgetId), REQUEST_EDIT_ACTIVITY)
     }
 
-    //TODO add test
-    private fun getWidgetIdFromIntent(intent: Intent) : Int {
+    @VisibleForTesting
+    fun getWidgetIdFromIntent(intent: Intent) : Int {
         val extras = intent.extras
         if (extras != null) {
             return extras.getInt(
