@@ -6,11 +6,17 @@ import android.graphics.Bitmap
 import android.os.Looper
 import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
+import io.reactivex.Observable
+import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val TAG = "ImageToCode"
-abstract class ImageToCodeConverter (looper: Looper) : AsyncConverter<Bitmap, RawBarcode>(looper)
+abstract class ImageToCodeConverter (looper: Looper) : AsyncConverter<Bitmap, RawBarcode>(looper) {
+
+    @Throws(Exception::class)
+    abstract fun convert(bitmap: Bitmap) : Observable<RawBarcode>
+}
 
 @Singleton
 class ZxingImageToCodeConverter @Inject constructor(looper: Looper) : ImageToCodeConverter(looper) {
@@ -38,25 +44,30 @@ class ZxingImageToCodeConverter @Inject constructor(looper: Looper) : ImageToCod
             }
     }
 
+    @Throws(Exception::class)
+    override fun convert(bitmap: Bitmap): Observable<RawBarcode> {
+        return Observable.just(convertBitmapToBarcode(bitmap))
+
+    }
+
+    @Throws(Exception::class)
+    private fun convertBitmapToBarcode(bitmap: Bitmap) : RawBarcode {
+        val width = bitmap.width
+        val height = bitmap.height
+        val pixels = IntArray(width * height)
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+        val source = RGBLuminanceSource(width, height, pixels)
+        val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
+        val result = MultiFormatReader().decode(binaryBitmap)
+        return zxingBarcodeToBarcode(result)
+    }
+
     override fun performConversion(bitmap: Bitmap, id: Int) {
         try {
-            val width = bitmap.width
-            val height = bitmap.height
-            val pixels = IntArray(width * height)
-            bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
-            val source = RGBLuminanceSource(width, height, pixels)
-            val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
-            val result = MultiFormatReader().decode(binaryBitmap)
-            val barcode = zxingBarcodeToBarcode(result)
+            val barcode = convertBitmapToBarcode(bitmap)
             sendResult(barcode, id)
         } catch (e: Exception) {
             sendError(e, id)
         }
-    }
-}
-
-class StubImageToCodeConverter(looper: Looper) : ImageToCodeConverter(looper) {
-    override fun performConversion(from: Bitmap, id: Int) {
-        sendResult(RawBarcode(Format.QR_CODE, "Andrii"), id)
     }
 }

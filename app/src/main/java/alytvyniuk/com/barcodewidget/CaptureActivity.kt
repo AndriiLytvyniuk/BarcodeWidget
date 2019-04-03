@@ -22,6 +22,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_capture.*
 import javax.inject.Inject
 
@@ -37,12 +38,14 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     lateinit var imageToCodeConverter: ImageToCodeConverter
     @VisibleForTesting
     var newWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
+    private lateinit var model : ImageConvertViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_capture)
         setSupportActionBar(toolbar)
         App.component().inject(this)
+        model = ViewModelProviders.of(this).get(ImageConvertViewModel::class.java)
         newWidgetId = getWidgetIdFromIntent(intent)
         updateWidgetTextView.visibility =
             if (newWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) View.GONE else View.VISIBLE
