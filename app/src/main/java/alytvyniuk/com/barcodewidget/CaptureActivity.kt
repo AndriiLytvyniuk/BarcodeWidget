@@ -22,10 +22,10 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_capture.*
-import javax.inject.Inject
-
+import java.lang.IllegalStateException
 
 private const val TAG = "CaptureActivity"
 private const val REQUEST_GALLERY = 2
@@ -34,8 +34,6 @@ private const val REQUEST_CAMERA_PERMISSION_ON_RESUME = 11
 
 class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResultHandler {
 
-    @Inject
-    lateinit var imageToCodeConverter: ImageToCodeConverter
     @VisibleForTesting
     var newWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private lateinit var model : ImageConvertViewModel
@@ -44,17 +42,30 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_capture)
         setSupportActionBar(toolbar)
-        App.component().inject(this)
-        model = ViewModelProviders.of(this).get(ImageConvertViewModel::class.java)
+        initViewModel()
         newWidgetId = getWidgetIdFromIntent(intent)
         updateWidgetTextView.visibility =
             if (newWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) View.GONE else View.VISIBLE
-
         galleryButton.setOnClickListener(this)
         savedButton.setOnClickListener(this)
         if (Intent.ACTION_VIEW == intent.action) {
             handleViewImage()
         }
+    }
+
+    private fun initViewModel() {
+        model = ViewModelProviders.of(this).get(ImageConvertViewModel::class.java)
+        model.observe(this, Observer { convertResponse ->
+            when {
+                convertResponse.barcode != null -> {
+                    Log.d(TAG, "Result of conversion = $convertResponse.barcode")
+                    onBarcodeResult(convertResponse.barcode)
+                }
+                convertResponse.exception != null -> Log.e(TAG, "Couldn't convert", convertResponse.exception)
+                //TODO handle
+                else -> throw IllegalStateException("Both barcode and exception can't be null")
+            }
+        })
     }
 
     override fun onClick(v: View?) {
@@ -127,17 +138,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     private fun performImageToBarcodeConversion(bitmap: Bitmap) {
-        imageToCodeConverter.convertAsync(bitmap, object : AsyncConverter.ConverterListener<RawBarcode> {
-            override fun onError(exception: Exception) {
-                Log.e(TAG, "Couldn't scan", exception)
-                //TODO handle
-            }
-
-            override fun onResult(to: RawBarcode) {
-                Log.d(TAG, "Result of scan = $to")
-                onBarcodeResult(to)
-            }
-        })
+        model.performConversion(bitmap)
     }
 
     override fun onBarcodeResult(rawBarcode: RawBarcode) {

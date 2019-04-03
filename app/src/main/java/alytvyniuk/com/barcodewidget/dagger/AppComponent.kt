@@ -13,7 +13,7 @@ import javax.inject.Singleton
 )
 interface AppComponent {
 
-    fun inject(barcodeCaptureActivity: CaptureActivity)
+    fun inject(imageConvertViewModel: ImageConvertViewModel)
     fun inject(barcodeWidgetProvider: BarcodeWidgetProvider)
     fun inject(editActivity: EditActivity)
     fun inject(previewActivity: PreviewActivity)

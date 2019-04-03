@@ -3,17 +3,21 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.model.RawBarcode
 import android.graphics.Bitmap
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.annotation.NonNull
+import androidx.lifecycle.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class ImageConvertViewModel(@Inject private val imageToCodeConverter: ImageToCodeConverter) : ViewModel() {
+class ImageConvertViewModel(private val imageToCodeConverter: ImageToCodeConverter) : ViewModel() {
 
     private val liveData: MutableLiveData<ConvertResponse> = MutableLiveData()
     private val compositeDisposable = CompositeDisposable()
+
+    fun observe(@NonNull owner: LifecycleOwner, @NonNull observer: Observer<ConvertResponse>) {
+        liveData.observe(owner, observer)
+    }
 
     fun performConversion(bitmap: Bitmap) {
         val disposable = imageToCodeConverter.convert(bitmap)
@@ -37,6 +41,12 @@ class ImageConvertViewModel(@Inject private val imageToCodeConverter: ImageToCod
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
+    }
+}
+
+class ImageConvertModelFactory(@Inject val imageToCodeConverter: ImageToCodeConverter): ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return ImageConvertViewModel(imageToCodeConverter) as T
     }
 }
 
