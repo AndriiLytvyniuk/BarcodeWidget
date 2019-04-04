@@ -125,7 +125,7 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_delete, menu)
-        if (newWidgetId.isValidWidgetId()) {
+        if (newWidgetId.isValidWidgetId() || initialBarcode.id == BarcodeDao.INVALID_DB_ID) {
             menu.findItem(R.id.delete).isVisible = false
         }
         return true
