@@ -6,4 +6,5 @@
     <string name="delete">Delete</string>
     <string name="initialize_widget">Choose barcode for your widget</string>
     <string name="set_title">Set title</string>
+    <string name="no_barcodes">There are no barcodes added</string>
 </resources>

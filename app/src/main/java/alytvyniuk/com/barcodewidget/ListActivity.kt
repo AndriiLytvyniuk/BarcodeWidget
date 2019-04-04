@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -49,7 +50,7 @@ class ListActivity : AppCompatActivity(), OnItemClickListener {
 
     override fun onResume() {
         super.onResume()
-        updateAdapter()
+        updateUI()
     }
 
     override fun onItemClicked(barcode: Barcode) {
@@ -66,12 +67,19 @@ class ListActivity : AppCompatActivity(), OnItemClickListener {
         }
     }
 
-    private fun updateAdapter() {
+    private fun updateUI() {
         val barcodes = barcodeDao.loadAll()
-        Log.d(TAG, "updateAdapter: ${barcodes.size}")
-        adapter.setBarcodes(barcodes)
-        adapter.setOnItemClickListener(this)
-        adapter.notifyDataSetChanged()
+        Log.d(TAG, "updateUI: ${barcodes.size}")
+        if (barcodes.isEmpty()) {
+            noBarcodesTextView.visibility = View.VISIBLE
+            barcodeListView.visibility = View.GONE
+        } else {
+            noBarcodesTextView.visibility = View.GONE
+            barcodeListView.visibility = View.VISIBLE
+            adapter.setBarcodes(barcodes)
+            adapter.setOnItemClickListener(this)
+            adapter.notifyDataSetChanged()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
