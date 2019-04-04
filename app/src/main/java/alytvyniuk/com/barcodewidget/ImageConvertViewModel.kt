@@ -9,6 +9,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 class ImageConvertViewModel(private val imageToCodeConverter: ImageToCodeConverter) : ViewModel() {
 
@@ -45,7 +46,7 @@ class ImageConvertViewModel(private val imageToCodeConverter: ImageToCodeConvert
     }
 }
 
-class ImageConvertModelFactory(val imageToCodeConverter: ImageToCodeConverter): ViewModelProvider.Factory {
+class ImageConvertModelFactory(private val imageToCodeConverter: ImageToCodeConverter): ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return ImageConvertViewModel(imageToCodeConverter) as T
     }

@@ -9,6 +9,7 @@ import javax.inject.Singleton
     modules = [ImageToCodeConverterModule::class,
         ImageToCodeConverterModule::class,
         CodeToImageConverterModule::class,
+        ImageConverterFactoryModule::class,
         BarcodeDaoModule::class]
 )
 interface AppComponent {
