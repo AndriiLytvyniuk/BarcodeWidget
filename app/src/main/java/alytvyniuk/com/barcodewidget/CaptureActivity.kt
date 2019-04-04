@@ -58,6 +58,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         model = ViewModelProviders.of(this, imageConvertModelFactory)
             .get(ImageConvertViewModel::class.java)
         model.observe(this, Observer { convertResponse ->
+            hideProgress()
             when {
                 convertResponse.barcode != null -> {
                     Log.d(TAG, "Result of conversion = $convertResponse.barcode")
@@ -140,6 +141,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     private fun performImageToBarcodeConversion(bitmap: Bitmap) {
+        showProgress()
         model.performConversion(bitmap)
     }
 
@@ -173,6 +175,14 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         if (!hasCameraPermission()) {
             requestCameraPermission(this, REQUEST_CAMERA_PERMISSION_ON_RESUME)
         }
+    }
+
+    private fun showProgress() {
+        progressLayout.visibility = View.VISIBLE
+    }
+
+    private fun hideProgress() {
+        progressLayout.visibility = View.GONE
     }
 }
 
