@@ -5,10 +5,10 @@ import alytvyniuk.com.barcodewidget.model.RawBarcode
 import android.graphics.Bitmap
 import androidx.annotation.NonNull
 import androidx.lifecycle.*
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
 
 class ImageConvertViewModel(private val imageToCodeConverter: ImageToCodeConverter) : ViewModel() {
 
@@ -22,6 +22,7 @@ class ImageConvertViewModel(private val imageToCodeConverter: ImageToCodeConvert
     fun performConversion(bitmap: Bitmap) {
         val disposable = imageToCodeConverter.convert(bitmap)
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableObserver<RawBarcode>() {
                 override fun onComplete() {
                 }
@@ -44,7 +45,7 @@ class ImageConvertViewModel(private val imageToCodeConverter: ImageToCodeConvert
     }
 }
 
-class ImageConvertModelFactory(@Inject val imageToCodeConverter: ImageToCodeConverter): ViewModelProvider.Factory {
+class ImageConvertModelFactory(val imageToCodeConverter: ImageToCodeConverter): ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return ImageConvertViewModel(imageToCodeConverter) as T
     }

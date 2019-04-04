@@ -26,6 +26,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_capture.*
 import java.lang.IllegalStateException
+import javax.inject.Inject
 
 private const val TAG = "CaptureActivity"
 private const val REQUEST_GALLERY = 2
@@ -34,6 +35,8 @@ private const val REQUEST_CAMERA_PERMISSION_ON_RESUME = 11
 
 class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResultHandler {
 
+    @Inject
+    lateinit var imageToCodeConverter: ImageToCodeConverter
     @VisibleForTesting
     var newWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private lateinit var model : ImageConvertViewModel
@@ -42,6 +45,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_capture)
         setSupportActionBar(toolbar)
+        App.component().inject(this)
         initViewModel()
         newWidgetId = getWidgetIdFromIntent(intent)
         updateWidgetTextView.visibility =
@@ -54,7 +58,8 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     private fun initViewModel() {
-        model = ViewModelProviders.of(this).get(ImageConvertViewModel::class.java)
+        model = ViewModelProviders.of(this, ImageConvertModelFactory(imageToCodeConverter))
+            .get(ImageConvertViewModel::class.java)
         model.observe(this, Observer { convertResponse ->
             when {
                 convertResponse.barcode != null -> {
