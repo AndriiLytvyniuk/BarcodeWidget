@@ -46,8 +46,9 @@ class ZxingImageToCodeConverter @Inject constructor(looper: Looper) : ImageToCod
 
     @Throws(Exception::class)
     override fun convert(bitmap: Bitmap): Observable<RawBarcode> {
-        return Observable.just(convertBitmapToBarcode(bitmap))
-
+        return Observable.fromCallable {
+            convertBitmapToBarcode(bitmap)
+        }
     }
 
     @Throws(Exception::class)
