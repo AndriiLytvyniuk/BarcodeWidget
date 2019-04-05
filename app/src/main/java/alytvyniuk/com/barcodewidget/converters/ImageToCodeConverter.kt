@@ -3,6 +3,7 @@ package alytvyniuk.com.barcodewidget.converters
 import alytvyniuk.com.barcodewidget.model.Format
 import alytvyniuk.com.barcodewidget.model.RawBarcode
 import android.graphics.Bitmap
+import android.net.Uri
 import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
 import io.reactivex.Observable
@@ -11,10 +12,16 @@ import javax.inject.Singleton
 
 private const val TAG = "ImageToCode"
 
-interface ImageToCodeConverter : Converter<Bitmap, Observable<RawBarcode>>
+interface ImageToCodeConverter : Converter<Bitmap, Observable<RawBarcode>> {
+
+    fun convert(uri: Uri)
+}
 
 @Singleton
 class ZxingImageToCodeConverter @Inject constructor() : ImageToCodeConverter {
+    override fun convert(uri: Uri) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     companion object {
         fun zxingBarcodeToBarcode(zxingResult: Result) =

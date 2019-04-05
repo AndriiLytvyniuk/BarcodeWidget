@@ -3,13 +3,17 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.model.RawBarcode
 import alytvyniuk.com.barcodewidget.utils.ReusableCompositeDisposable
+import android.app.Application
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.annotation.NonNull
 import androidx.lifecycle.*
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class ImageConvertViewModel(private val imageToCodeConverter: ImageToCodeConverter) : ViewModel() {
+class ImageConvertViewModel(application: Application,
+                            private val imageToCodeConverter: ImageToCodeConverter) : AndroidViewModel(application) {
 
     private val liveData: MutableLiveData<ConvertResponse> = MutableLiveData()
     private val reusableDisposable = ReusableCompositeDisposable()
@@ -18,8 +22,18 @@ class ImageConvertViewModel(private val imageToCodeConverter: ImageToCodeConvert
         liveData.observe(owner, observer)
     }
 
+    fun performConversion(uri: Uri) {
+        executeConversion(Observable.fromCallable {
+            getApplication<Application>().getBitmapForImageUri(uri)
+        }.flatMap { bitmap -> imageToCodeConverter.convert(bitmap) })
+    }
+
     fun performConversion(bitmap: Bitmap) {
-        val disposable = imageToCodeConverter.convert(bitmap)
+        executeConversion(imageToCodeConverter.convert(bitmap))
+    }
+
+    private fun executeConversion(observable: Observable<RawBarcode>) {
+        val disposable = observable
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ rawBarcode ->
@@ -36,9 +50,9 @@ class ImageConvertViewModel(private val imageToCodeConverter: ImageToCodeConvert
     }
 }
 
-class ImageConvertModelFactory(private val imageToCodeConverter: ImageToCodeConverter) : ViewModelProvider.Factory {
+class ImageConvertModelFactory(private val application: Application, private val imageToCodeConverter: ImageToCodeConverter) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return ImageConvertViewModel(imageToCodeConverter) as T
+        return ImageConvertViewModel(application, imageToCodeConverter) as T
     }
 }
 
