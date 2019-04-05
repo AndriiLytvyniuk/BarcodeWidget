@@ -15,6 +15,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_barcode_list.*
 import javax.inject.Inject
 
@@ -68,18 +70,23 @@ class ListActivity : DisposeActivity(), OnItemClickListener {
     }
 
     private fun updateUI() {
-        val barcodes = barcodeDao.loadAll()
-        Log.d(TAG, "updateUI: ${barcodes.size}")
-        if (barcodes.isEmpty()) {
-            noBarcodesTextView.visibility = View.VISIBLE
-            barcodeListView.visibility = View.GONE
-        } else {
-            noBarcodesTextView.visibility = View.GONE
-            barcodeListView.visibility = View.VISIBLE
-            adapter.setBarcodes(barcodes)
-            adapter.setOnItemClickListener(this)
-            adapter.notifyDataSetChanged()
-        }
+        noBarcodesTextView.visibility = View.GONE
+        barcodeListView.visibility = View.GONE
+        addDisposable(barcodeDao.loadAll()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { barcodes ->
+                Log.d(TAG, "updateUI: ${barcodes.size}")
+                if (barcodes.isEmpty()) {
+                    noBarcodesTextView.visibility = View.VISIBLE
+                } else {
+                    barcodeListView.visibility = View.VISIBLE
+                    adapter.setBarcodes(barcodes)
+                    adapter.setOnItemClickListener(this)
+                    adapter.notifyDataSetChanged()
+                }
+            }
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

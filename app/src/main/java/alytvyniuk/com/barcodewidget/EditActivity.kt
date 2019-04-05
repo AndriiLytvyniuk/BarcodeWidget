@@ -19,6 +19,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.ContextCompat
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -38,7 +39,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
 
         /**
          * If @param barcode and widgetId are valid, means edit.
-         * If barcode is valid, and widgetId is not, means create new and save
+         * If barcode is valid, and widgetId is not, means create new and saveAndExit
          */
         fun intent(context: Context,
                    barcode: Barcode,
@@ -86,15 +87,30 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
         colorFrameView.setBackgroundColor(color)
     }
 
-    private fun save(barcode: Barcode) {
+    private fun saveAndExit(barcode: Barcode) {
         val id = initialBarcode.id
-        if (id == BarcodeDao.INVALID_DB_ID) {
+        val observable = if (id == BarcodeDao.INVALID_DB_ID) {
             Log.d(TAG, "Save new barcode: $barcode")
             barcodeDao.insert(barcode)
         } else {
             Log.d(TAG, "Update barcode: $barcode")
             barcodeDao.update(barcode)
         }
+        addDisposable(observable.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                exitAfterSaved(barcode)
+            }
+        )
+    }
+
+    private fun exitAfterSaved(barcode: Barcode) {
+        if (newWidgetId.isValidWidgetId()) {
+            updateWidgetProvider(newWidgetId)
+        }
+        val result = Intent().putExtra(KEY_BARCODE, barcode)
+        setResult(Activity.RESULT_OK, result)
+        finish()
     }
 
     private fun updateWidgetProvider(widgetId : Int) {
@@ -105,18 +121,11 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.confirmButton -> {
-                //TODO take rawBarcode value from UI
                 val barcode = initialBarcode
                 barcode.title = titleEditText.text.toString()
                 barcode.widgetId = newWidgetId
                 barcode.color = color
-                save(barcode)
-                if (newWidgetId.isValidWidgetId()) {
-                    updateWidgetProvider(newWidgetId)
-                }
-                val result = Intent().putExtra(KEY_BARCODE, barcode)
-                setResult(Activity.RESULT_OK, result)
-                finish()
+                saveAndExit(barcode)
             }
         }
     }
@@ -139,7 +148,10 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
         when(item.itemId) {
             R.id.delete -> {
                 barcodeDao.delete(initialBarcode)
-                finish()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe {
+                        finish()
+                    }
             }
         }
         return super.onOptionsItemSelected(item)

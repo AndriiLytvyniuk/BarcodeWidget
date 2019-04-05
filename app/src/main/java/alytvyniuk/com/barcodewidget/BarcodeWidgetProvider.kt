@@ -48,7 +48,7 @@ open class BarcodeWidgetProvider : AppWidgetProvider() {
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId : Int) {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
-        val barcode = barcodeDao.loadBarcodeEntity(widgetId)
+        val barcode = barcodeDao.loadBarcodeEntity(widgetId).blockingFirst()
         Log.d(TAG, "Update widget for id $widgetId, rawBarcode = $barcode")
         barcode?.let {
             val bitmap = codeToImageConverter.convert(barcode.rawBarcode).blockingFirst()
@@ -84,7 +84,7 @@ open class BarcodeWidgetProvider : AppWidgetProvider() {
         super.onDeleted(context, appWidgetIds)
         Log.d(TAG, "onDeleted: ${appWidgetIds.contentToString()}")
         for (widgetId in appWidgetIds) {
-            val res = barcodeDao.eraseWidgetId(widgetId)
+            val res = barcodeDao.eraseWidgetId(widgetId).blockingFirst()
             if (res != 1) {
                 Log.e(TAG, "Incorrect widget delete. Deleted: $res")
             }
