@@ -4,6 +4,7 @@ import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
+import alytvyniuk.com.barcodewidget.utils.DisposeActivity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -12,7 +13,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_barcode_list.*
@@ -22,7 +22,7 @@ private const val TAG = "ListActivity"
 private const val REQUEST_UPDATE_WIDGET = 1
 private const val REQUEST_SHOW = 2
 
-class ListActivity : AppCompatActivity(), OnItemClickListener {
+class ListActivity : DisposeActivity(), OnItemClickListener {
 
     companion object {
         fun intent(context: Context, widgetId : Int = AppWidgetManager.INVALID_APPWIDGET_ID) : Intent {
@@ -44,7 +44,7 @@ class ListActivity : AppCompatActivity(), OnItemClickListener {
         barcodeListView.layoutManager = LinearLayoutManager(this)
         barcodeListView.addItemDecoration(
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        adapter = BarcodeAdapter(codeToImageConverter)
+        adapter = BarcodeAdapter(codeToImageConverter, getReusableCompositeDisposable())
         barcodeListView.adapter = adapter
     }
 

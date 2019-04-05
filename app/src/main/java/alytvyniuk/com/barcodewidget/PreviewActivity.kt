@@ -3,15 +3,15 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.EditActivity.Companion.REQUEST_EDIT_ACTIVITY
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
+import alytvyniuk.com.barcodewidget.utils.DisposeActivity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_preview.*
 import javax.inject.Inject
 
-class PreviewActivity : AppCompatActivity() {
+class PreviewActivity : DisposeActivity() {
 
     companion object {
         fun intent(context: Context, barcode: Barcode): Intent {
@@ -33,8 +33,8 @@ class PreviewActivity : AppCompatActivity() {
     }
 
     private fun updateView(barcode: Barcode) {
-        val bitmap = codeToImageConverter.convert(barcode.rawBarcode)
-        barcodeImageView.setImageBitmap(bitmap)
+        val disposable = barcodeImageView.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
+        addDisposable(disposable)
         dataTextView.text = barcode.rawBarcode.value
         titleTextView.text = barcode.title
         colorFrameView.setBackgroundColor(barcode.color ?: Color.TRANSPARENT)

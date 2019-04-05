@@ -3,7 +3,9 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
+import alytvyniuk.com.barcodewidget.model.RawBarcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
+import alytvyniuk.com.barcodewidget.utils.DisposeActivity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -14,11 +16,13 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit.*
-import java.lang.IllegalStateException
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -27,7 +31,7 @@ private const val KEY_WIDGET_ID = "KEY_WIDGET_ID"
 private const val KEY_BARCODE = "KEY_BARCODE"
 private const val COLORS_NUMBER = 12
 
-class EditActivity : AppCompatActivity(), View.OnClickListener {
+class EditActivity : DisposeActivity(), View.OnClickListener {
 
     companion object {
         const val REQUEST_EDIT_ACTIVITY = 4
@@ -74,8 +78,8 @@ class EditActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initUI(barcode: Barcode) {
-        val bitmap = codeToImageConverter.convert(barcode.rawBarcode)
-        barcodeImage.setImageBitmap(bitmap)
+        val disposable = barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
+        addDisposable(disposable)
         dataTextView.text = barcode.rawBarcode.value
         formatTextView.text = barcode.rawBarcode.format.toString()
         titleEditText.setText(initialBarcode.title)
@@ -166,5 +170,16 @@ object BarcodeActivityHelper {
 fun Intent.getWidgetId() = getIntExtra(KEY_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
 
 fun Intent.getBarcode() : Barcode = getParcelableExtra(KEY_BARCODE)
+
+fun ImageView.setImageFromBarcode(codeToImageConverter: CodeToImageConverter, rawBarcode : RawBarcode) : Disposable {
+    visibility = View.INVISIBLE
+    return codeToImageConverter.convert(rawBarcode)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { bitmap ->
+            setImageBitmap(bitmap)
+            visibility = View.VISIBLE
+        }
+}
 
 

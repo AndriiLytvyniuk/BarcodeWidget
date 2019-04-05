@@ -51,7 +51,7 @@ open class BarcodeWidgetProvider : AppWidgetProvider() {
         val barcode = barcodeDao.loadBarcodeEntity(widgetId)
         Log.d(TAG, "Update widget for id $widgetId, rawBarcode = $barcode")
         barcode?.let {
-            val bitmap = codeToImageConverter.convert(barcode.rawBarcode)
+            val bitmap = codeToImageConverter.convert(barcode.rawBarcode).blockingFirst()
             remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmap)
             remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
             val frameBitmap = createFrameBitmap(bitmap.width, bitmap.height, barcode.color ?: Color.TRANSPARENT)

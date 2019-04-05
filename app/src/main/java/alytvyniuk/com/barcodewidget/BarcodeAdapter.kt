@@ -3,6 +3,7 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
+import alytvyniuk.com.barcodewidget.utils.ReusableCompositeDisposable
 import android.graphics.Color
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -11,7 +12,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.barcode_list_item.view.*
 
-class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter)
+class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter,
+                     private val reusableDisposable: ReusableCompositeDisposable)
     : RecyclerView.Adapter<BarcodeAdapter.BarcodeItemHolder>() {
 
     private var barcodes : List<Barcode> = listOf()
@@ -41,8 +43,9 @@ class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter)
         fun bind(item: Barcode) {
             itemView.setOnClickListener(this)
             itemView.dataTextView.text = item.rawBarcode.value
-            val bitmap = codeToImageConverter.convert(item.rawBarcode)
-            itemView.barcodeImageView.setImageBitmap(bitmap)
+
+            val disposable = itemView.barcodeImageView.setImageFromBarcode(codeToImageConverter, item.rawBarcode)
+            reusableDisposable.add(disposable)
             if (TextUtils.isEmpty(item.title)) {
                 itemView.titleTextView.visibility = View.INVISIBLE
             } else {

@@ -6,22 +6,25 @@ import android.graphics.Bitmap
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val IMAGE_SIZE = 200
 
-interface CodeToImageConverter : Converter<RawBarcode, Bitmap>
+interface CodeToImageConverter : Converter<RawBarcode, Observable<Bitmap>>
 
 @Singleton
 class ZXingCodeToImageConverter @Inject constructor(): CodeToImageConverter {
 
-    override fun convert(rawBarcode: RawBarcode): Bitmap {
+    override fun convert(rawBarcode: RawBarcode): Observable<Bitmap> {
         val multiFormatWriter = MultiFormatWriter()
         val format = mapFormat(rawBarcode.format)
         val bitMatrix = multiFormatWriter.encode(rawBarcode.value, format, IMAGE_SIZE, IMAGE_SIZE)
         val barcodeEncoder = BarcodeEncoder()
-        return barcodeEncoder.createBitmap(bitMatrix)
+        return Observable.fromCallable {
+            barcodeEncoder.createBitmap(bitMatrix)
+        }
     }
 
     private fun mapFormat(format: Format) =
