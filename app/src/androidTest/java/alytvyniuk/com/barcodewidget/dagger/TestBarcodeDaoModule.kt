@@ -2,10 +2,9 @@ package alytvyniuk.com.barcodewidget.dagger
 
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
-import alytvyniuk.com.barcodewidget.model.Format
-import alytvyniuk.com.barcodewidget.model.RawBarcode
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Observable
 import javax.inject.Singleton
 
 @Module
@@ -19,7 +18,6 @@ class TestBarcodeDaoModule {
 }
 
 class BarcodeDaoMock : BarcodeDao {
-
     companion object {
         private val barcodes = mutableListOf<Barcode>()
 
@@ -30,27 +28,28 @@ class BarcodeDaoMock : BarcodeDao {
     }
 
 
-    override fun insert(barcode: Barcode) {
-        barcodes.add(barcode)
+    override fun insert(barcode: Barcode): Observable<Unit> = Observable.fromCallable {
+            barcodes.add(barcode)
+            return@fromCallable
+        }
+
+    override fun loadBarcodeEntity(widgetId: Int): Observable<Barcode?> = Observable.fromCallable {
+        if (barcodes.isEmpty()) null else barcodes[0]
     }
 
-    override fun loadBarcodeEntity(widgetId: Int): Barcode? {
-        return if (barcodes.isEmpty()) null else barcodes[0]
+    override fun loadAll(): Observable<List<Barcode>> = Observable.fromCallable {
+        barcodes
     }
 
-    override fun loadAll(): List<Barcode> {
-        return barcodes
-    }
-
-    override fun update(barcode: Barcode) {
+    override fun update(barcode: Barcode): Observable<Unit> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun eraseWidgetId(widgetId: Int): Int {
+    override fun eraseWidgetId(widgetId: Int): Observable<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun delete(barcode: Barcode): Int {
+    override fun delete(barcode: Barcode): Observable<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
