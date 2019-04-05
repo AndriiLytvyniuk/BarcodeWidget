@@ -1,25 +1,20 @@
 package alytvyniuk.com.barcodewidget.converters
 
-import alytvyniuk.com.barcodewidget.model.RawBarcode
 import alytvyniuk.com.barcodewidget.model.Format
+import alytvyniuk.com.barcodewidget.model.RawBarcode
 import android.graphics.Bitmap
-import android.os.Looper
 import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
 import io.reactivex.Observable
-import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val TAG = "ImageToCode"
-abstract class ImageToCodeConverter (looper: Looper) : AsyncConverter<Bitmap, RawBarcode>(looper) {
 
-    @Throws(Exception::class)
-    abstract fun convert(bitmap: Bitmap) : Observable<RawBarcode>
-}
+interface ImageToCodeConverter : Converter<Bitmap, Observable<RawBarcode>>
 
 @Singleton
-class ZxingImageToCodeConverter @Inject constructor(looper: Looper) : ImageToCodeConverter(looper) {
+class ZxingImageToCodeConverter @Inject constructor() : ImageToCodeConverter {
 
     companion object {
         fun zxingBarcodeToBarcode(zxingResult: Result) =
@@ -61,14 +56,5 @@ class ZxingImageToCodeConverter @Inject constructor(looper: Looper) : ImageToCod
         val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
         val result = MultiFormatReader().decode(binaryBitmap)
         return zxingBarcodeToBarcode(result)
-    }
-
-    override fun performConversion(bitmap: Bitmap, id: Int) {
-        try {
-            val barcode = convertBitmapToBarcode(bitmap)
-            sendResult(barcode, id)
-        } catch (e: Exception) {
-            sendError(e, id)
-        }
     }
 }

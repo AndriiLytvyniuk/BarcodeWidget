@@ -7,14 +7,14 @@ import alytvyniuk.com.barcodewidget.converters.ZxingImageToCodeConverter
 import dagger.Binds
 import dagger.Module
 
-@Module(includes = [MainLooperModule::class])
+@Module
 abstract class CodeToImageConverterModule {
 
     @Binds
     abstract fun provideCodeToImageConverter(codeToImageConverter: ZXingCodeToImageConverter) : CodeToImageConverter
 }
 
-@Module(includes = [MainLooperModule::class])
+@Module
 abstract class ImageToCodeConverterModule {
 
     @Binds

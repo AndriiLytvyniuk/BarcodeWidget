@@ -9,8 +9,8 @@ import javax.inject.Singleton
 @Component(
     modules = [MainLooperModule::class,
         TestBarcodeDaoModule::class,
-        CodeToImageConverterModule::class,
-        ImageToCodeConverterModule::class]
+        ImageConverterFactoryModule::class,
+        CodeToImageConverterModule::class]
 )
 interface TestAppComponent : AppComponent {
 
