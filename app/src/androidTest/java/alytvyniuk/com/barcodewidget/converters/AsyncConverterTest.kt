@@ -1,5 +1,6 @@
 package alytvyniuk.com.barcodewidget.converters
 
+import alytvyniuk.com.barcodewidget.App
 import alytvyniuk.com.barcodewidget.dagger.DaggerTestAppComponent
 import android.os.Looper
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -7,7 +8,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.Exception
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -18,8 +18,7 @@ class AsyncConverterTest {
 
     @Before
     fun before() {
-        val component = DaggerTestAppComponent.builder().build()
-        component.inject(this)
+        (App.component() as DaggerTestAppComponent).inject(this)
         asyncConverter = TestAsyncConverter(looper)
     }
 
