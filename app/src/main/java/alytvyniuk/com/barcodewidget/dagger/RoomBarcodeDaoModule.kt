@@ -2,7 +2,7 @@ package alytvyniuk.com.barcodewidget.dagger
 
 import alytvyniuk.com.barcodewidget.db.BarcodeDB
 import alytvyniuk.com.barcodewidget.db.RoomBarcodeDao
-import android.content.Context
+import android.app.Application
 import androidx.annotation.NonNull
 import androidx.room.Room
 import dagger.Module
@@ -17,8 +17,8 @@ class RoomBarcodeDaoModule {
     @Provides
     @Singleton
     @NonNull
-    fun providesRoomBarcodeDao(context: Context) : RoomBarcodeDao {
-        return Room.databaseBuilder(context, BarcodeDB::class.java, DB_NAME)
+    fun providesRoomBarcodeDao(application: Application) : RoomBarcodeDao {
+        return Room.databaseBuilder(application, BarcodeDB::class.java, DB_NAME)
             .allowMainThreadQueries()
             .build()
             .getDao()

@@ -48,5 +48,4 @@ class EditActivityTest {
         launchAsSave()
         onView(withId(R.id.dataTextView)).check(matches(withText(testBarcodeTemplate.rawBarcode.value)))
     }
-
 }

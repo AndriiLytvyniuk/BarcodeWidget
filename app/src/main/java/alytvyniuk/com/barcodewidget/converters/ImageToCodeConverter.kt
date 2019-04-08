@@ -3,7 +3,11 @@ package alytvyniuk.com.barcodewidget.converters
 import alytvyniuk.com.barcodewidget.model.Format
 import alytvyniuk.com.barcodewidget.model.RawBarcode
 import android.graphics.Bitmap
-import com.google.zxing.*
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.Result
+import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import io.reactivex.Observable
 import javax.inject.Inject

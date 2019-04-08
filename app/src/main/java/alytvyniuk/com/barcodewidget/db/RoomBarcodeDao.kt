@@ -1,8 +1,11 @@
 package alytvyniuk.com.barcodewidget.db
 
-import alytvyniuk.com.barcodewidget.model.Barcode
 import android.appwidget.AppWidgetManager
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface RoomBarcodeDao {

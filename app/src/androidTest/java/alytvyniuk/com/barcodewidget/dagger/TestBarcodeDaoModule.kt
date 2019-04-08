@@ -2,8 +2,6 @@ package alytvyniuk.com.barcodewidget.dagger
 
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
-import alytvyniuk.com.barcodewidget.model.Format
-import alytvyniuk.com.barcodewidget.model.RawBarcode
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable

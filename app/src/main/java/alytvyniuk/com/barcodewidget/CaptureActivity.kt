@@ -98,13 +98,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
 
     private fun handleViewImage() {
         if (intent.data != null) {
-            val bitmap = getBitmapForImageUri(intent.data)
-            if (bitmap != null) {
-                performImageToBarcodeConversion(bitmap)
-            } else {
-                // TODO error message
-                Log.e(TAG, "Couldn't get bitmap from ACTION_VIEW")
-            }
+            performImageToBarcodeConversion(intent.data)
         } else {
             // TODO error message
             Log.e(TAG, "Couldn't get image from ACTION_VIEW null uri")
@@ -114,13 +108,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     private fun handleGalleryResult(resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             if (data != null && data.data != null) {
-                val bitmap = getBitmapForImageUri(data.data)
-                if (bitmap != null) {
-                    performImageToBarcodeConversion(bitmap)
-                } else {
-                    // TODO error message
-                    Log.e(TAG, "Couldn't get bitmap from gallery image")
-                }
+                performImageToBarcodeConversion(data.data)
             } else {
                 // TODO error message
                 Log.e(TAG, "Couldn't get image from gallery null uri")
@@ -140,9 +128,9 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         }
     }
 
-    private fun performImageToBarcodeConversion(bitmap: Bitmap) {
+    private fun performImageToBarcodeConversion(uri: Uri) {
         showProgress()
-        model.performConversion(bitmap)
+        model.performConversion(uri)
     }
 
     override fun onBarcodeResult(rawBarcode: RawBarcode) {
