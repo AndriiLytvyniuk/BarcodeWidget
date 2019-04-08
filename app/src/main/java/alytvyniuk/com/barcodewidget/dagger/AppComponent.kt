@@ -1,6 +1,10 @@
 package alytvyniuk.com.barcodewidget.dagger
 
-import alytvyniuk.com.barcodewidget.*
+import alytvyniuk.com.barcodewidget.BarcodeWidgetProvider
+import alytvyniuk.com.barcodewidget.CaptureActivity
+import alytvyniuk.com.barcodewidget.EditActivity
+import alytvyniuk.com.barcodewidget.ListActivity
+import alytvyniuk.com.barcodewidget.PreviewActivity
 import dagger.Component
 import javax.inject.Singleton
 

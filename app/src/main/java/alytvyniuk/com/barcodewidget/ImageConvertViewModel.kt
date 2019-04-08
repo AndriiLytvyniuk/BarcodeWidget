@@ -7,7 +7,12 @@ import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.annotation.NonNull
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -50,7 +55,8 @@ class ImageConvertViewModel(application: Application,
     }
 }
 
-class ImageConvertModelFactory(private val application: Application, private val imageToCodeConverter: ImageToCodeConverter) : ViewModelProvider.Factory {
+class ImageConvertModelFactory(private val application: Application,
+                               private val imageToCodeConverter: ImageToCodeConverter) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return ImageConvertViewModel(application, imageToCodeConverter) as T
     }

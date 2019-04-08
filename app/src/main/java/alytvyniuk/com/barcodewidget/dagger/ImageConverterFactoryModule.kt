@@ -12,7 +12,8 @@ class ImageConverterFactoryModule {
 
     @Provides
     @Singleton
-    fun provideCodeToImageConverter(application: Application, imageToCodeConverter: ZxingImageToCodeConverter) : ImageConvertModelFactory {
+    fun provideCodeToImageConverter(application: Application,
+                                    imageToCodeConverter: ZxingImageToCodeConverter) : ImageConvertModelFactory {
         return ImageConvertModelFactory(application, imageToCodeConverter)
     }
 }
