@@ -7,4 +7,7 @@
     <string name="initialize_widget">Choose barcode for your widget</string>
     <string name="set_title">Set title</string>
     <string name="no_barcodes">There are no barcodes added</string>
+    <string name="data_title">Data</string>
+    <string name="title">Title</string>
+    <string name="barcode_format">Format</string>
 </resources>

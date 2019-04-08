@@ -54,6 +54,8 @@
             app:layout_constraintStart_toStartOf="@+id/backgroundView"
             android:layout_marginTop="8dp"
             android:maxLines="3"
+            android:textColorLink="@color/link_color"
+            android:autoLink="web"
             android:ellipsize="end"
             app:layout_constraintTop_toBottomOf="@+id/colorFrameView"
             android:layout_marginBottom="8dp"

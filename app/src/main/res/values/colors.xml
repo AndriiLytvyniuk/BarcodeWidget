@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="transparent_grey">#00000033</color>
+    <color name="link_color">#0000FF</color>
 
     <color name="choice_color_0">#FF0000</color>
     <color name="choice_color_1">#800000</color>
