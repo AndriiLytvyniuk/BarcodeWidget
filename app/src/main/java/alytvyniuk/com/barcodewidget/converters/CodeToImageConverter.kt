@@ -27,6 +27,7 @@ class ZXingCodeToImageConverter @Inject constructor(): CodeToImageConverter {
         }
     }
 
+    @SuppressWarnings("ComplexMethod")
     private fun mapFormat(format: Format) =
         when (format) {
             Format.QR_CODE -> BarcodeFormat.QR_CODE

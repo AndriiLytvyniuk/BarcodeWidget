@@ -30,6 +30,7 @@ private const val REQUEST_GALLERY = 2
 private const val REQUEST_LIST_ACTIVITY = 3
 private const val REQUEST_CAMERA_PERMISSION_ON_RESUME = 11
 
+@SuppressWarnings("TooManyFunctions")
 class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResultHandler {
 
     @Inject

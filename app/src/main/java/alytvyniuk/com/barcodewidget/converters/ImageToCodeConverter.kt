@@ -24,6 +24,7 @@ class ZxingImageToCodeConverter @Inject constructor() : ImageToCodeConverter {
         fun zxingBarcodeToBarcode(zxingResult: Result) =
             RawBarcode(mapFormat(zxingResult.barcodeFormat), zxingResult.text)
 
+        @SuppressWarnings("ComplexMethod")
         private fun mapFormat(zxingFormat: BarcodeFormat) =
             when (zxingFormat) {
                 BarcodeFormat.QR_CODE -> Format.QR_CODE
