@@ -13,8 +13,8 @@ interface RoomBarcodeDao {
     @Insert
     fun insert(barcode: RoomBarcode)
 
-    @Query("SELECT * FROM RoomBarcode WHERE widgetId = :widgetId")
-    fun loadBarcodeEntity(widgetId: Int) : RoomBarcode?
+    @Query("SELECT * FROM RoomBarcode WHERE widgetId IN (:widgetIds)")
+    fun loadBarcodeEntities(widgetIds: List<Int>) : List<RoomBarcode>
 
     @Query("SELECT * FROM RoomBarcode")
     fun loadAll() : List<RoomBarcode>

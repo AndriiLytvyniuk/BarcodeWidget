@@ -33,8 +33,8 @@ class BarcodeDaoMock : BarcodeDao {
             return@fromCallable
         }
 
-    override fun loadBarcodeEntity(widgetId: Int): Observable<Barcode?> = Observable.fromCallable {
-        if (barcodes.isEmpty()) null else barcodes[0]
+    override fun loadBarcodeEntities(widgetIds: List<Int>): Observable<List<Barcode>> = Observable.fromCallable {
+        barcodes.subList(0, widgetIds.size)
     }
 
     override fun loadAll(): Observable<List<Barcode>> = Observable.fromCallable {

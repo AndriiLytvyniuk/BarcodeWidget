@@ -41,28 +41,21 @@ open class BarcodeWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         Log.d(TAG, "onUpdate ${appWidgetIds.size}")
-        for (widgetId in appWidgetIds) {
-            updateWidget(context, appWidgetManager, widgetId)
+        val barcodes = barcodeDao.loadBarcodeEntities(appWidgetIds.asList()).blockingFirst()
+        for (barcode in barcodes) {
+            updateWidget(context, appWidgetManager, barcode)
         }
     }
 
-    private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId : Int) {
+    private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, barcode: Barcode) {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
-        try {
-            //TODO Deal with null in javarx
-            val barcode = barcodeDao.loadBarcodeEntity(widgetId).blockingFirst()
-            Log.d(TAG, "Update widget for id $widgetId, rawBarcode = $barcode")
-            barcode?.let {
-                val bitmap = codeToImageConverter.convert(barcode.rawBarcode).blockingFirst()
-                remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmap)
-                remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
-                val frameBitmap = createFrameBitmap(bitmap.width, bitmap.height, barcode.color ?: Color.TRANSPARENT)
-                remoteViews.setBitmap(R.id.frameImageView, "setImageBitmap", frameBitmap)
-                appWidgetManager.updateAppWidget(widgetId, remoteViews)
-            }
-        } catch (e : NoSuchElementException) {
-
-        }
+        Log.d(TAG, "Update widget for id ${barcode.widgetId}, rawBarcode = $barcode")
+        val bitmap = codeToImageConverter.convert(barcode.rawBarcode).blockingFirst()
+        remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmap)
+        remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
+        val frameBitmap = createFrameBitmap(bitmap.width, bitmap.height, barcode.color ?: Color.TRANSPARENT)
+        remoteViews.setBitmap(R.id.frameImageView, "setImageBitmap", frameBitmap)
+        appWidgetManager.updateAppWidget(barcode.widgetId, remoteViews)
     }
 
     /**

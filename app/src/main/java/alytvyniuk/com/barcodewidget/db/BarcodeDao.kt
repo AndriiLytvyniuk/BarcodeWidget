@@ -1,7 +1,6 @@
 package alytvyniuk.com.barcodewidget.db
 
 import alytvyniuk.com.barcodewidget.model.Barcode
-import io.reactivex.Maybe
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,7 +11,7 @@ interface BarcodeDao {
     }
 
     fun insert(barcode: Barcode): Observable<Unit>
-    fun loadBarcodeEntity(widgetId: Int): Observable<Barcode?>
+    fun loadBarcodeEntities(widgetIds: List<Int>): Observable<List<Barcode>>
     fun loadAll(): Observable<List<Barcode>>
     fun update(barcode: Barcode): Observable<Unit>
     fun eraseWidgetId(widgetId: Int): Observable<Int>
@@ -27,10 +26,10 @@ class RoomBarcodeDaoImpl @Inject constructor(private val roomBarcodeDao: RoomBar
         roomBarcodeDao.insert(roomEntity)
     }
 
-    override fun loadBarcodeEntity(widgetId: Int): Observable<Barcode?> = Maybe.fromCallable {
-        val roomEntity = roomBarcodeDao.loadBarcodeEntity(widgetId)
-        roomEntity?.toBarcodeEntity()
-    }.toObservable()
+    override fun loadBarcodeEntities(widgetIds: List<Int>): Observable<List<Barcode>> = Observable.fromCallable {
+        val roomEntities = roomBarcodeDao.loadBarcodeEntities(widgetIds)
+        roomEntities.map { it.toBarcodeEntity() }
+    }
 
     override fun loadAll(): Observable<List<Barcode>> = Observable.fromCallable {
         val entities = roomBarcodeDao.loadAll()
