@@ -14,7 +14,7 @@ interface BarcodeDao {
     fun loadBarcodeEntities(widgetIds: List<Int>): Observable<List<Barcode>>
     fun loadAll(): Observable<List<Barcode>>
     fun update(barcode: Barcode): Observable<Unit>
-    fun eraseWidgetId(widgetId: Int): Observable<Int>
+    fun eraseWidgetIds(widgetIds: List<Int>): Observable<Int>
     fun delete(barcode: Barcode): Observable<Int>
 }
 
@@ -41,8 +41,8 @@ class RoomBarcodeDaoImpl @Inject constructor(private val roomBarcodeDao: RoomBar
         roomBarcodeDao.update(roomEntity)
     }
 
-    override fun eraseWidgetId(widgetId: Int): Observable<Int> = Observable.fromCallable {
-        roomBarcodeDao.eraseWidgetId(widgetId)
+    override fun eraseWidgetIds(widgetIds: List<Int>): Observable<Int> = Observable.fromCallable {
+        roomBarcodeDao.eraseWidgetIds(widgetIds)
     }
 
     override fun delete(barcode: Barcode): Observable<Int> = Observable.fromCallable {

@@ -18,6 +18,7 @@ class TestBarcodeDaoModule {
 }
 
 class BarcodeDaoMock : BarcodeDao {
+
     companion object {
         private val barcodes = mutableListOf<Barcode>()
 
@@ -29,9 +30,9 @@ class BarcodeDaoMock : BarcodeDao {
 
 
     override fun insert(barcode: Barcode): Observable<Unit> = Observable.fromCallable {
-            barcodes.add(barcode)
-            return@fromCallable
-        }
+        barcodes.add(barcode)
+        return@fromCallable
+    }
 
     override fun loadBarcodeEntities(widgetIds: List<Int>): Observable<List<Barcode>> = Observable.fromCallable {
         barcodes.subList(0, widgetIds.size)
@@ -45,9 +46,10 @@ class BarcodeDaoMock : BarcodeDao {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun eraseWidgetId(widgetId: Int): Observable<Int> {
+    override fun eraseWidgetIds(widgetIds: List<Int>): Observable<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 
     override fun delete(barcode: Barcode): Observable<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

@@ -141,14 +141,10 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
 
     @VisibleForTesting
     fun getWidgetIdFromIntent(intent: Intent) : Int {
-        val extras = intent.extras
-        if (extras != null) {
-            return extras.getInt(
-                AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID
-            )
-        }
-        return AppWidgetManager.INVALID_APPWIDGET_ID
+        return intent.getIntExtra(
+            AppWidgetManager.EXTRA_APPWIDGET_ID,
+            AppWidgetManager.INVALID_APPWIDGET_ID
+        )
     }
 
     private fun requestCameraPermission(activity: Activity, requestCode: Int) {

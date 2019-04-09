@@ -22,8 +22,8 @@ interface RoomBarcodeDao {
     @Update
     fun update(barcode: RoomBarcode)
 
-    @Query("UPDATE RoomBarcode SET widgetId = ${AppWidgetManager.INVALID_APPWIDGET_ID} WHERE widgetId = :widgetId")
-    fun eraseWidgetId(widgetId: Int) : Int
+    @Query("UPDATE RoomBarcode SET widgetId = ${AppWidgetManager.INVALID_APPWIDGET_ID} WHERE widgetId IN (:widgetIds)")
+    fun eraseWidgetIds(widgetIds: List<Int>) : Int
 
     @Delete
     fun delete(barcode: RoomBarcode): Int

@@ -62,6 +62,10 @@
                     android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/file_paths"/>
         </provider>
+        <service
+                android:name=".WidgetUpdateService"
+                android:permission="android.permission.BIND_JOB_SERVICE"
+                android:exported="true"/>
     </application>
 
 </manifest>

@@ -19,7 +19,6 @@ class RoomBarcodeDaoModule {
     @NonNull
     fun providesRoomBarcodeDao(application: Application) : RoomBarcodeDao {
         return Room.databaseBuilder(application, BarcodeDB::class.java, DB_NAME)
-            .allowMainThreadQueries()
             .build()
             .getDao()
     }
