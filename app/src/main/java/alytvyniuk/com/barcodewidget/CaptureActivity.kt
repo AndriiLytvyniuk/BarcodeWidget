@@ -189,7 +189,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.about -> {
-
+                startActivity(AboutActivity.intent(this))
             }
         }
         return super.onOptionsItemSelected(item)
