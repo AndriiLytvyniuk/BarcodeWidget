@@ -3,4 +3,5 @@
     <dimen name="list_item_height">80dp</dimen>
     <dimen name="text_size_small_title">22sp</dimen>
     <dimen name="text_size_ordinary">18sp</dimen>
+    <dimen name="social_icon_size">50dp</dimen>
 </resources>
