@@ -32,7 +32,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <ProgressBar
+                    android:visibility="gone"
+                    android:id="@+id/progressCircle"
+                    android:layout_gravity="end"
+                    android:padding="7dp"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="?attr/actionBarSize"/>
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -72,18 +81,5 @@
             android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"/>
-
-    <FrameLayout
-            android:id="@+id/progressLayout"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:background="@color/transparent_grey"
-            android:layout_height="match_parent">
-
-        <ProgressBar
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

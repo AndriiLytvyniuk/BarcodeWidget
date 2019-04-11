@@ -15,6 +15,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
@@ -72,10 +74,12 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         })
     }
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.galleryButton -> dispatchGalleryIntent()
-            R.id.savedButton -> startSavedBarcodesActivity()
+    override fun onClick(v: View) {
+        if (!isProgressShown()) {
+            when (v.id) {
+                R.id.galleryButton -> dispatchGalleryIntent()
+                R.id.savedButton -> startSavedBarcodesActivity()
+            }
         }
     }
 
@@ -135,8 +139,10 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     override fun onBarcodeResult(rawBarcode: RawBarcode) {
-        val barcode = Barcode(rawBarcode)
-        startActivityForResult(EditActivity.intent(this, barcode, newWidgetId), REQUEST_EDIT_ACTIVITY)
+        if (!isProgressShown()) {
+            val barcode = Barcode(rawBarcode)
+            startActivityForResult(EditActivity.intent(this, barcode, newWidgetId), REQUEST_EDIT_ACTIVITY)
+        }
     }
 
     @VisibleForTesting
@@ -163,12 +169,33 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     private fun showProgress() {
-        progressLayout.visibility = View.VISIBLE
+        progressCircle.visibility = View.VISIBLE
+        invalidateOptionsMenu()
     }
 
     private fun hideProgress() {
-        progressLayout.visibility = View.GONE
+        progressCircle.visibility = View.GONE
+        invalidateOptionsMenu()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_about, menu)
+        if (isProgressShown()) {
+            menu.findItem(R.id.about).isVisible = false
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.about -> {
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun isProgressShown() = progressCircle.visibility == View.VISIBLE
 }
 
 interface BarcodeResultHandler {
