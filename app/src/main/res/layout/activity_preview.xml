@@ -8,7 +8,7 @@
         android:orientation="vertical"
         tools:background="@android:color/darker_gray"
         android:layout_height="match_parent"
-        tools:context=".CaptureActivity">
+        tools:context=".PreviewActivity">
 
     <View
             android:id="@+id/backgroundView"
