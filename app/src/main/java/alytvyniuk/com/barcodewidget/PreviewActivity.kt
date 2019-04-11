@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import kotlinx.android.synthetic.main.activity_preview.*
 import javax.inject.Inject
 
@@ -27,9 +28,6 @@ class PreviewActivity : DisposeActivity() {
         App.component().inject(this)
         val barcode = intent.getBarcode()
         updateView(barcode)
-        editButton.setOnClickListener {
-            openEditActivity(barcode)
-        }
     }
 
     private fun updateView(barcode: Barcode) {
@@ -38,6 +36,17 @@ class PreviewActivity : DisposeActivity() {
         dataTextView.text = barcode.rawBarcode.value
         titleTextView.text = barcode.title
         colorFrameView.setBackgroundColor(barcode.color ?: Color.TRANSPARENT)
+
+        val onClickListener = View.OnClickListener { v ->
+            when (v.id) {
+                R.id.editButton -> openEditActivity(barcode)
+                R.id.transparentFrame -> onBackPressed()
+            }
+        }
+        editButton.setOnClickListener(onClickListener)
+        transparentFrame.setOnClickListener(onClickListener)
+        // Prevent close activity on click inside visible area
+        backgroundView.setOnClickListener(onClickListener)
     }
 
     private fun openEditActivity(barcode: Barcode) {
