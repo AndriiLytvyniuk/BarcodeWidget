@@ -91,10 +91,8 @@ class WidgetUpdateService : JobIntentService() {
     }
 
     private fun getOnClickIntent(context: Context, barcode: Barcode): PendingIntent {
-        val stackBuilder = TaskStackBuilder.create(context)
         val intent = PreviewActivity.intent(context, barcode)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        stackBuilder.addNextIntent(intent)
-        return stackBuilder.getPendingIntent(WIDGET_REQUEST_CODE, PendingIntent.FLAG_UPDATE_CURRENT)!!
+        return PendingIntent.getActivity(context, barcode.widgetId, intent, 0)
     }
 }
