@@ -8,9 +8,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_preview.*
 import javax.inject.Inject
+
+private const val TAG = "PreviewActivity"
 
 class PreviewActivity : DisposeActivity() {
 
@@ -31,6 +34,7 @@ class PreviewActivity : DisposeActivity() {
     }
 
     private fun updateView(barcode: Barcode) {
+        Log.d(TAG, "updateView: $barcode")
         val disposable = barcodeImageView.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
         addDisposable(disposable)
         dataTextView.text = barcode.rawBarcode.value
