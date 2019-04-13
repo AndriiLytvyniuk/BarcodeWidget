@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -44,7 +46,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha4'
     implementation 'com.google.android.material:material:1.1.0-alpha05'
     implementation "androidx.lifecycle:lifecycle-extensions:2.1.0-alpha04"
 
@@ -60,6 +62,9 @@ dependencies {
 
     implementation 'com.github.ReactiveX:RxKotlin:2.x-SNAPSHOT'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
 
     kaptAndroidTest 'com.google.dagger:dagger-compiler:2.14.1'
     androidTestImplementation 'junit:junit:4.12'

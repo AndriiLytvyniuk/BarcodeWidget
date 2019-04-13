@@ -5,6 +5,7 @@ libs
 obj
 lint.xml
 local.properties
+google-services.json
 
 # IntelliJ IDEA
 .idea
