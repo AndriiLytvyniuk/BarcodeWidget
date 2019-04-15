@@ -4,7 +4,6 @@ import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.model.RawBarcode
 import alytvyniuk.com.barcodewidget.utils.ReusableCompositeDisposable
 import android.app.Application
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.annotation.NonNull
 import androidx.lifecycle.AndroidViewModel
@@ -33,10 +32,6 @@ class ImageConvertViewModel(application: Application,
         }.flatMap { bitmap -> imageToCodeConverter.convert(bitmap) })
     }
 
-    fun performConversion(bitmap: Bitmap) {
-        executeConversion(imageToCodeConverter.convert(bitmap))
-    }
-
     private fun executeConversion(observable: Observable<RawBarcode>) {
         val disposable = observable
             .subscribeOn(Schedulers.io())
@@ -57,6 +52,7 @@ class ImageConvertViewModel(application: Application,
 
 class ImageConvertModelFactory(private val application: Application,
                                private val imageToCodeConverter: ImageToCodeConverter) : ViewModelProvider.Factory {
+    @SuppressWarnings("unchecked")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return ImageConvertViewModel(application, imageToCodeConverter) as T
     }

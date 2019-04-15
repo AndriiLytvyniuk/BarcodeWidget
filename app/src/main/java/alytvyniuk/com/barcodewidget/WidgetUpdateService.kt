@@ -14,13 +14,11 @@ import android.graphics.Paint
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.JobIntentService
-import androidx.core.app.TaskStackBuilder
 import javax.inject.Inject
 
 private const val TAG = "WidgetUpdateService"
 
 private const val JOB_ID = 1000
-private const val WIDGET_REQUEST_CODE = 2
 private const val EXTRA_WIDGET_IDS = "EXTRA_WIDGET_IDS"
 
 class WidgetUpdateService : JobIntentService() {
