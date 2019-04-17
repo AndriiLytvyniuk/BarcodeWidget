@@ -39,8 +39,9 @@
 
         <ImageView
                 android:id="@+id/barcodeImageView"
-                tools:src="@drawable/test_qr_code"
-                android:layout_margin="10dp"
+                tools:src="@drawable/github"
+                android:layout_margin="@dimen/barcode_frame_width"
+                android:background="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
     </FrameLayout>
@@ -65,7 +66,7 @@
             app:layout_constraintVertical_bias="0.176"
             android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
-            tools:text="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"/>
+            tools:text="dddddddddddddddddddddddddddd"/>
 
     <TextView
             android:id="@+id/titleTextView"

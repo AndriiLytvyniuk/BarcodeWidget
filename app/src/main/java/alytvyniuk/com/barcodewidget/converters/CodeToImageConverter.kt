@@ -20,7 +20,12 @@ class ZXingCodeToImageConverter @Inject constructor(): CodeToImageConverter {
     override fun convert(rawBarcode: RawBarcode): Observable<Bitmap> {
         val multiFormatWriter = MultiFormatWriter()
         val format = mapFormat(rawBarcode.format)
-        val bitMatrix = multiFormatWriter.encode(rawBarcode.value, format, IMAGE_SIZE, IMAGE_SIZE)
+        val width = when (format) {
+            BarcodeFormat.CODABAR,
+            BarcodeFormat.EAN_13 -> IMAGE_SIZE * 2
+            else -> IMAGE_SIZE
+        }
+        val bitMatrix = multiFormatWriter.encode(rawBarcode.value, format, width, IMAGE_SIZE)
         val barcodeEncoder = BarcodeEncoder()
         return Observable.fromCallable {
             barcodeEncoder.createBitmap(bitMatrix)
