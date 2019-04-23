@@ -18,7 +18,13 @@ class ButtonColorPicker : View.OnClickListener {
     }
 
     fun addView(imageView: ImageView) {
-        if (isChosen(imageView)) {
+        addView(imageView, false)
+    }
+
+    fun addView(imageView: ImageView, makeToggled: Boolean) {
+        unchoose(imageView)
+        if (makeToggled) {
+            choose(imageView)
             unchooseToggledView()
             toggledView = imageView
         }

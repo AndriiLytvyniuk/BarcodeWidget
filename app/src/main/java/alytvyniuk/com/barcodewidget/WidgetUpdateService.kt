@@ -67,7 +67,7 @@ class WidgetUpdateService : JobIntentService() {
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, barcode: Barcode) {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
-        Log.d(TAG, "Update widget for id ${barcode.widgetId}, rawBarcode = $barcode")
+        Log.d(TAG, "Update widget for id ${barcode.widgetId}, barcode = $barcode")
         val bitmap = codeToImageConverter.convert(barcode.rawBarcode).blockingFirst()
         remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmap)
         remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
@@ -91,6 +91,6 @@ class WidgetUpdateService : JobIntentService() {
     private fun getOnClickIntent(context: Context, barcode: Barcode): PendingIntent {
         val intent = PreviewActivity.intent(context, barcode)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        return PendingIntent.getActivity(context, barcode.widgetId, intent, 0)
+        return PendingIntent.getActivity(context, barcode.widgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 }

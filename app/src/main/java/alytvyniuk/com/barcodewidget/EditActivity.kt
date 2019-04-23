@@ -87,14 +87,14 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     private fun updateUI(barcode: Barcode) {
         val disposable = barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
         addDisposable(disposable)
-        initColorPicker()
+        initColorPicker(barcode.color!!)
         dataTextView.text = barcode.rawBarcode.value
         formatTextView.text = barcode.rawBarcode.format.toString()
         titleEditText.setText(this.barcode.title)
         colorFrameView.setBackgroundColor(barcode.color!!)
     }
 
-    private fun initColorPicker() {
+    private fun initColorPicker(chosenColor : Int) {
         val colorsNumber = 8
         for (i in 0 until colorsNumber) {
             val id = resources.getIdentifier("colorView$i", "id", packageName)
@@ -102,7 +102,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
             val colorId = resources.getIdentifier("choice_color_$i", "color", packageName)
             val color = ContextCompat.getColor(this, colorId)
             imageView.setImageDrawable(ColorDrawable(color))
-            colorPicker.addView(imageView)
+            colorPicker.addView(imageView, chosenColor == color)
         }
         colorPicker.setOnColorListener(object : OnColorListener {
             override fun onColorSelected(color: Int) {
@@ -138,6 +138,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     }
 
     private fun updateWidgetProvider(widgetId : Int) {
+        Log.d(TAG, "updateWidgetProvider: $widgetId")
         sendBroadcast(Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
             .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId)))
     }
