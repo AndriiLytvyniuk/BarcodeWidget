@@ -16,4 +16,5 @@
     <string name="about_me">About Me</string>
     <string name="saved_codes">Saved</string>
     <string name="edit_and_save">Edit and Save</string>
+    <string name="save">Save</string>
 </resources>

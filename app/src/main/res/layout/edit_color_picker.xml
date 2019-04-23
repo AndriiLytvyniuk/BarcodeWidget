@@ -5,36 +5,23 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".EditActivity">
 
-    <View
-            android:id="@+id/colorFrameView"
-            tools:background="@android:color/holo_green_dark"
+    <ImageView
+            android:id="@+id/barcodeImage"
+            tools:src="@drawable/github"
+            android:background="@android:color/white"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"/>
-
-    <ImageView
-            android:id="@+id/barcodeImage"
-            android:src="@drawable/test_qr_code"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@+id/colorFrameView"
-            app:layout_constraintEnd_toEndOf="@+id/colorFrameView"
-            android:layout_marginStart="16dp"
-            app:layout_constraintTop_toTopOf="@+id/colorFrameView"
-            app:layout_constraintBottom_toBottomOf="@+id/colorFrameView"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp" app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintVertical_bias="1.0"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="?attr/actionBarSize"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
@@ -49,9 +36,107 @@
             android:id="@+id/guideline3"
             app:layout_constraintGuide_percent="0.85"
             android:orientation="vertical"/>
+
     <ImageView
-            android:layout_width="39dp"
-            android:layout_height="47dp" app:srcCompat="@drawable/ic_github"
-            tools:layout_editor_absoluteY="258dp" tools:layout_editor_absoluteX="16dp" android:id="@+id/imageView5"/>
+            android:layout_width="@dimen/color_picker_button_size"
+            android:layout_height="@dimen/color_picker_button_size"
+            android:background="@android:color/black"
+            app:srcCompat="@android:color/holo_red_dark"
+            android:id="@+id/colorView0"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/colorView5"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/barcodeImage"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="@+id/barcodeImage"/>
+
+    <ImageView
+            android:layout_width="@dimen/color_picker_button_size"
+            android:layout_height="@dimen/color_picker_button_size"
+            android:background="@android:color/black"
+            app:srcCompat="@android:color/holo_red_dark"
+            android:id="@+id/colorView1"
+            app:layout_constraintTop_toBottomOf="@+id/colorView3"
+            app:layout_constraintStart_toStartOf="@+id/colorView3"
+            app:layout_constraintEnd_toEndOf="@+id/colorView3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toTopOf="@+id/colorView2"/>
+
+    <ImageView
+            android:layout_width="@dimen/color_picker_button_size"
+            android:layout_height="@dimen/color_picker_button_size"
+            android:background="@android:color/black"
+            app:srcCompat="@android:color/holo_red_dark"
+            android:id="@+id/colorView2"
+            app:layout_constraintTop_toBottomOf="@+id/colorView1"
+            app:layout_constraintEnd_toEndOf="@+id/colorView1"
+            app:layout_constraintStart_toStartOf="@+id/colorView1"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toTopOf="@+id/colorView4"/>
+
+    <ImageView
+            android:layout_width="@dimen/color_picker_button_size"
+            android:layout_height="@dimen/color_picker_button_size"
+            android:background="@android:color/black"
+            app:srcCompat="@android:color/holo_red_dark"
+            android:id="@+id/colorView3"
+            app:layout_constraintTop_toTopOf="@+id/barcodeImage"
+            app:layout_constraintBottom_toTopOf="@+id/colorView1"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintVertical_chainStyle="spread"
+            app:layout_constraintStart_toEndOf="@+id/barcodeImage"/>
+
+    <ImageView
+            android:layout_width="@dimen/color_picker_button_size"
+            android:layout_height="@dimen/color_picker_button_size"
+            android:background="@android:color/black"
+            app:srcCompat="@android:color/holo_red_dark"
+            android:id="@+id/colorView4"
+            app:layout_constraintStart_toStartOf="@+id/colorView2"
+            app:layout_constraintTop_toBottomOf="@+id/colorView2"
+            app:layout_constraintBottom_toBottomOf="@+id/barcodeImage"
+            app:layout_constraintEnd_toEndOf="@+id/colorView2"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginBottom="8dp"/>
+
+    <ImageView
+            android:layout_width="@dimen/color_picker_button_size"
+            android:layout_height="@dimen/color_picker_button_size"
+            android:background="@android:color/black"
+            app:srcCompat="@android:color/holo_red_dark"
+            android:id="@+id/colorView5"
+            app:layout_constraintTop_toBottomOf="@+id/colorView0"
+            app:layout_constraintBottom_toTopOf="@+id/colorView6"
+            app:layout_constraintEnd_toEndOf="@+id/colorView0"
+            app:layout_constraintStart_toStartOf="@+id/colorView0"/>
+
+    <ImageView
+            android:layout_width="@dimen/color_picker_button_size"
+            android:layout_height="@dimen/color_picker_button_size"
+            android:background="@android:color/black"
+            app:srcCompat="@android:color/holo_red_dark"
+            android:id="@+id/colorView6"
+            app:layout_constraintStart_toStartOf="@+id/colorView5"
+            app:layout_constraintTop_toBottomOf="@+id/colorView5"
+            app:layout_constraintBottom_toTopOf="@+id/colorView7"
+            app:layout_constraintEnd_toEndOf="@+id/colorView5"
+            app:layout_constraintHorizontal_bias="1.0"/>
+
+    <ImageView
+            android:layout_width="@dimen/color_picker_button_size"
+            android:layout_height="@dimen/color_picker_button_size"
+            android:background="@android:color/black"
+            app:srcCompat="@android:color/holo_red_dark"
+            android:id="@+id/colorView7"
+            app:layout_constraintStart_toStartOf="@+id/colorView6"
+            app:layout_constraintTop_toBottomOf="@+id/colorView6"
+            app:layout_constraintEnd_toEndOf="@+id/colorView6"
+            app:layout_constraintHorizontal_bias="1.0"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/barcodeImage"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit.*
+import kotlinx.android.synthetic.main.edit_color_picker.*
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -34,7 +35,7 @@ private const val KEY_TITLE = "KEY_TITLE"
 private const val KEY_COLOR = "KEY_COLOR"
 private const val COLORS_NUMBER = 12
 
-class EditActivity : DisposeActivity(), View.OnClickListener {
+class EditActivity : DisposeActivity() {
 
     companion object {
         const val REQUEST_EDIT_ACTIVITY = 4
@@ -69,7 +70,6 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
         initWidgetId()
         barcode.color = barcode.color ?: getRandomColor()
         updateUI(barcode)
-        confirmButton.setOnClickListener(this)
     }
 
     private fun initWidgetId() {
@@ -91,7 +91,9 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
         dataTextView.text = barcode.rawBarcode.value
         formatTextView.text = barcode.rawBarcode.format.toString()
         titleEditText.setText(this.barcode.title)
-        colorFrameView.setBackgroundColor(barcode.color!!)
+        val colorDrawable = ColorDrawable(barcode.color!!)
+        colorFrameView.background = colorDrawable
+        supportActionBar?.setBackgroundDrawable(colorDrawable)
     }
 
     private fun initColorPicker(chosenColor : Int) {
@@ -107,6 +109,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
         colorPicker.setOnColorListener(object : OnColorListener {
             override fun onColorSelected(color: Int) {
                 colorFrameView.setBackgroundColor(color)
+                supportActionBar?.setBackgroundDrawable(ColorDrawable(color))
             }
         })
     }
@@ -143,18 +146,6 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
             .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId)))
     }
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.confirmButton -> {
-                val barcode = barcode
-                barcode.title = titleEditText.text.toString()
-                barcode.widgetId = newWidgetId
-                barcode.color = colorPicker.getCurrentColor()
-                saveAndExit(barcode)
-            }
-        }
-    }
-
     private fun getRandomColor() : Int {
         val number = Random.nextInt(COLORS_NUMBER)
         val colorId = resources.getIdentifier("choice_color_$number", "color", packageName)
@@ -162,7 +153,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_delete, menu)
+        menuInflater.inflate(R.menu.menu_edit, menu)
         if (newWidgetId.isValidWidgetId() || barcode.id == BarcodeDao.INVALID_DB_ID) {
             menu.findItem(R.id.delete).isVisible = false
         }
@@ -177,6 +168,13 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
                     .subscribe {
                         finish()
                     }
+            }
+            R.id.save -> {
+                val barcode = barcode
+                barcode.title = titleEditText.text.toString()
+                barcode.widgetId = newWidgetId
+                barcode.color = colorPicker.getCurrentColor()
+                saveAndExit(barcode)
             }
         }
         return super.onOptionsItemSelected(item)
