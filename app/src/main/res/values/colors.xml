@@ -6,14 +6,15 @@
     <color name="transparent_grey">#00000033</color>
     <color name="link_color">#0000FF</color>
 
-    <color name="choice_color_0">#FF0000</color>
-    <color name="choice_color_1">#800000</color>
-    <color name="choice_color_2">#FFFF00</color>
-    <color name="choice_color_3">#808000</color>
-    <color name="choice_color_4">#00FF00</color>
-    <color name="choice_color_5">#008000</color>
-    <color name="choice_color_6">#00FFFF</color>
-    <color name="choice_color_7">#008080</color>
+    <color name="choice_color_0">#092e6e</color>
+    <color name="choice_color_1">#00aeef</color>
+    <color name="choice_color_2">#363a35</color>
+    <color name="choice_color_3">#a9ae00</color>
+    <color name="choice_color_4">#f6a704</color>
+    <color name="choice_color_5">#d5441c</color>
+    <color name="choice_color_6">#be2d2a</color>
+    <color name="choice_color_7">#328445</color>
+
     <color name="choice_color_8">#0000FF</color>
     <color name="choice_color_9">#000080</color>
     <color name="choice_color_10">#FF00FF</color>

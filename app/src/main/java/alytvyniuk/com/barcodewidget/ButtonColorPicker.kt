@@ -8,7 +8,7 @@ import android.widget.ImageView
 
 class ButtonColorPicker : View.OnClickListener {
 
-    private val paddingSize = 15
+    private val paddingSize = 5
     private var toggledView: ImageView? = null
     private var onColorListener : OnColorListener? = null
 

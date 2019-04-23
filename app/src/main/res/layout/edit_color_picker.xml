@@ -6,12 +6,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        tools:background="@color/colorAccent"
         tools:context=".EditActivity">
 
-    <ImageView
-            android:id="@+id/barcodeImage"
-            tools:src="@drawable/github"
-            android:background="@android:color/white"
+    <androidx.cardview.widget.CardView
+            android:id="@+id/barcodeImageFrame"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1"
@@ -20,8 +19,20 @@
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             android:layout_marginStart="8dp"
             app:layout_constraintTop_toTopOf="parent"
+            app:cardCornerRadius="15dp"
             android:layout_marginBottom="?attr/actionBarSize"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+                android:id="@+id/barcodeImage"
+                tools:src="@drawable/github"
+                android:background="@android:color/white"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+    </androidx.cardview.widget.CardView>
 
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
@@ -47,10 +58,10 @@
             android:layout_marginStart="16dp"
             app:layout_constraintBottom_toTopOf="@+id/colorView5"
             android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/barcodeImage"
+            app:layout_constraintEnd_toStartOf="@+id/barcodeImageFrame"
             app:layout_constraintHorizontal_bias="0.0"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="@+id/barcodeImage"/>
+            app:layout_constraintTop_toTopOf="@+id/barcodeImageFrame"/>
 
     <ImageView
             android:layout_width="@dimen/color_picker_button_size"
@@ -82,13 +93,13 @@
             android:background="@android:color/black"
             app:srcCompat="@android:color/holo_red_dark"
             android:id="@+id/colorView3"
-            app:layout_constraintTop_toTopOf="@+id/barcodeImage"
+            app:layout_constraintTop_toTopOf="@+id/barcodeImageFrame"
             app:layout_constraintBottom_toTopOf="@+id/colorView1"
             android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             app:layout_constraintVertical_chainStyle="spread"
-            app:layout_constraintStart_toEndOf="@+id/barcodeImage"/>
+            app:layout_constraintStart_toEndOf="@+id/barcodeImageFrame"/>
 
     <ImageView
             android:layout_width="@dimen/color_picker_button_size"
@@ -98,7 +109,7 @@
             android:id="@+id/colorView4"
             app:layout_constraintStart_toStartOf="@+id/colorView2"
             app:layout_constraintTop_toBottomOf="@+id/colorView2"
-            app:layout_constraintBottom_toBottomOf="@+id/barcodeImage"
+            app:layout_constraintBottom_toBottomOf="@+id/barcodeImageFrame"
             app:layout_constraintEnd_toEndOf="@+id/colorView2"
             app:layout_constraintHorizontal_bias="0.5"
             android:layout_marginBottom="8dp"/>
@@ -137,6 +148,6 @@
             app:layout_constraintEnd_toEndOf="@+id/colorView6"
             app:layout_constraintHorizontal_bias="1.0"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/barcodeImage"/>
+            app:layout_constraintBottom_toBottomOf="@+id/barcodeImageFrame"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

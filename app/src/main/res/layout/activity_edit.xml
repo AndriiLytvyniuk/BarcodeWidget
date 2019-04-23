@@ -11,9 +11,6 @@
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:theme="@style/AppTheme.AppBarOverlay"
             app:elevation="0dp"
             android:id="@+id/appBarLayout">
@@ -39,24 +36,19 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_small_title"
             android:id="@+id/titleNotesTextView"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/colorFrameView"/>
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"/>
 
     <EditText
             android:hint="@string/set_title"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/titleEditText"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginStart="20dp"
             android:textSize="@dimen/text_size_ordinary"
             tools:text="dddddddddddddd"
-            app:layout_constraintTop_toBottomOf="@+id/titleNotesTextView"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
             android:singleLine="true"/>
 
     <TextView
@@ -64,26 +56,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_small_title"
+            android:layout_marginStart="20dp"
             android:id="@+id/titleDataTextView"
-            app:layout_constraintStart_toStartOf="@+id/titleNotesTextView"
-            app:layout_constraintTop_toBottomOf="@+id/titleEditText"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="8dp"/>
 
     <TextView
             android:text="Data"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/dataTextView"
             android:textColorLink="@color/link_color"
             android:autoLink="web"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="20dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
-            app:layout_constraintHorizontal_bias="0.0"
             android:textSize="@dimen/text_size_ordinary"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/titleDataTextView"/>
+            android:layout_marginTop="8dp"/>
 
     <TextView
             android:text="@string/barcode_format"
@@ -91,18 +78,16 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_small_title"
             android:id="@+id/titleFormatTextView"
-            app:layout_constraintStart_toStartOf="@+id/titleNotesTextView"
-            app:layout_constraintTop_toBottomOf="@+id/dataTextView"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"/>
 
     <TextView
             tools:text="QR_CODE"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/formatTextView"
+            android:layout_marginStart="20dp"
             android:textSize="@dimen/text_size_ordinary"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/titleFormatTextView"
-            app:layout_constraintStart_toStartOf="@+id/titleEditText"/>
+            android:layout_marginTop="8dp" />
 
 </LinearLayout>
