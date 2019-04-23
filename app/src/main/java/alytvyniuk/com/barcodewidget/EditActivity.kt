@@ -10,7 +10,7 @@ import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -30,6 +30,8 @@ import kotlin.random.Random
 private const val TAG = "EditActivity"
 private const val KEY_WIDGET_ID = "KEY_WIDGET_ID"
 private const val KEY_BARCODE = "KEY_BARCODE"
+private const val KEY_TITLE = "KEY_TITLE"
+private const val KEY_COLOR = "KEY_COLOR"
 private const val COLORS_NUMBER = 12
 
 class EditActivity : DisposeActivity(), View.OnClickListener {
@@ -51,44 +53,66 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     @Inject lateinit var barcodeDao: BarcodeDao
     @Inject lateinit var codeToImageConverter: CodeToImageConverter
     private var newWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-    private lateinit var initialBarcode: Barcode
-    private var color : Int = Color.TRANSPARENT
+    private lateinit var barcode: Barcode
+    private val colorPicker = ButtonColorPicker()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
         setSupportActionBar(toolbar)
         App.component().inject(this)
-        initialBarcode = intent.getBarcode()
+        barcode = intent.getBarcode()
+        savedInstanceState?.let {
+            barcode.title = savedInstanceState.getString(KEY_TITLE)
+            barcode.color = savedInstanceState.getInt(KEY_COLOR)
+        }
         initWidgetId()
-        color = initialBarcode.color ?: getRandomColor()
-        initUI(initialBarcode)
+        barcode.color = barcode.color ?: getRandomColor()
+        updateUI(barcode)
         confirmButton.setOnClickListener(this)
     }
 
     private fun initWidgetId() {
         newWidgetId = intent.getWidgetId()
-        if (initialBarcode.widgetId.isValidWidgetId()) {
+        if (barcode.widgetId.isValidWidgetId()) {
             if (newWidgetId.isValidWidgetId()) {
                 throw IllegalStateException("Can't reuse record of existing barcode. " +
-                        "From intent=$newWidgetId, from barcode=${initialBarcode.widgetId}")
+                        "From intent=$newWidgetId, from barcode=${barcode.widgetId}")
             } else {
-                newWidgetId = initialBarcode.widgetId
+                newWidgetId = barcode.widgetId
             }
         }
     }
 
-    private fun initUI(barcode: Barcode) {
+    private fun updateUI(barcode: Barcode) {
         val disposable = barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
         addDisposable(disposable)
+        initColorPicker()
         dataTextView.text = barcode.rawBarcode.value
         formatTextView.text = barcode.rawBarcode.format.toString()
-        titleEditText.setText(initialBarcode.title)
-        colorFrameView.setBackgroundColor(color)
+        titleEditText.setText(this.barcode.title)
+        colorFrameView.setBackgroundColor(barcode.color!!)
+    }
+
+    private fun initColorPicker() {
+        val colorsNumber = 8
+        for (i in 0 until colorsNumber) {
+            val id = resources.getIdentifier("colorView$i", "id", packageName)
+            val imageView = findViewById<ImageView>(id)
+            val colorId = resources.getIdentifier("choice_color_$i", "color", packageName)
+            val color = ContextCompat.getColor(this, colorId)
+            imageView.setImageDrawable(ColorDrawable(color))
+            colorPicker.addView(imageView)
+        }
+        colorPicker.setOnColorListener(object : OnColorListener {
+            override fun onColorSelected(color: Int) {
+                colorFrameView.setBackgroundColor(color)
+            }
+        })
     }
 
     private fun saveAndExit(barcode: Barcode) {
-        val id = initialBarcode.id
+        val id = this.barcode.id
         val observable = if (id == BarcodeDao.INVALID_DB_ID) {
             Log.d(TAG, "Save new barcode: $barcode")
             barcodeDao.insert(barcode)
@@ -121,10 +145,10 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.confirmButton -> {
-                val barcode = initialBarcode
+                val barcode = barcode
                 barcode.title = titleEditText.text.toString()
                 barcode.widgetId = newWidgetId
-                barcode.color = color
+                barcode.color = colorPicker.getCurrentColor()
                 saveAndExit(barcode)
             }
         }
@@ -138,7 +162,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_delete, menu)
-        if (newWidgetId.isValidWidgetId() || initialBarcode.id == BarcodeDao.INVALID_DB_ID) {
+        if (newWidgetId.isValidWidgetId() || barcode.id == BarcodeDao.INVALID_DB_ID) {
             menu.findItem(R.id.delete).isVisible = false
         }
         return true
@@ -147,7 +171,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.delete -> {
-                barcodeDao.delete(initialBarcode)
+                barcodeDao.delete(barcode)
                     .subscribeOn(Schedulers.io())
                     .subscribe {
                         finish()
@@ -155,6 +179,12 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(KEY_TITLE, titleEditText.text.toString())
+        outState.putInt(KEY_COLOR, colorPicker.getCurrentColor())
+        super.onSaveInstanceState(outState)
     }
 
     override fun setSupportActionBar(toolbar: Toolbar?) {

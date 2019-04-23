@@ -5,4 +5,5 @@
     <dimen name="text_size_ordinary">18sp</dimen>
     <dimen name="social_icon_size">50dp</dimen>
     <dimen name="barcode_frame_width">16dp</dimen>
+    <dimen name="color_picker_button_size">30dp</dimen>
 </resources>
