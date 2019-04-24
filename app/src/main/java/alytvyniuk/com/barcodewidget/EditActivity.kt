@@ -25,6 +25,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit.*
 import kotlinx.android.synthetic.main.edit_color_picker.*
+import kotlinx.android.synthetic.main.edit_data_layout.*
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -91,9 +92,7 @@ class EditActivity : DisposeActivity() {
         dataTextView.text = barcode.rawBarcode.value
         formatTextView.text = barcode.rawBarcode.format.toString()
         titleEditText.setText(this.barcode.title)
-        val colorDrawable = ColorDrawable(barcode.color!!)
-        colorFrameView.background = colorDrawable
-        supportActionBar?.setBackgroundDrawable(colorDrawable)
+        changeColor(barcode.color!!)
     }
 
     private fun initColorPicker(chosenColor : Int) {
@@ -108,10 +107,16 @@ class EditActivity : DisposeActivity() {
         }
         colorPicker.setOnColorListener(object : OnColorListener {
             override fun onColorSelected(color: Int) {
-                colorFrameView.setBackgroundColor(color)
-                supportActionBar?.setBackgroundDrawable(ColorDrawable(color))
+                changeColor(color)
             }
         })
+    }
+
+    private fun changeColor(color: Int) {
+        val colorDrawable = ColorDrawable(color)
+        colorFrameView.background = colorDrawable
+        supportActionBar?.setBackgroundDrawable(colorDrawable)
+        window.statusBarColor = color
     }
 
     private fun saveAndExit(barcode: Barcode) {

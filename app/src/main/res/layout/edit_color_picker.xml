@@ -20,7 +20,7 @@
             android:layout_marginStart="8dp"
             app:layout_constraintTop_toTopOf="parent"
             app:cardCornerRadius="15dp"
-            android:layout_marginBottom="?attr/actionBarSize"
+            android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
