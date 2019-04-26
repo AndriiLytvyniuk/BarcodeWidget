@@ -15,8 +15,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.52"
-            android:id="@+id/fragment"/>
+            app:layout_constraintHorizontal_bias="1.0"
+            android:id="@+id/fragment"
+            app:layout_constraintVertical_bias="0.0"/>
 
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
@@ -45,35 +46,35 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <Button
             android:id="@+id/galleryButton"
-            android:layout_width="88dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            app:srcCompat="@android:drawable/ic_menu_gallery"
+            android:text="@string/from_gallery"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_button"
             app:layout_constraintStart_toEndOf="@+id/savedButton"
             android:layout_marginStart="8dp"
-            app:borderWidth="0dp"
-            android:backgroundTint="@color/choice_color_7"
-            app:layout_constraintBottom_toBottomOf="@+id/savedButton"
-            app:layout_constraintTop_toTopOf="@+id/savedButton"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"/>
+            app:layout_constraintTop_toTopOf="@+id/savedButton"
+            app:layout_constraintBottom_toBottomOf="@+id/savedButton"
+            app:layout_constraintVertical_bias="1.0"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <Button
             android:id="@+id/savedButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            app:borderWidth="0dp"
-            app:srcCompat="@android:drawable/ic_menu_save"
+            android:text="@string/from_saved"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_button"
+            android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:layout_marginBottom="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/galleryButton"
-            app:layout_constraintHorizontal_bias="0.5"/>
+            android:layout_marginBottom="36dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="8dp"/>
+
     <TextView
             android:text="@string/initialize_widget"
             android:layout_width="wrap_content"

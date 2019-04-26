@@ -19,4 +19,6 @@
     <string name="save">Save</string>
     <string name="edit">Edit</string>
     <string name="details">Details</string>
+    <string name="from_gallery">From Gallery</string>
+    <string name="from_saved">From Saved</string>
 </resources>
