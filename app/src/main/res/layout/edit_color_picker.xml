@@ -21,7 +21,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:cardCornerRadius="15dp"
             android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.07999998">
 
         <ImageView
                 android:id="@+id/barcodeImage"
@@ -47,6 +48,22 @@
             android:id="@+id/guideline3"
             app:layout_constraintGuide_percent="0.85"
             android:orientation="vertical"/>
+
+    <Button
+            android:id="@+id/saveButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:text="@string/save"
+            android:textColor="@android:color/white"
+            android:layout_margin="@dimen/fab_margin"
+            android:background="@drawable/rounded_button"
+            app:layout_constraintEnd_toEndOf="@+id/barcodeImageFrame"
+            app:layout_constraintTop_toBottomOf="@+id/barcodeImageFrame"
+            app:layout_constraintStart_toStartOf="@+id/barcodeImageFrame"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
 
     <ImageView
             android:layout_width="@dimen/color_picker_button_size"

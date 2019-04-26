@@ -36,7 +36,7 @@ private const val KEY_TITLE = "KEY_TITLE"
 private const val KEY_COLOR = "KEY_COLOR"
 private const val COLORS_NUMBER = 12
 
-class EditActivity : DisposeActivity() {
+class EditActivity : DisposeActivity(), View.OnClickListener {
 
     companion object {
         const val REQUEST_EDIT_ACTIVITY = 4
@@ -93,6 +93,7 @@ class EditActivity : DisposeActivity() {
         formatTextView.text = barcode.rawBarcode.format.toString()
         titleEditText.setText(this.barcode.title)
         changeColor(barcode.color!!)
+        saveButton.setOnClickListener(this)
     }
 
     private fun initColorPicker(chosenColor : Int) {
@@ -165,6 +166,13 @@ class EditActivity : DisposeActivity() {
         return true
     }
 
+    override fun onClick(v: View?) {
+        barcode.title = titleEditText.text.toString()
+        barcode.widgetId = newWidgetId
+        barcode.color = colorPicker.getCurrentColor()
+        saveAndExit(barcode)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.delete -> {
@@ -173,13 +181,6 @@ class EditActivity : DisposeActivity() {
                     .subscribe {
                         finish()
                     }
-            }
-            R.id.save -> {
-                val barcode = barcode
-                barcode.title = titleEditText.text.toString()
-                barcode.widgetId = newWidgetId
-                barcode.color = colorPicker.getCurrentColor()
-                saveAndExit(barcode)
             }
         }
         return super.onOptionsItemSelected(item)

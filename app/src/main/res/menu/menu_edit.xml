@@ -5,8 +5,4 @@
           android:icon="@android:drawable/ic_menu_delete"
           android:title="@string/delete"
           app:showAsAction="ifRoom"/>
-    <item android:id="@+id/save"
-          android:icon="@android:drawable/ic_menu_save"
-          android:title="@string/save"
-          app:showAsAction="ifRoom"/>
 </menu>
