@@ -29,6 +29,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@color/colorPrimary"
             android:layout_width="match_parent"
+            android:layout_weight="2"
             android:layout_height="wrap_content">
 
         <TextView
@@ -43,7 +44,7 @@
                 android:textColor="@android:color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="44dp"
                 app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
@@ -77,8 +78,7 @@
 
         <ImageView
                 android:layout_width="@dimen/social_icon_size"
-                app:layout_constraintDimensionRatio="1"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/social_icon_size"
                 app:srcCompat="@drawable/ic_linkedin"
                 android:id="@+id/linkToLinkedIn"
                 app:layout_constraintStart_toStartOf="parent"
@@ -105,7 +105,7 @@
 
     <TextView
             android:text="@string/check_project_on"
-            android:gravity="center"
+            android:gravity="center|bottom"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="8dp"
             android:layout_gravity="center"
@@ -118,5 +118,6 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             app:srcCompat="@drawable/github"
+            android:layout_marginBottom="20dp"
             android:id="@+id/linkToProject"/>
 </LinearLayout>
