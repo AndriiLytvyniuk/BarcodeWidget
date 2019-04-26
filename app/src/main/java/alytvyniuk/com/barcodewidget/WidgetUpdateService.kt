@@ -7,10 +7,7 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.JobIntentService
@@ -81,10 +78,11 @@ class WidgetUpdateService : JobIntentService() {
      */
     private fun createFrameBitmap(width: Int, height: Int, color: Int): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val drawable = getDrawable(R.drawable.widget_frame)
+        drawable.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         val canvas = Canvas(bitmap)
-        val paint = Paint()
-        paint.color = color
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        drawable.setBounds(0, 0, width, height)
+        drawable.draw(canvas)
         return bitmap
     }
 
