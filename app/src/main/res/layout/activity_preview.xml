@@ -24,27 +24,49 @@
             android:layout_marginStart="30dp"
             app:layout_constraintStart_toStartOf="parent"/>
 
-    <FrameLayout
+    <View
             android:id="@+id/colorFrameView"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            app:layout_constraintDimensionRatio="1"
+            tools:background="@color/choice_color_2"
             app:layout_constraintTop_toTopOf="@+id/backgroundView"
             app:layout_constraintEnd_toEndOf="@+id/backgroundView"
             app:layout_constraintStart_toStartOf="@+id/backgroundView"
-            app:layout_constraintBottom_toBottomOf="@+id/backgroundView"
-            android:layout_marginEnd="32dp"
-            android:layout_marginStart="32dp"
-            app:layout_constraintVertical_bias="0.37">
+            app:layout_constraintBottom_toTopOf="@+id/guideline"/>
 
-        <ImageView
-                android:id="@+id/barcodeImageView"
-                tools:src="@drawable/github"
-                android:layout_margin="@dimen/barcode_frame_width"
-                android:background="@android:color/white"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-    </FrameLayout>
+    <ImageView
+            android:id="@+id/barcodeImageView"
+            tools:src="@drawable/test_qr_code"
+            android:layout_marginStart="45dp"
+            android:layout_marginEnd="45dp"
+            android:layout_marginTop="20dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/editButton"
+            app:layout_constraintTop_toTopOf="@+id/colorFrameView"
+            app:layout_constraintStart_toStartOf="@+id/colorFrameView"
+            app:layout_constraintEnd_toEndOf="@+id/colorFrameView"/>
+
+    <TextView
+            android:id="@+id/titleTextView"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_small_title"
+            android:layout_width="0dp"
+            android:textColor="@android:color/black"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toEndOf="@+id/backgroundView"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintStart_toStartOf="@+id/backgroundView"
+            android:maxLines="1"
+            android:layout_marginStart="24dp"
+            tools:text="Title of barcodedddddddddddddddddddddd "
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/guideline"
+            app:layout_constraintBottom_toTopOf="@+id/dataTextView"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintVertical_chainStyle="packed"/>
 
     <TextView
             android:id="@+id/dataTextView"
@@ -54,51 +76,36 @@
             android:textSize="@dimen/text_size_ordinary"
             app:layout_constraintEnd_toEndOf="@+id/backgroundView"
             app:layout_constraintStart_toStartOf="@+id/backgroundView"
-            android:layout_marginTop="8dp"
             android:maxLines="3"
             android:textColorLink="@color/link_color"
             android:autoLink="web"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@+id/colorFrameView"
             android:layout_marginBottom="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"
             app:layout_constraintBottom_toBottomOf="@+id/backgroundView"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintVertical_bias="0.176"
             android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
             tools:text="dddddddddddddddddddddddddddd"/>
 
-    <TextView
-            android:id="@+id/titleTextView"
-            android:gravity="center"
-            android:textSize="@dimen/text_size_small_title"
+    <Button
+            android:id="@+id/editButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            app:layout_constraintEnd_toEndOf="@+id/backgroundView"
-            android:layout_marginEnd="24dp"
-            app:layout_constraintStart_toStartOf="@+id/backgroundView"
-            android:maxLines="1"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="@+id/backgroundView"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/colorFrameView"
-            tools:text="Title of barcodedddddddddddddddddddddd "/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/editButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:text="@string/edit"
+            android:textColor="@android:color/white"
             android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@android:drawable/ic_menu_edit"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/backgroundView"
-            android:layout_marginEnd="8dp"
-            app:backgroundTint="@android:color/darker_gray"
-            app:borderWidth="0dp"
-            app:fabSize="mini"
-            app:layout_constraintEnd_toEndOf="@+id/backgroundView"/>
+            android:background="@drawable/rounded_button"
+            app:layout_constraintEnd_toEndOf="@+id/barcodeImageView"
+            app:layout_constraintTop_toBottomOf="@+id/barcodeImageView"
+            app:layout_constraintStart_toStartOf="@+id/barcodeImageView"
+            app:layout_constraintBottom_toBottomOf="@+id/colorFrameView"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.7"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
