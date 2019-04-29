@@ -22,7 +22,12 @@
         <!--<item name="android:windowIsFloating">true</item>-->
         <item name="android:backgroundDimEnabled">false</item>
     </style>
+
+    <style name="Buttons">
+        <item name="android:background">@drawable/rounded_button</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">@dimen/text_size_buttons</item>
+    </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 </resources>
