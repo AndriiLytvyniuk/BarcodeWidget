@@ -48,10 +48,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         setSupportActionBar(toolbar)
         initViewModel()
         newWidgetId = getWidgetIdFromIntent(intent)
-        updateWidgetTextView.visibility =
-            if (newWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) View.GONE else View.VISIBLE
-        galleryButton.setOnClickListener(this)
-        savedButton.setOnClickListener(this)
+        initUi()
         if (Intent.ACTION_VIEW == intent.action) {
             handleViewImage()
         }
@@ -72,6 +69,20 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
                 else -> throw IllegalStateException("Both barcode and exception can't be null")
             }
         })
+    }
+
+    private fun initUi() {
+        galleryButton.setOnClickListener(this)
+        savedButton.setOnClickListener(this)
+            if (newWidgetId.isValidWidgetId()) {
+                updateWidgetTextView.visibility = View.VISIBLE
+                galleryButton.setText(R.string.from_gallery)
+                savedButton.setText(R.string.from_saved)
+            } else {
+                updateWidgetTextView.visibility = View.GONE
+                galleryButton.setText(R.string.gallery)
+                savedButton.setText(R.string.saved)
+            }
     }
 
     override fun onClick(v: View) {
