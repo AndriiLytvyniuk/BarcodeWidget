@@ -21,4 +21,6 @@
     <string name="details">Details</string>
     <string name="from_gallery">From Gallery</string>
     <string name="from_saved">From Saved</string>
+    <string name="available_items">Available Items</string>
+    <string name="reserved_by_widget">Reserved by Widget</string>
 </resources>

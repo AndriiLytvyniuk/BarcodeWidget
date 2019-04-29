@@ -51,8 +51,8 @@ class ListActivity : DisposeActivity(), OnItemClickListener {
         barcodeListView.adapter = adapter
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         updateUI()
     }
 
