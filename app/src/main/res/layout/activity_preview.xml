@@ -102,8 +102,6 @@
 
     <Button
             android:id="@+id/editButton"
-            android:layout_width="@dimen/button_width"
-            android:layout_height="@dimen/button_height"
             android:layout_gravity="bottom|end"
             android:text="@string/edit"
             style="@style/Buttons"

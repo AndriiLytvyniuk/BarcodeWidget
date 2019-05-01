@@ -48,8 +48,7 @@
 
     <Button
             android:id="@+id/galleryButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+
             android:text="@string/from_gallery"
             style="@style/Buttons"
             app:layout_constraintStart_toEndOf="@+id/savedButton"
@@ -62,8 +61,6 @@
 
     <Button
             android:id="@+id/savedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:text="@string/from_saved"
             style="@style/Buttons"
             android:layout_marginStart="16dp"

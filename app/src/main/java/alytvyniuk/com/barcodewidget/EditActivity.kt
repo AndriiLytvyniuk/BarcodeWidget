@@ -117,7 +117,6 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
         val colorDrawable = ColorDrawable(color)
         colorFrameView.background = colorDrawable
         supportActionBar?.setBackgroundDrawable(colorDrawable)
-        window.statusBarColor = color
     }
 
     private fun saveAndExit(barcode: Barcode) {

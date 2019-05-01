@@ -18,11 +18,9 @@
             android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:cardCornerRadius="15dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.07999998">
+            app:cardCornerRadius="15dp">
 
         <ImageView
                 android:id="@+id/barcodeImage"
@@ -51,18 +49,15 @@
 
     <Button
             android:id="@+id/saveButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:text="@string/save"
             style="@style/Buttons"
-            android:layout_margin="@dimen/fab_margin"
             app:layout_constraintEnd_toEndOf="@+id/barcodeImageFrame"
             app:layout_constraintTop_toBottomOf="@+id/barcodeImageFrame"
             app:layout_constraintStart_toStartOf="@+id/barcodeImageFrame"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ImageView
             android:layout_width="@dimen/color_picker_button_size"
@@ -71,12 +66,8 @@
             app:srcCompat="@android:color/holo_red_dark"
             android:id="@+id/colorView0"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="16dp"
             app:layout_constraintBottom_toTopOf="@+id/colorView5"
-            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toStartOf="@+id/barcodeImageFrame"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="@+id/barcodeImageFrame"/>
 
     <ImageView
@@ -88,7 +79,6 @@
             app:layout_constraintTop_toBottomOf="@+id/colorView3"
             app:layout_constraintStart_toStartOf="@+id/colorView3"
             app:layout_constraintEnd_toEndOf="@+id/colorView3"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintBottom_toTopOf="@+id/colorView2"/>
 
     <ImageView
@@ -100,7 +90,6 @@
             app:layout_constraintTop_toBottomOf="@+id/colorView1"
             app:layout_constraintEnd_toEndOf="@+id/colorView1"
             app:layout_constraintStart_toStartOf="@+id/colorView1"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintBottom_toTopOf="@+id/colorView4"/>
 
     <ImageView
