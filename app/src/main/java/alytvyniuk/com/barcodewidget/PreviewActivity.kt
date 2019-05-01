@@ -35,7 +35,7 @@ class PreviewActivity : DisposeActivity() {
 
     private fun updateView(barcode: Barcode) {
         Log.d(TAG, "updateView: $barcode")
-        val disposable = barcodeImageView.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
+        val disposable = barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
         addDisposable(disposable)
         dataTextView.text = barcode.rawBarcode.value
         titleTextView.text = barcode.title
