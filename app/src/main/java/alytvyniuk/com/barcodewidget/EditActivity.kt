@@ -10,6 +10,9 @@ import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
@@ -103,8 +106,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
             val imageView = findViewById<ImageView>(id)
             val colorId = resources.getIdentifier("choice_color_$i", "color", packageName)
             val color = ContextCompat.getColor(this, colorId)
-            imageView.setImageDrawable(ColorDrawable(color))
-            colorPicker.addView(imageView, chosenColor == color)
+            colorPicker.addView(imageView, color, chosenColor == color)
         }
         colorPicker.setOnColorListener(object : OnColorListener {
             override fun onColorSelected(color: Int) {

@@ -30,6 +30,13 @@
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textSize">@dimen/text_size_buttons</item>
     </style>
+    <style name="ColorPickerRadioButton">
+        <item name="android:layout_width">@dimen/color_picker_button_size</item>
+        <item name="android:layout_height">@dimen/color_picker_button_size</item>
+        <item name="android:background">@drawable/round_drawable</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:src">@drawable/round_drawable</item>
+    </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

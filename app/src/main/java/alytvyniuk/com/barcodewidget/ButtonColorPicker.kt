@@ -1,6 +1,8 @@
 package alytvyniuk.com.barcodewidget
 
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.widget.ImageView
@@ -8,7 +10,7 @@ import android.widget.ImageView
 
 class ButtonColorPicker : View.OnClickListener {
 
-    private val paddingSize = 5
+    //private val paddingSize = 5
     private var toggledView: ImageView? = null
     private var onColorListener : OnColorListener? = null
 
@@ -17,11 +19,9 @@ class ButtonColorPicker : View.OnClickListener {
         return this
     }
 
-    fun addView(imageView: ImageView) {
-        addView(imageView, false)
-    }
-
-    fun addView(imageView: ImageView, makeToggled: Boolean) {
+    fun addView(imageView: ImageView, color: Int, makeToggled: Boolean) {
+        imageView.drawable.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+        imageView.tag = color
         unchoose(imageView)
         if (makeToggled) {
             choose(imageView)
@@ -33,7 +33,7 @@ class ButtonColorPicker : View.OnClickListener {
 
     fun getCurrentColor() : Int {
         toggledView?.let {
-            return (it.drawable as ColorDrawable).color
+            return it.tag as Int
         }
         return Color.TRANSPARENT
     }
@@ -45,9 +45,9 @@ class ButtonColorPicker : View.OnClickListener {
         onColorListener?.onColorSelected(getCurrentColor())
     }
 
-    private fun unchoose(v : View) {
+    private fun unchoose(v : ImageView) {
         v.isEnabled = true
-        v.setPadding(0, 0, 0, 0)
+        v.background.colorFilter = PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
     }
 
     private fun unchooseToggledView() {
@@ -58,8 +58,9 @@ class ButtonColorPicker : View.OnClickListener {
 
     private fun choose(v : View) {
         v.isEnabled = false
-        val p = paddingSize
-        v.setPadding(p, p, p, p)
+        v.background.colorFilter = PorterDuffColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
+        //val p = paddingSize
+        //v.setPadding(p, p, p, p)
     }
 
     private fun isChosen(v : View) = !v.isEnabled

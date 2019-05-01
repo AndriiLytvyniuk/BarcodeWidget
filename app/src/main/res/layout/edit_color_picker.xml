@@ -60,21 +60,15 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ImageView
-            android:layout_width="@dimen/color_picker_button_size"
-            android:layout_height="@dimen/color_picker_button_size"
-            android:background="@android:color/black"
-            app:srcCompat="@android:color/holo_red_dark"
             android:id="@+id/colorView0"
+            style="@style/ColorPickerRadioButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/colorView5"
             app:layout_constraintEnd_toStartOf="@+id/barcodeImageFrame"
             app:layout_constraintTop_toTopOf="@+id/barcodeImageFrame"/>
 
     <ImageView
-            android:layout_width="@dimen/color_picker_button_size"
-            android:layout_height="@dimen/color_picker_button_size"
-            android:background="@android:color/black"
-            app:srcCompat="@android:color/holo_red_dark"
+            style="@style/ColorPickerRadioButton"
             android:id="@+id/colorView1"
             app:layout_constraintTop_toBottomOf="@+id/colorView3"
             app:layout_constraintStart_toStartOf="@+id/colorView3"
@@ -82,10 +76,7 @@
             app:layout_constraintBottom_toTopOf="@+id/colorView2"/>
 
     <ImageView
-            android:layout_width="@dimen/color_picker_button_size"
-            android:layout_height="@dimen/color_picker_button_size"
-            android:background="@android:color/black"
-            app:srcCompat="@android:color/holo_red_dark"
+            style="@style/ColorPickerRadioButton"
             android:id="@+id/colorView2"
             app:layout_constraintTop_toBottomOf="@+id/colorView1"
             app:layout_constraintEnd_toEndOf="@+id/colorView1"
@@ -93,37 +84,24 @@
             app:layout_constraintBottom_toTopOf="@+id/colorView4"/>
 
     <ImageView
-            android:layout_width="@dimen/color_picker_button_size"
-            android:layout_height="@dimen/color_picker_button_size"
-            android:background="@android:color/black"
-            app:srcCompat="@android:color/holo_red_dark"
+            style="@style/ColorPickerRadioButton"
             android:id="@+id/colorView3"
             app:layout_constraintTop_toTopOf="@+id/barcodeImageFrame"
             app:layout_constraintBottom_toTopOf="@+id/colorView1"
-            android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
             app:layout_constraintVertical_chainStyle="spread"
             app:layout_constraintStart_toEndOf="@+id/barcodeImageFrame"/>
 
     <ImageView
-            android:layout_width="@dimen/color_picker_button_size"
-            android:layout_height="@dimen/color_picker_button_size"
-            android:background="@android:color/black"
-            app:srcCompat="@android:color/holo_red_dark"
+            style="@style/ColorPickerRadioButton"
             android:id="@+id/colorView4"
             app:layout_constraintStart_toStartOf="@+id/colorView2"
             app:layout_constraintTop_toBottomOf="@+id/colorView2"
             app:layout_constraintBottom_toBottomOf="@+id/barcodeImageFrame"
-            app:layout_constraintEnd_toEndOf="@+id/colorView2"
-            app:layout_constraintHorizontal_bias="0.5"
-            android:layout_marginBottom="8dp"/>
+            app:layout_constraintEnd_toEndOf="@+id/colorView2"/>
 
     <ImageView
-            android:layout_width="@dimen/color_picker_button_size"
-            android:layout_height="@dimen/color_picker_button_size"
-            android:background="@android:color/black"
-            app:srcCompat="@android:color/holo_red_dark"
+            style="@style/ColorPickerRadioButton"
             android:id="@+id/colorView5"
             app:layout_constraintTop_toBottomOf="@+id/colorView0"
             app:layout_constraintBottom_toTopOf="@+id/colorView6"
@@ -131,28 +109,19 @@
             app:layout_constraintStart_toStartOf="@+id/colorView0"/>
 
     <ImageView
-            android:layout_width="@dimen/color_picker_button_size"
-            android:layout_height="@dimen/color_picker_button_size"
-            android:background="@android:color/black"
-            app:srcCompat="@android:color/holo_red_dark"
+            style="@style/ColorPickerRadioButton"
             android:id="@+id/colorView6"
             app:layout_constraintStart_toStartOf="@+id/colorView5"
             app:layout_constraintTop_toBottomOf="@+id/colorView5"
             app:layout_constraintBottom_toTopOf="@+id/colorView7"
-            app:layout_constraintEnd_toEndOf="@+id/colorView5"
-            app:layout_constraintHorizontal_bias="1.0"/>
+            app:layout_constraintEnd_toEndOf="@+id/colorView5"/>
 
     <ImageView
-            android:layout_width="@dimen/color_picker_button_size"
-            android:layout_height="@dimen/color_picker_button_size"
-            android:background="@android:color/black"
-            app:srcCompat="@android:color/holo_red_dark"
+            style="@style/ColorPickerRadioButton"
             android:id="@+id/colorView7"
             app:layout_constraintStart_toStartOf="@+id/colorView6"
             app:layout_constraintTop_toBottomOf="@+id/colorView6"
             app:layout_constraintEnd_toEndOf="@+id/colorView6"
-            app:layout_constraintHorizontal_bias="1.0"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/barcodeImageFrame"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
