@@ -31,13 +31,13 @@ class ListActivityTest {
 
     @Test
     fun checkListViewCount() {
-        onView(withId(R.id.barcodeListView)).check(RecyclerViewItemCountAssertion(testBarcodes.size))
+        onView(withId(R.id.barcodeListView)).check(RecyclerViewItemCountAssertion(testBarcodes.size + 1))
     }
 
     //TODO add more UI Tests
     @Test
     fun checkListViewItem() {
-        onView(withRecyclerView(R.id.barcodeListView).atPositionOnView(0, R.id.dataTextView))
+        onView(withRecyclerView(R.id.barcodeListView).atPositionOnView(1, R.id.dataTextView))
             .check(ViewAssertions.matches(ViewMatchers.withText(testBarcodes[0].rawBarcode.value)))
     }
 }
