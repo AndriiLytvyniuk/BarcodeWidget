@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@android:color/transparent"/>
-
-    <stroke
-            android:width="2dp"
-            android:color="@color/colorPrimary"/>
+    <solid android:color="@android:color/white"/>
 
     <corners
-            android:bottomRightRadius="2dp"
-            android:bottomLeftRadius="2dp"
-            android:topLeftRadius="2dp"
-            android:topRightRadius="2dp"/>
+            android:bottomRightRadius="@dimen/widget_frame_radius"
+            android:bottomLeftRadius="@dimen/widget_frame_radius"
+            android:topLeftRadius="@dimen/widget_frame_radius"
+            android:topRightRadius="@dimen/widget_frame_radius"/>
 </shape>

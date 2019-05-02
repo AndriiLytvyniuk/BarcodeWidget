@@ -1,25 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+
+<ImageView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/widgetImageView"
+        android:src="@drawable/widget_preview"
         android:background="@android:color/transparent"
+        tools:background="@android:color/holo_red_dark"
+        android:scaleType="fitCenter"
+        android:layout_gravity="center"
+        tools:src="@drawable/test_qr_code"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <ImageView
-            android:id="@+id/widgetImageView"
-            android:src="@drawable/widget_preview"
-            android:background="@android:color/transparent"
-            android:layout_margin="4dp"
-            android:scaleType="fitCenter"
-            tools:src="@drawable/test_qr_code"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    <ImageView
-            android:id="@+id/frameImageView"
-            tools:src="@drawable/widget_frame"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-</FrameLayout>
+        android:layout_height="match_parent"/>

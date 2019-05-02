@@ -66,23 +66,25 @@ class WidgetUpdateService : JobIntentService() {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
         Log.d(TAG, "Update widget for id ${barcode.widgetId}, barcode = $barcode")
         val bitmap = codeToImageConverter.convert(barcode.rawBarcode).blockingFirst()
-        remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmap)
         remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
-        val frameBitmap = createFrameBitmap(bitmap.width, bitmap.height, barcode.color ?: Color.TRANSPARENT)
-        remoteViews.setBitmap(R.id.frameImageView, "setImageBitmap", frameBitmap)
+        val bitmapWithFrame = createFrameBitmap(bitmap, barcode.color ?: Color.TRANSPARENT)
+        remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmapWithFrame)
         appWidgetManager.updateAppWidget(barcode.widgetId, remoteViews)
     }
 
     /**
      * This is the only way to create stable frame around ImageView with same ratio
      */
-    private fun createFrameBitmap(width: Int, height: Int, color: Int): Bitmap {
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    private fun createFrameBitmap(imageBitmap: Bitmap, color: Int): Bitmap {
+        val bitmap = Bitmap.createBitmap(imageBitmap.width, imageBitmap.height, Bitmap.Config.ARGB_8888)
         val drawable = getDrawable(R.drawable.widget_frame)
         drawable.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, width, height)
+        drawable.setBounds(0, 0, imageBitmap.width, imageBitmap.height)
         drawable.draw(canvas)
+        val frameWidth = 8
+        canvas.drawBitmap(imageBitmap, null,
+            Rect(frameWidth, frameWidth, bitmap.width - frameWidth, bitmap.height - frameWidth), null)
         return bitmap
     }
 
