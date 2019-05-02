@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BarcodeWidget</string>
+    <string name="app_name">QR Widget</string>
     <string name="action_settings">Settings</string>
     <string name="confirm">OK</string>
     <string name="barcode_is_reserved">This code is already reserved</string>
