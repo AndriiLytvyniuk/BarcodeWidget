@@ -25,6 +25,7 @@
     <TextView
             android:id="@+id/noBarcodesTextView"
             android:text="@string/no_barcodes"
+            android:textSize="@dimen/text_size_ordinary"
             android:gravity="center"
             android:visibility="gone"
             android:layout_width="match_parent"

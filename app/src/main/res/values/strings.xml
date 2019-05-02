@@ -25,4 +25,5 @@
     <string name="reserved_by_widget">Reserved by Widget</string>
     <string name="gallery">Gallery</string>
     <string name="saved">Saved</string>
+    <string name="confirm_delete">Are you sure you want to delete barcode?</string>
 </resources>
