@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         app:cardCornerRadius="3dp"
-        android:foreground="@color/transparent_gray"
+        android:backgroundTint="@color/light_gray"
         android:layout_height="@dimen/header_list_item_height">
 
         <TextView

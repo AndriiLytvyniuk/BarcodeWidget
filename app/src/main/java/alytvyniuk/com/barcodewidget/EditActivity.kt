@@ -37,7 +37,7 @@ private const val KEY_WIDGET_ID = "KEY_WIDGET_ID"
 private const val KEY_BARCODE = "KEY_BARCODE"
 private const val KEY_TITLE = "KEY_TITLE"
 private const val KEY_COLOR = "KEY_COLOR"
-private const val COLORS_NUMBER = 12
+private const val COLORS_NUMBER = 8
 
 class EditActivity : DisposeActivity(), View.OnClickListener {
 
