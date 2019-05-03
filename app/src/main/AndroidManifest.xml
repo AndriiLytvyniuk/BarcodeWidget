@@ -10,9 +10,9 @@
     <application
             android:allowBackup="true"
             android:name=".App"
-            android:icon="@drawable/temp_ic_launcher"
+            android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
-            android:roundIcon="@drawable/temp_ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="GoogleAppIndexingWarning">
