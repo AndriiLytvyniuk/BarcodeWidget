@@ -1,0 +1,39 @@
+<resources>
+
+    <!--General-->
+    <string name="app_name">QR Widget</string>
+
+    <!--CaptureActivity-->
+    <string name="initialize_widget">Выбирете баркод для своего виджета</string>
+    <string name="from_gallery">Из Галереи</string>
+    <string name="from_saved">Из сохраненных</string>
+    <string name="gallery">Галерея</string>
+    <string name="saved">Сохраненные</string>
+
+    <!--ListActivity-->
+    <string name="barcode_is_reserved">Этот код уже зарезервирован</string>
+    <string name="no_barcodes">Нет добавленных кодов</string>
+    <string name="available_items">Доступные</string>
+    <string name="reserved_by_widget">Зарезервированы виджетом</string>
+
+    <!--EditActivity-->
+    <string name="edit_and_save">Редактирование</string>
+    <string name="details">Детали</string>
+    <string name="delete">Удалить</string>
+    <string name="set_title">Название</string>
+    <string name="data_title">Данные</string>
+    <string name="title">Название кода</string>
+    <string name="barcode_format">Формат</string>
+    <string name="save">Сохранить</string>
+    <string name="confirm_delete">Вы действительно хотите удалить баркод?</string>
+
+    <!--AboutActivity-->
+    <string name="project_info">О проекте</string>
+    <string name="check_project_on">Проект можно найти на</string>
+    <string name="my_name">Андрей Литвинюк</string>
+    <string name="about_me">Обо мне</string>
+
+    <!--PreviewActivity-->
+    <string name="edit">Редактировать</string>
+
+</resources>

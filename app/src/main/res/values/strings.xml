@@ -11,7 +11,6 @@
     <string name="saved">Saved</string>
 
     <!--ListActivity-->
-    <string name="saved_codes">Saved</string>
     <string name="barcode_is_reserved">This code is already reserved</string>
     <string name="no_barcodes">There are no barcodes added</string>
     <string name="available_items">Available Items</string>

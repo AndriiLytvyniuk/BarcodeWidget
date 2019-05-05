@@ -1,0 +1,39 @@
+<resources>
+
+    <!--General-->
+    <string name="app_name">QR Widget</string>
+
+    <!--CaptureActivity-->
+    <string name="initialize_widget">Оберіть код для свого віджету</string>
+    <string name="from_gallery">З Галереї</string>
+    <string name="from_saved">Зі збережених</string>
+    <string name="gallery">Галерея</string>
+    <string name="saved">Збережені</string>
+
+    <!--ListActivity-->
+    <string name="barcode_is_reserved">Цей код вже зарезервовано</string>
+    <string name="no_barcodes">Нема доданих кодів</string>
+    <string name="available_items">Доступні</string>
+    <string name="reserved_by_widget">Заразервовані віджетом</string>
+
+    <!--EditActivity-->
+    <string name="edit_and_save">Редагування</string>
+    <string name="details">Деталі</string>
+    <string name="delete">Видалити</string>
+    <string name="set_title">Моя назва</string>
+    <string name="data_title">Дані</string>
+    <string name="title">Назва</string>
+    <string name="barcode_format">Формат</string>
+    <string name="save">Зберегти</string>
+    <string name="confirm_delete">Ви дійсно хочете видалити код?</string>
+
+    <!--AboutActivity-->
+    <string name="project_info">Про проект</string>
+    <string name="check_project_on">Проект можна знайти на</string>
+    <string name="my_name">Андрій Литвинюк</string>
+    <string name="about_me">Про мене</string>
+
+    <!--PreviewActivity-->
+    <string name="edit">Редагувати</string>
+
+</resources>
