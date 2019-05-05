@@ -1,28 +1,39 @@
 <resources>
+
+    <!--General-->
     <string name="app_name">QR Widget</string>
-    <string name="action_settings">Settings</string>
-    <string name="confirm">OK</string>
-    <string name="barcode_is_reserved">This code is already reserved</string>
-    <string name="delete">Delete</string>
+
+    <!--CaptureActivity-->
     <string name="initialize_widget">Choose barcode for your widget</string>
-    <string name="set_title">Set title</string>
+    <string name="from_gallery">From Gallery</string>
+    <string name="from_saved">From Saved</string>
+    <string name="gallery">Gallery</string>
+    <string name="saved">Saved</string>
+
+    <!--ListActivity-->
+    <string name="saved_codes">Saved</string>
+    <string name="barcode_is_reserved">This code is already reserved</string>
     <string name="no_barcodes">There are no barcodes added</string>
+    <string name="available_items">Available Items</string>
+    <string name="reserved_by_widget">Reserved by Widget</string>
+
+    <!--EditActivity-->
+    <string name="edit_and_save">Edit and Save</string>
+    <string name="details">Details</string>
+    <string name="delete">Delete</string>
+    <string name="set_title">Set title</string>
     <string name="data_title">Data</string>
     <string name="title">Title</string>
     <string name="barcode_format">Format</string>
+    <string name="save">Save</string>
+
+    <!--AboutActivity-->
     <string name="project_info">Project Info</string>
     <string name="check_project_on">Find project on</string>
     <string name="my_name">Andrii Lytvyniuk</string>
     <string name="about_me">About Me</string>
-    <string name="saved_codes">Saved</string>
-    <string name="edit_and_save">Edit and Save</string>
-    <string name="save">Save</string>
+
+    <!--PreviewActivity-->
     <string name="edit">Edit</string>
-    <string name="details">Details</string>
-    <string name="from_gallery">From Gallery</string>
-    <string name="from_saved">From Saved</string>
-    <string name="available_items">Available Items</string>
-    <string name="reserved_by_widget">Reserved by Widget</string>
-    <string name="gallery">Gallery</string>
-    <string name="saved">Saved</string>
+
 </resources>
