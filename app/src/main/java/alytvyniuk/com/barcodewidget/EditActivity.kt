@@ -31,6 +31,9 @@ import kotlinx.android.synthetic.main.edit_color_picker.*
 import kotlinx.android.synthetic.main.edit_data_layout.*
 import javax.inject.Inject
 import kotlin.random.Random
+import android.content.DialogInterface
+import androidx.appcompat.app.AlertDialog
+
 
 private const val TAG = "EditActivity"
 private const val KEY_WIDGET_ID = "KEY_WIDGET_ID"
@@ -48,15 +51,19 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
          * If @param barcode and widgetId are valid, means edit.
          * If barcode is valid, and widgetId is not, means create new and saveAndExit
          */
-        fun intent(context: Context,
-                   barcode: Barcode,
-                   widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID): Intent {
+        fun intent(
+            context: Context,
+            barcode: Barcode,
+            widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
+        ): Intent {
             return BarcodeActivityHelper.intent(EditActivity::class.java, context, barcode, widgetId)
         }
     }
 
-    @Inject lateinit var barcodeDao: BarcodeDao
-    @Inject lateinit var codeToImageConverter: CodeToImageConverter
+    @Inject
+    lateinit var barcodeDao: BarcodeDao
+    @Inject
+    lateinit var codeToImageConverter: CodeToImageConverter
     private var newWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private lateinit var barcode: Barcode
     private val colorPicker = ButtonColorPicker()
@@ -80,8 +87,10 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
         newWidgetId = intent.getWidgetId()
         if (barcode.widgetId.isValidWidgetId()) {
             if (newWidgetId.isValidWidgetId()) {
-                throw IllegalStateException("Can't reuse record of existing barcode. " +
-                        "From intent=$newWidgetId, from barcode=${barcode.widgetId}")
+                throw IllegalStateException(
+                    "Can't reuse record of existing barcode. " +
+                            "From intent=$newWidgetId, from barcode=${barcode.widgetId}"
+                )
             } else {
                 newWidgetId = barcode.widgetId
             }
@@ -99,7 +108,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
         saveButton.setOnClickListener(this)
     }
 
-    private fun initColorPicker(chosenColor : Int) {
+    private fun initColorPicker(chosenColor: Int) {
         val colorsNumber = 8
         for (i in 0 until colorsNumber) {
             val id = resources.getIdentifier("colorView$i", "id", packageName)
@@ -147,13 +156,15 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
         finish()
     }
 
-    private fun updateWidgetProvider(widgetId : Int) {
+    private fun updateWidgetProvider(widgetId: Int) {
         Log.d(TAG, "updateWidgetProvider: $widgetId")
-        sendBroadcast(Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
-            .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId)))
+        sendBroadcast(
+            Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+                .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
+        )
     }
 
-    private fun getRandomColor() : Int {
+    private fun getRandomColor(): Int {
         val number = Random.nextInt(COLORS_NUMBER)
         val colorId = resources.getIdentifier("choice_color_$number", "color", packageName)
         return ContextCompat.getColor(this, colorId)
@@ -175,13 +186,9 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.delete -> {
-                barcodeDao.delete(barcode)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe {
-                        finish()
-                    }
+                showDeleteConfirmationDialog()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -203,19 +210,43 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
         onBackPressed()
         return super.onSupportNavigateUp()
     }
+
+    private fun showDeleteConfirmationDialog() {
+        val dialogClickListener = DialogInterface.OnClickListener { dialog, which ->
+            when (which) {
+                DialogInterface.BUTTON_POSITIVE -> {
+                    barcodeDao.delete(barcode)
+                        .subscribeOn(Schedulers.io())
+                        .subscribe {
+                            finish()
+                        }
+                }
+            }
+        }
+
+        AlertDialog.Builder(this)
+            .setMessage(R.string.confirm_delete)
+            .setPositiveButton(android.R.string.yes, dialogClickListener)
+            .setNegativeButton(android.R.string.no, dialogClickListener)
+            .show()
+    }
 }
 
 object BarcodeActivityHelper {
 
-    fun <T> intent(clazz: Class<T>, context: Context, barcode: Barcode? = null,
-                   widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID): Intent {
+    fun <T> intent(
+        clazz: Class<T>, context: Context, barcode: Barcode? = null,
+        widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
+    ): Intent {
         val intent = Intent(context, clazz)
         return appendExtras(intent, barcode, widgetId)
     }
 
     @VisibleForTesting
-    fun appendExtras(intent: Intent, barcode: Barcode? = null,
-                     widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID) : Intent {
+    fun appendExtras(
+        intent: Intent, barcode: Barcode? = null,
+        widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
+    ): Intent {
         if (widgetId.isValidWidgetId()) {
             intent.putExtra(KEY_WIDGET_ID, widgetId)
         }
@@ -228,9 +259,9 @@ object BarcodeActivityHelper {
 
 fun Intent.getWidgetId() = getIntExtra(KEY_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
 
-fun Intent.getBarcode() : Barcode = getParcelableExtra(KEY_BARCODE)
+fun Intent.getBarcode(): Barcode = getParcelableExtra(KEY_BARCODE)
 
-fun ImageView.setImageFromBarcode(codeToImageConverter: CodeToImageConverter, rawBarcode : RawBarcode) : Disposable {
+fun ImageView.setImageFromBarcode(codeToImageConverter: CodeToImageConverter, rawBarcode: RawBarcode): Disposable {
     visibility = View.INVISIBLE
     return codeToImageConverter.convert(rawBarcode)
         .subscribeOn(Schedulers.io())

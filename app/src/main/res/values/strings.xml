@@ -26,6 +26,7 @@
     <string name="title">Title</string>
     <string name="barcode_format">Format</string>
     <string name="save">Save</string>
+    <string name="confirm_delete">Are you sure you want to delete barcode?</string>
 
     <!--AboutActivity-->
     <string name="project_info">Project Info</string>
