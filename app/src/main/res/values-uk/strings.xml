@@ -15,6 +15,7 @@
     <string name="no_barcodes">Нема доданих кодів</string>
     <string name="available_items">Доступні</string>
     <string name="reserved_by_widget">Заразервовані віджетом</string>
+    <string name="failed_to_convert">Не вдалося зконвертувати зображення</string>
 
     <!--EditActivity-->
     <string name="edit_and_save">Редагування</string>

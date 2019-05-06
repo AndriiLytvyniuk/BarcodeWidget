@@ -18,6 +18,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -64,8 +65,10 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
                     Log.d(TAG, "Result of conversion = $convertResponse.barcode")
                     onBarcodeResult(convertResponse.barcode)
                 }
-                convertResponse.exception != null -> Log.e(TAG, "Couldn't convert", convertResponse.exception)
-                //TODO handle
+                convertResponse.exception != null -> {
+                    Log.e(TAG, "Couldn't convert", convertResponse.exception)
+                    Toast.makeText(this, R.string.failed_to_convert, Toast.LENGTH_LONG).show()
+                }
                 else -> throw IllegalStateException("Both barcode and exception can't be null")
             }
         })
@@ -116,7 +119,6 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         if (intent.data != null) {
             performImageToBarcodeConversion(intent.data)
         } else {
-            // TODO error message
             Log.e(TAG, "Couldn't get image from ACTION_VIEW null uri")
         }
     }
@@ -126,11 +128,9 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
             if (data != null && data.data != null) {
                 performImageToBarcodeConversion(data.data)
             } else {
-                // TODO error message
                 Log.e(TAG, "Couldn't get image from gallery null uri")
             }
         } else {
-            // TODO error message
             Log.e(TAG, "Couldn't get image from gallery")
         }
     }

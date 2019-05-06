@@ -1,5 +1,6 @@
 package alytvyniuk.com.barcodewidget
 
+import android.Manifest
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
@@ -7,12 +8,17 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.rule.GrantPermissionRule
 import org.hamcrest.CoreMatchers.not
 import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.Test
 
 private const val WIDGET_ID = 1
 class CaptureActivityTest {
+
+    @get:Rule val grantPermissionRule: GrantPermissionRule
+            = GrantPermissionRule.grant(Manifest.permission.CAMERA)
 
     private fun launchFromHome() =
         ActivityScenario.launch<CaptureActivity>(CaptureActivity::class.java)

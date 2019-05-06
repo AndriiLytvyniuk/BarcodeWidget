@@ -9,6 +9,7 @@
     <string name="from_saved">Из сохраненных</string>
     <string name="gallery">Галерея</string>
     <string name="saved">Сохраненные</string>
+    <string name="failed_to_convert">Не удалось сконвертировать изображение</string>
 
     <!--ListActivity-->
     <string name="barcode_is_reserved">Этот код уже зарезервирован</string>
