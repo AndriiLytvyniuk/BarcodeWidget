@@ -64,8 +64,6 @@ class PreviewActivity : DisposeActivity() {
             val barcode = data?.getBarcode()
             if (barcode != null) {
                 updateView(barcode)
-            } else {
-                throw IllegalArgumentException("No rawBarcode found in extra")
             }
         }
     }
