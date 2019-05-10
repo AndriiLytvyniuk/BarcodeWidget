@@ -32,6 +32,8 @@ private const val TAG = "CaptureActivity"
 private const val REQUEST_GALLERY = 2
 private const val REQUEST_LIST_ACTIVITY = 3
 private const val REQUEST_CAMERA_PERMISSION_ON_RESUME = 11
+private const val KEY_STARTED_FOR_RECENTS = "KEY_STARTED_FOR_RECENTS"
+
 
 @SuppressWarnings("TooManyFunctions")
 class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResultHandler {
@@ -41,6 +43,13 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     @VisibleForTesting
     var newWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private lateinit var model : ImageConvertViewModel
+
+    companion object {
+        fun intentToPutInRecents(context: Context): Intent {
+            return Intent(context, CaptureActivity::class.java)
+                .putExtra(KEY_STARTED_FOR_RECENTS, true)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         App.component().inject(this)
@@ -52,6 +61,8 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         initUi()
         if (Intent.ACTION_VIEW == intent.action) {
             handleViewImage()
+        } else if (intent.getBooleanExtra(KEY_STARTED_FOR_RECENTS, false)) {
+            onBackPressed()
         }
     }
 
@@ -168,8 +179,8 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
         ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA), requestCode)
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         if (!hasCameraPermission()) {
             requestCameraPermission(this, REQUEST_CAMERA_PERMISSION_ON_RESUME)
         }
