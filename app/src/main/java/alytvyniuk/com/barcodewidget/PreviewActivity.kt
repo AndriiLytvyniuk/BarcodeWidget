@@ -68,9 +68,7 @@ class PreviewActivity : DisposeActivity() {
         }
     }
 
-    // When closing preview, it is more preferable to see CaptureActivity in recents
     override fun onBackPressed() {
-        startActivity(CaptureActivity.intentToPutInRecents(this))
-        super.onBackPressed()
+        finishAndRemoveTask()
     }
 }
