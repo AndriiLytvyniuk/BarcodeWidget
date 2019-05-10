@@ -165,11 +165,7 @@ class CaptureActivity : AppCompatActivity(), View.OnClickListener, BarcodeResult
     }
 
     private fun requestCameraPermission(activity: Activity, requestCode: Int) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)) {
-            //TODO Show Rationale
-        } else {
-            ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA), requestCode)
-        }
+        ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA), requestCode)
     }
 
     override fun onResume() {
