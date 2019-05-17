@@ -213,5 +213,5 @@ interface BarcodeResultHandler {
 fun Context.hasCameraPermission() = ContextCompat
     .checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
 
-fun Context.getBitmapForImageUri(uri: Uri): Bitmap? =
+fun Context.getBitmapForImageUri(uri: Uri): Bitmap =
     MediaStore.Images.Media.getBitmap(contentResolver, uri)

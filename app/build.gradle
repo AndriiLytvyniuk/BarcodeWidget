@@ -77,6 +77,10 @@ dependencies {
     implementation 'com.github.ReactiveX:RxKotlin:2.x-SNAPSHOT'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha01"
+
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
 

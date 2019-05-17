@@ -28,8 +28,8 @@ plugins {
 allprojects {
     repositories {
         google()
-        maven { url 'https://jitpack.io' }
         jcenter()
+        maven { url 'https://jitpack.io' }
         maven { url 'https://maven.fabric.io/public' }
     }
 }

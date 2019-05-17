@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 private const val TAG = "ImageToCode"
 
-interface ImageToCodeConverter : Converter<Bitmap, Observable<RawBarcode>>
+interface ImageToCodeConverter : Converter<Bitmap, RawBarcode>
 
 @Singleton
 class ZxingImageToCodeConverter @Inject constructor() : ImageToCodeConverter {
@@ -45,11 +45,7 @@ class ZxingImageToCodeConverter @Inject constructor() : ImageToCodeConverter {
     }
 
     @Throws(Exception::class)
-    override fun convert(bitmap: Bitmap): Observable<RawBarcode> {
-        return Observable.fromCallable {
-            convertBitmapToBarcode(bitmap)
-        }
-    }
+    override fun convert(bitmap: Bitmap) = convertBitmapToBarcode(bitmap)
 
     @Throws(Exception::class)
     private fun convertBitmapToBarcode(bitmap: Bitmap) : RawBarcode {
