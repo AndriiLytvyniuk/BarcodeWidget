@@ -4,7 +4,10 @@ import alytvyniuk.com.barcodewidget.model.Format
 import alytvyniuk.com.barcodewidget.model.RawBarcode
 import android.graphics.Bitmap
 import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
+import com.google.zxing.ResultMetadataType
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -25,7 +28,11 @@ class ZXingCodeToImageConverter @Inject constructor(): CodeToImageConverter {
             BarcodeFormat.EAN_13 -> IMAGE_SIZE * 2
             else -> IMAGE_SIZE
         }
-        val bitMatrix = multiFormatWriter.encode(rawBarcode.value, format, width, IMAGE_SIZE)
+        val options = if (format == BarcodeFormat.QR_CODE)
+            mapOf<EncodeHintType, Any>(EncodeHintType.ERROR_CORRECTION to ErrorCorrectionLevel.L).toMutableMap()
+        else
+            null
+        val bitMatrix = multiFormatWriter.encode(rawBarcode.value, format, width, IMAGE_SIZE, options)
         val barcodeEncoder = BarcodeEncoder()
         return Observable.fromCallable {
             barcodeEncoder.createBitmap(bitMatrix)

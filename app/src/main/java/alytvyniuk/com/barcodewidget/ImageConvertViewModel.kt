@@ -5,13 +5,15 @@ import alytvyniuk.com.barcodewidget.model.RawBarcode
 import android.app.Application
 import android.net.Uri
 import androidx.annotation.NonNull
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 
 class ImageConvertViewModel(application: Application,
                             private val imageToCodeConverter: ImageToCodeConverter) : AndroidViewModel(application) {
 
-    private val liveData: MutableLiveData<ConvertResponse> = MutableLiveData()
+    @VisibleForTesting
+    val liveData: MutableLiveData<ConvertResponse> = MutableLiveData()
 
     fun observe(@NonNull owner: LifecycleOwner, @NonNull observer: Observer<ConvertResponse>) {
         liveData.observe(owner, observer)
