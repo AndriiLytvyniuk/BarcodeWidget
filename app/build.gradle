@@ -15,8 +15,8 @@ android {
         applicationId "alytvyniuk.com.barcodewidget"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "Caravaggio"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
