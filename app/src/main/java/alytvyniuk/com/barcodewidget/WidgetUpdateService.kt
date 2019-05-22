@@ -11,6 +11,7 @@ import android.graphics.*
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.JobIntentService
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 private const val TAG = "WidgetUpdateService"
@@ -65,7 +66,9 @@ class WidgetUpdateService : JobIntentService() {
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, barcode: Barcode) {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
         Log.d(TAG, "Update widget for id ${barcode.widgetId}, barcode = $barcode")
-        val bitmap = codeToImageConverter.convert(barcode.rawBarcode).blockingFirst()
+        val bitmap = runBlocking {
+            codeToImageConverter.convert(barcode.rawBarcode)
+        }
         remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
         val bitmapWithFrame = createFrameBitmap(bitmap, barcode.color ?: Color.TRANSPARENT)
         remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmapWithFrame)

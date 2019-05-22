@@ -35,8 +35,7 @@ class PreviewActivity : DisposeActivity() {
 
     private fun updateView(barcode: Barcode) {
         Log.d(TAG, "updateView: $barcode")
-        val disposable = barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
-        addDisposable(disposable)
+        barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
         dataTextView.text = barcode.rawBarcode.value
         titleTextView.text = barcode.title
         colorFrameView.setBackgroundColor(barcode.color ?: Color.TRANSPARENT)

@@ -9,10 +9,8 @@ import alytvyniuk.com.barcodewidget.utils.DisposeActivity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
@@ -21,18 +19,20 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.VisibleForTesting
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit.*
 import kotlinx.android.synthetic.main.edit_color_picker.*
 import kotlinx.android.synthetic.main.edit_data_layout.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.random.Random
-import android.content.DialogInterface
-import androidx.appcompat.app.AlertDialog
 
 
 private const val TAG = "EditActivity"
@@ -98,8 +98,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     }
 
     private fun updateUI(barcode: Barcode) {
-        val disposable = barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
-        addDisposable(disposable)
+        barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
         initColorPicker(barcode.color!!)
         dataTextView.text = barcode.rawBarcode.value
         formatTextView.text = barcode.rawBarcode.format.toString()
@@ -212,7 +211,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     }
 
     private fun showDeleteConfirmationDialog() {
-        val dialogClickListener = DialogInterface.OnClickListener { dialog, which ->
+        val dialogClickListener = DialogInterface.OnClickListener { _, which ->
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     barcodeDao.delete(barcode)
@@ -261,15 +260,15 @@ fun Intent.getWidgetId() = getIntExtra(KEY_WIDGET_ID, AppWidgetManager.INVALID_A
 
 fun Intent.getBarcode(): Barcode = getParcelableExtra(KEY_BARCODE)
 
-fun ImageView.setImageFromBarcode(codeToImageConverter: CodeToImageConverter, rawBarcode: RawBarcode): Disposable {
+fun ImageView.setImageFromBarcode(codeToImageConverter: CodeToImageConverter, rawBarcode: RawBarcode) {
     visibility = View.INVISIBLE
-    return codeToImageConverter.convert(rawBarcode)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { bitmap ->
+    GlobalScope.launch {
+        val bitmap = codeToImageConverter.convert(rawBarcode)
+        withContext(Dispatchers.Main) {
             setImageBitmap(bitmap)
             visibility = View.VISIBLE
         }
+    }
 }
 
 

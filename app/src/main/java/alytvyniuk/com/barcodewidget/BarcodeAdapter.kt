@@ -78,8 +78,7 @@ class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter,
             itemView.setOnClickListener(this)
             itemView.dataTextView.text = item.rawBarcode.value
 
-            val disposable = itemView.barcodeImageView.setImageFromBarcode(codeToImageConverter, item.rawBarcode)
-            reusableDisposable.add(disposable)
+            itemView.barcodeImageView.setImageFromBarcode(codeToImageConverter, item.rawBarcode)
             if (TextUtils.isEmpty(item.title)) {
                 itemView.titleTextView.visibility = View.INVISIBLE
             } else {

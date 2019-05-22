@@ -9,7 +9,6 @@ import com.google.zxing.MultiFormatReader
 import com.google.zxing.Result
 import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.HybridBinarizer
-import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,7 +44,7 @@ class ZxingImageToCodeConverter @Inject constructor() : ImageToCodeConverter {
     }
 
     @Throws(Exception::class)
-    override fun convert(bitmap: Bitmap) = convertBitmapToBarcode(bitmap)
+    override suspend fun convert(bitmap: Bitmap) = convertBitmapToBarcode(bitmap)
 
     @Throws(Exception::class)
     private fun convertBitmapToBarcode(bitmap: Bitmap) : RawBarcode {
