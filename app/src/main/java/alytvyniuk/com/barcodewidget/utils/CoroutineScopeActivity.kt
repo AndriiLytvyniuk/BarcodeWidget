@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-abstract class CoroutineContextActivity : AppCompatActivity(), CoroutineScope {
+abstract class CoroutineScopeActivity : AppCompatActivity(), CoroutineScope {
 
     private lateinit var mJob: Job
     override val coroutineContext: CoroutineContext

@@ -4,7 +4,7 @@ import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
-import alytvyniuk.com.barcodewidget.utils.CoroutineContextActivity
+import alytvyniuk.com.barcodewidget.utils.CoroutineScopeActivity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -26,7 +26,7 @@ private const val TAG = "ListActivity"
 private const val REQUEST_UPDATE_WIDGET = 1
 private const val REQUEST_SHOW = 2
 
-class ListActivity : CoroutineContextActivity(), OnItemClickListener {
+class ListActivity : CoroutineScopeActivity(), OnItemClickListener {
 
     companion object {
         fun intent(context: Context, widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID): Intent {

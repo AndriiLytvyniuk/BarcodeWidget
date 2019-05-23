@@ -5,7 +5,7 @@ import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.RawBarcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
-import alytvyniuk.com.barcodewidget.utils.CoroutineContextActivity
+import alytvyniuk.com.barcodewidget.utils.CoroutineScopeActivity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -37,7 +37,7 @@ private const val KEY_TITLE = "KEY_TITLE"
 private const val KEY_COLOR = "KEY_COLOR"
 private const val COLORS_NUMBER = 8
 
-class EditActivity : CoroutineContextActivity(), View.OnClickListener {
+class EditActivity : CoroutineScopeActivity(), View.OnClickListener {
 
     companion object {
         const val REQUEST_EDIT_ACTIVITY = 4
@@ -93,7 +93,7 @@ class EditActivity : CoroutineContextActivity(), View.OnClickListener {
     }
 
     private fun updateUI(barcode: Barcode) {
-        barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
+        barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode, this)
         initColorPicker(barcode.color!!)
         dataTextView.text = barcode.rawBarcode.value
         formatTextView.text = barcode.rawBarcode.format.toString()
@@ -256,9 +256,11 @@ fun Intent.getWidgetId() = getIntExtra(KEY_WIDGET_ID, AppWidgetManager.INVALID_A
 
 fun Intent.getBarcode(): Barcode = getParcelableExtra(KEY_BARCODE)
 
-fun ImageView.setImageFromBarcode(codeToImageConverter: CodeToImageConverter, rawBarcode: RawBarcode) {
+fun ImageView.setImageFromBarcode(codeToImageConverter: CodeToImageConverter,
+                                  rawBarcode: RawBarcode,
+                                  coroutineScope: CoroutineScope = GlobalScope) {
     visibility = View.INVISIBLE
-    GlobalScope.launch {
+    coroutineScope.launch {
         val bitmap = codeToImageConverter.convert(rawBarcode)
         withContext(Dispatchers.Main) {
             setImageBitmap(bitmap)

@@ -3,7 +3,7 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.EditActivity.Companion.REQUEST_EDIT_ACTIVITY
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
-import alytvyniuk.com.barcodewidget.utils.CoroutineContextActivity
+import alytvyniuk.com.barcodewidget.utils.CoroutineScopeActivity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 private const val TAG = "PreviewActivity"
 
-class PreviewActivity : CoroutineContextActivity() {
+class PreviewActivity : CoroutineScopeActivity() {
 
     companion object {
         fun intent(context: Context, barcode: Barcode): Intent {
@@ -35,7 +35,7 @@ class PreviewActivity : CoroutineContextActivity() {
 
     private fun updateView(barcode: Barcode) {
         Log.d(TAG, "updateView: $barcode")
-        barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
+        barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode, this)
         dataTextView.text = barcode.rawBarcode.value
         titleTextView.text = barcode.title
         colorFrameView.setBackgroundColor(barcode.color ?: Color.TRANSPARENT)
