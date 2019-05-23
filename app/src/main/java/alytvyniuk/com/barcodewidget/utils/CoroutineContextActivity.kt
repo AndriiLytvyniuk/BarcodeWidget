@@ -16,27 +16,6 @@ abstract class CoroutineContextActivity : AppCompatActivity(), CoroutineScope {
         mJob = Job()
     }
 
-//    fun <T> launchWithResult (blockAsync: suspend CoroutineScope.() -> T,
-//                         blockUI: suspend CoroutineScope.(T) -> Unit) {
-//        launch {
-//            val deferred = async { blockAsync }
-//            val result = deferred.await()
-//            blockUI(result)
-//        }
-//    }
-//    private val reusableDisposable = ReusableCompositeDisposable()
-//
-//    protected fun getReusableCompositeDisposable() = reusableDisposable
-//
-//    protected fun addDisposable(disposable: Disposable) {
-//        reusableDisposable.add(disposable)
-//    }
-//
-//    override fun onStop() {
-//        super.onStop()
-//        reusableDisposable.dispose()
-//    }
-
     override fun onDestroy() {
         super.onDestroy()
         mJob.cancel()
