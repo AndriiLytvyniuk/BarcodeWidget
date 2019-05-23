@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-abstract class CoroutineScopeActivity : AppCompatActivity(), CoroutineScope {
+abstract class CoroutineScopeActivity : AppCompatActivity(), AsyncTaskCoroutineScope {
 
     private lateinit var mJob: Job
     override val coroutineContext: CoroutineContext
@@ -19,5 +19,18 @@ abstract class CoroutineScopeActivity : AppCompatActivity(), CoroutineScope {
     override fun onDestroy() {
         super.onDestroy()
         mJob.cancel()
+    }
+}
+
+interface AsyncTaskCoroutineScope : CoroutineScope {
+
+    fun <T> launchWithResult (blockAsync: suspend () -> T, blockUI: (T) -> Unit) {
+        launch {
+            val deferred = async(Dispatchers.Default) {
+                blockAsync()
+            }
+            val res = deferred.await()
+            blockUI(res)
+        }
     }
 }

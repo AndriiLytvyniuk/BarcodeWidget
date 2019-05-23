@@ -10,16 +10,12 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_barcode_list.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "ListActivity"
@@ -75,20 +71,14 @@ class ListActivity : CoroutineScopeActivity(), OnItemClickListener {
     private fun updateUI() {
         noBarcodesTextView.visibility = View.GONE
         barcodeListView.visibility = View.GONE
-        launch {
-            val deferred = async(Dispatchers.Default) { barcodeDao.loadAll() }
-            val barcodes = deferred.await()
-            Log.d(TAG, "updateUI: ${barcodes.size}")
-            if (barcodes.isEmpty()) {
-                noBarcodesTextView.visibility = View.VISIBLE
-            } else {
-                barcodeListView.visibility = View.VISIBLE
-                adapter.setBarcodes(barcodes)
-                adapter.setOnItemClickListener(this@ListActivity)
-                adapter.notifyDataSetChanged()
-            }
-
-        }
+        launchWithResult({
+            barcodeDao.loadAll()
+        }, { barcodes ->
+            barcodeListView.visibility = View.VISIBLE
+            adapter.setBarcodes(barcodes)
+            adapter.setOnItemClickListener(this@ListActivity)
+            adapter.notifyDataSetChanged()
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

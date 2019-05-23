@@ -5,6 +5,7 @@ import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.RawBarcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
+import alytvyniuk.com.barcodewidget.utils.AsyncTaskCoroutineScope
 import alytvyniuk.com.barcodewidget.utils.CoroutineScopeActivity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
@@ -25,7 +26,6 @@ import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_edit.*
 import kotlinx.android.synthetic.main.edit_color_picker.*
 import kotlinx.android.synthetic.main.edit_data_layout.*
-import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -126,19 +126,17 @@ class EditActivity : CoroutineScopeActivity(), View.OnClickListener {
 
     private fun saveAndExit(barcode: Barcode) {
         val id = this.barcode.id
-        launch {
-            val deferred = async(Dispatchers.Default) {
-                if (id == BarcodeDao.INVALID_DB_ID) {
-                    Log.d(TAG, "Save new barcode: $barcode")
-                    barcodeDao.insert(barcode)
-                } else {
-                    Log.d(TAG, "Update barcode: $barcode")
-                    barcodeDao.update(barcode)
-                }
+        launchWithResult({
+            if (id == BarcodeDao.INVALID_DB_ID) {
+                Log.d(TAG, "Save new barcode: $barcode")
+                barcodeDao.insert(barcode)
+            } else {
+                Log.d(TAG, "Update barcode: $barcode")
+                barcodeDao.update(barcode)
             }
-            deferred.await()
+        }, {
             exitAfterSaved(barcode)
-        }
+        })
     }
 
     private fun exitAfterSaved(barcode: Barcode) {
@@ -208,13 +206,11 @@ class EditActivity : CoroutineScopeActivity(), View.OnClickListener {
     private fun showDeleteConfirmationDialog() {
         val dialogClickListener = DialogInterface.OnClickListener { _, which ->
             when (which) {
-                DialogInterface.BUTTON_POSITIVE ->     {
-                    GlobalScope.launch {
-                        barcodeDao.delete(barcode)
-                        withContext(Dispatchers.Main) {
-                            finish()
-                        }
-                    }
+                DialogInterface.BUTTON_POSITIVE -> {
+                    launchWithResult(
+                        { barcodeDao.delete(barcode) },
+                        { finish() }
+                    )
                 }
             }
         }
@@ -256,17 +252,18 @@ fun Intent.getWidgetId() = getIntExtra(KEY_WIDGET_ID, AppWidgetManager.INVALID_A
 
 fun Intent.getBarcode(): Barcode = getParcelableExtra(KEY_BARCODE)
 
-fun ImageView.setImageFromBarcode(codeToImageConverter: CodeToImageConverter,
-                                  rawBarcode: RawBarcode,
-                                  coroutineScope: CoroutineScope = GlobalScope) {
+fun ImageView.setImageFromBarcode(
+    codeToImageConverter: CodeToImageConverter,
+    rawBarcode: RawBarcode,
+    asyncTaskCoroutineScope: AsyncTaskCoroutineScope
+) {
     visibility = View.INVISIBLE
-    coroutineScope.launch {
-        val bitmap = codeToImageConverter.convert(rawBarcode)
-        withContext(Dispatchers.Main) {
+    asyncTaskCoroutineScope.launchWithResult(
+        { codeToImageConverter.convert(rawBarcode) },
+        { bitmap ->
             setImageBitmap(bitmap)
             visibility = View.VISIBLE
-        }
-    }
+        })
 }
 
 
