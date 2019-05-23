@@ -5,7 +5,7 @@ import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.RawBarcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
-import alytvyniuk.com.barcodewidget.utils.DisposeActivity
+import alytvyniuk.com.barcodewidget.utils.CoroutineContextActivity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -22,15 +22,10 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit.*
 import kotlinx.android.synthetic.main.edit_color_picker.*
 import kotlinx.android.synthetic.main.edit_data_layout.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -42,7 +37,7 @@ private const val KEY_TITLE = "KEY_TITLE"
 private const val KEY_COLOR = "KEY_COLOR"
 private const val COLORS_NUMBER = 8
 
-class EditActivity : DisposeActivity(), View.OnClickListener {
+class EditActivity : CoroutineContextActivity(), View.OnClickListener {
 
     companion object {
         const val REQUEST_EDIT_ACTIVITY = 4
@@ -131,19 +126,19 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
 
     private fun saveAndExit(barcode: Barcode) {
         val id = this.barcode.id
-        val observable = if (id == BarcodeDao.INVALID_DB_ID) {
-            Log.d(TAG, "Save new barcode: $barcode")
-            barcodeDao.insert(barcode)
-        } else {
-            Log.d(TAG, "Update barcode: $barcode")
-            barcodeDao.update(barcode)
-        }
-        addDisposable(observable.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                exitAfterSaved(barcode)
+        launch {
+            val deferred = async(Dispatchers.Default) {
+                if (id == BarcodeDao.INVALID_DB_ID) {
+                    Log.d(TAG, "Save new barcode: $barcode")
+                    barcodeDao.insert(barcode)
+                } else {
+                    Log.d(TAG, "Update barcode: $barcode")
+                    barcodeDao.update(barcode)
+                }
             }
-        )
+            deferred.await()
+            exitAfterSaved(barcode)
+        }
     }
 
     private fun exitAfterSaved(barcode: Barcode) {
@@ -213,12 +208,13 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     private fun showDeleteConfirmationDialog() {
         val dialogClickListener = DialogInterface.OnClickListener { _, which ->
             when (which) {
-                DialogInterface.BUTTON_POSITIVE -> {
-                    barcodeDao.delete(barcode)
-                        .subscribeOn(Schedulers.io())
-                        .subscribe {
+                DialogInterface.BUTTON_POSITIVE ->     {
+                    GlobalScope.launch {
+                        barcodeDao.delete(barcode)
+                        withContext(Dispatchers.Main) {
                             finish()
                         }
+                    }
                 }
             }
         }

@@ -4,7 +4,7 @@ import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
-import alytvyniuk.com.barcodewidget.utils.DisposeActivity
+import alytvyniuk.com.barcodewidget.utils.CoroutineContextActivity
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -16,19 +16,20 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_barcode_list.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "ListActivity"
 private const val REQUEST_UPDATE_WIDGET = 1
 private const val REQUEST_SHOW = 2
 
-class ListActivity : DisposeActivity(), OnItemClickListener {
+class ListActivity : CoroutineContextActivity(), OnItemClickListener {
 
     companion object {
-        fun intent(context: Context, widgetId : Int = AppWidgetManager.INVALID_APPWIDGET_ID) : Intent {
+        fun intent(context: Context, widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID): Intent {
             return BarcodeActivityHelper.intent(ListActivity::class.java, context, widgetId = widgetId)
         }
     }
@@ -37,7 +38,7 @@ class ListActivity : DisposeActivity(), OnItemClickListener {
     lateinit var barcodeDao: BarcodeDao
     @Inject
     lateinit var codeToImageConverter: CodeToImageConverter
-    private lateinit var adapter : BarcodeAdapter
+    private lateinit var adapter: BarcodeAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +47,9 @@ class ListActivity : DisposeActivity(), OnItemClickListener {
         App.component().inject(this)
         barcodeListView.layoutManager = LinearLayoutManager(this)
         barcodeListView.addItemDecoration(
-            DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        adapter = BarcodeAdapter(codeToImageConverter, getReusableCompositeDisposable())
+            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        )
+        adapter = BarcodeAdapter(codeToImageConverter, this)
         barcodeListView.adapter = adapter
     }
 
@@ -57,7 +59,7 @@ class ListActivity : DisposeActivity(), OnItemClickListener {
     }
 
     override fun onItemClicked(barcode: Barcode) {
-        val widgetId : Int = intent.getWidgetId()
+        val widgetId: Int = intent.getWidgetId()
         val nextIntent = EditActivity.intent(this, barcode, widgetId)
         if (widgetId.isValidWidgetId()) {
             if (barcode.widgetId.isValidWidgetId()) {
@@ -73,21 +75,20 @@ class ListActivity : DisposeActivity(), OnItemClickListener {
     private fun updateUI() {
         noBarcodesTextView.visibility = View.GONE
         barcodeListView.visibility = View.GONE
-        addDisposable(barcodeDao.loadAll()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { barcodes ->
-                Log.d(TAG, "updateUI: ${barcodes.size}")
-                if (barcodes.isEmpty()) {
-                    noBarcodesTextView.visibility = View.VISIBLE
-                } else {
-                    barcodeListView.visibility = View.VISIBLE
-                    adapter.setBarcodes(barcodes)
-                    adapter.setOnItemClickListener(this)
-                    adapter.notifyDataSetChanged()
-                }
+        launch {
+            val deferred = async(Dispatchers.Default) { barcodeDao.loadAll() }
+            val barcodes = deferred.await()
+            Log.d(TAG, "updateUI: ${barcodes.size}")
+            if (barcodes.isEmpty()) {
+                noBarcodesTextView.visibility = View.VISIBLE
+            } else {
+                barcodeListView.visibility = View.VISIBLE
+                adapter.setBarcodes(barcodes)
+                adapter.setOnItemClickListener(this@ListActivity)
+                adapter.notifyDataSetChanged()
             }
-        )
+
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -1,7 +1,6 @@
 package alytvyniuk.com.barcodewidget.db
 
 import alytvyniuk.com.barcodewidget.model.Barcode
-import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -10,43 +9,38 @@ interface BarcodeDao {
         const val INVALID_DB_ID = 0
     }
 
-    fun insert(barcode: Barcode): Observable<Unit>
-    fun loadBarcodeEntities(widgetIds: List<Int>): Observable<List<Barcode>>
-    fun loadAll(): Observable<List<Barcode>>
-    fun update(barcode: Barcode): Observable<Unit>
-    fun eraseWidgetIds(widgetIds: List<Int>): Observable<Int>
-    fun delete(barcode: Barcode): Observable<Int>
+    suspend fun insert(barcode: Barcode)
+    suspend fun loadBarcodeEntities(widgetIds: List<Int>): List<Barcode>
+    suspend fun loadAll(): List<Barcode>
+    suspend fun update(barcode: Barcode)
+    suspend fun eraseWidgetIds(widgetIds: List<Int>): Int
+    suspend fun delete(barcode: Barcode): Int
 }
 
 @Singleton
 class RoomBarcodeDaoImpl @Inject constructor(private val roomBarcodeDao: RoomBarcodeDao) : BarcodeDao {
 
-    override fun insert(barcode: Barcode): Observable<Unit> = Observable.fromCallable {
+    override suspend fun insert(barcode: Barcode) {
         val roomEntity = RoomBarcode(barcode)
         roomBarcodeDao.insert(roomEntity)
     }
 
-    override fun loadBarcodeEntities(widgetIds: List<Int>): Observable<List<Barcode>> = Observable.fromCallable {
+    override suspend fun loadBarcodeEntities(widgetIds: List<Int>) : List<Barcode> {
         val roomEntities = roomBarcodeDao.loadBarcodeEntities(widgetIds)
-        roomEntities.map { it.toBarcodeEntity() }
+        return roomEntities.map { it.toBarcodeEntity() }
     }
 
-    override fun loadAll(): Observable<List<Barcode>> = Observable.fromCallable {
+    override suspend fun loadAll(): List<Barcode> {
         val entities = roomBarcodeDao.loadAll()
-        entities.map { it.toBarcodeEntity() }
+        return entities.map { it.toBarcodeEntity() }
     }
 
-    override fun update(barcode: Barcode): Observable<Unit> = Observable.fromCallable {
+    override suspend fun update(barcode: Barcode) {
         val roomEntity = RoomBarcode(barcode)
         roomBarcodeDao.update(roomEntity)
     }
 
-    override fun eraseWidgetIds(widgetIds: List<Int>): Observable<Int> = Observable.fromCallable {
-        roomBarcodeDao.eraseWidgetIds(widgetIds)
-    }
+    override suspend fun eraseWidgetIds(widgetIds: List<Int>) = roomBarcodeDao.eraseWidgetIds(widgetIds)
 
-    override fun delete(barcode: Barcode): Observable<Int> = Observable.fromCallable {
-        val roomEntity = RoomBarcode(barcode)
-        roomBarcodeDao.delete(roomEntity)
-    }
+    override suspend fun delete(barcode: Barcode) = roomBarcodeDao.delete(RoomBarcode(barcode))
 }

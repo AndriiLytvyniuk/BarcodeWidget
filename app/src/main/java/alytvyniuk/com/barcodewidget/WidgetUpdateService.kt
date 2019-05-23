@@ -51,14 +51,18 @@ class WidgetUpdateService : JobIntentService() {
         val widgetIds = intent.getIntegerArrayListExtra(EXTRA_WIDGET_IDS) ?: return
         when (intent.action) {
             AppWidgetManager.ACTION_APPWIDGET_UPDATE -> {
-                val barcodes = barcodeDao.loadBarcodeEntities(widgetIds).blockingFirst()
-                val appWidgetManager = AppWidgetManager.getInstance(this)
-                for (barcode in barcodes) {
-                    updateWidget(this, appWidgetManager, barcode)
+                runBlocking {
+                    val barcodes = barcodeDao.loadBarcodeEntities(widgetIds)
+                    val appWidgetManager = AppWidgetManager.getInstance(this@WidgetUpdateService)
+                    for (barcode in barcodes) {
+                        updateWidget(this@WidgetUpdateService, appWidgetManager, barcode)
+                    }
                 }
             }
             AppWidgetManager.ACTION_APPWIDGET_DELETED -> {
-                barcodeDao.eraseWidgetIds(widgetIds).blockingFirst()
+                runBlocking {
+                    barcodeDao.eraseWidgetIds(widgetIds)
+                }
             }
         }
     }

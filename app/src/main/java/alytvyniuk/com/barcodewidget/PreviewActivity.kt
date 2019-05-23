@@ -3,7 +3,7 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.EditActivity.Companion.REQUEST_EDIT_ACTIVITY
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
-import alytvyniuk.com.barcodewidget.utils.DisposeActivity
+import alytvyniuk.com.barcodewidget.utils.CoroutineContextActivity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 private const val TAG = "PreviewActivity"
 
-class PreviewActivity : DisposeActivity() {
+class PreviewActivity : CoroutineContextActivity() {
 
     companion object {
         fun intent(context: Context, barcode: Barcode): Intent {

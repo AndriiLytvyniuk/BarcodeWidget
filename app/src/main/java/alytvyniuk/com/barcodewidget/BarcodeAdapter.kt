@@ -3,7 +3,6 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
-import alytvyniuk.com.barcodewidget.utils.ReusableCompositeDisposable
 import android.graphics.Color
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -12,12 +11,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.barcode_list_item.view.*
 import kotlinx.android.synthetic.main.header_list_item.view.*
+import kotlinx.coroutines.CoroutineScope
 
 private const val VIEW_TYPE_HEADER = 0
 private const val VIEW_TYPE_BARCODE = 1
 
 class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter,
-                     private val reusableDisposable: ReusableCompositeDisposable)
+                     private val scope: CoroutineScope)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var barcodes : List<Barcode> = listOf()
