@@ -3,7 +3,10 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.EditActivity.Companion.REQUEST_EDIT_ACTIVITY
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
-import alytvyniuk.com.barcodewidget.utils.DisposeActivity
+import alytvyniuk.com.barcodewidget.utils.CoroutineScopeActivity
+import alytvyniuk.com.barcodewidget.utils.getBarcode
+import alytvyniuk.com.barcodewidget.utils.getBarcodeActivityIntent
+import alytvyniuk.com.barcodewidget.utils.setImageFromBarcode
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -15,11 +18,11 @@ import javax.inject.Inject
 
 private const val TAG = "PreviewActivity"
 
-class PreviewActivity : DisposeActivity() {
+class PreviewActivity : CoroutineScopeActivity() {
 
     companion object {
         fun intent(context: Context, barcode: Barcode): Intent {
-            return BarcodeActivityHelper.intent(PreviewActivity::class.java, context, barcode)
+            return context.getBarcodeActivityIntent(PreviewActivity::class.java, barcode)
         }
     }
 
@@ -35,8 +38,7 @@ class PreviewActivity : DisposeActivity() {
 
     private fun updateView(barcode: Barcode) {
         Log.d(TAG, "updateView: $barcode")
-        val disposable = barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
-        addDisposable(disposable)
+        barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode, this)
         dataTextView.text = barcode.rawBarcode.value
         titleTextView.text = barcode.title
         colorFrameView.setBackgroundColor(barcode.color ?: Color.TRANSPARENT)

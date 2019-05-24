@@ -3,16 +3,18 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
-import alytvyniuk.com.barcodewidget.model.RawBarcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
-import alytvyniuk.com.barcodewidget.utils.DisposeActivity
+import alytvyniuk.com.barcodewidget.utils.CoroutineScopeActivity
+import alytvyniuk.com.barcodewidget.utils.KEY_BARCODE
+import alytvyniuk.com.barcodewidget.utils.getBarcode
+import alytvyniuk.com.barcodewidget.utils.getBarcodeActivityIntent
+import alytvyniuk.com.barcodewidget.utils.getWidgetId
+import alytvyniuk.com.barcodewidget.utils.setImageFromBarcode
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
@@ -20,29 +22,23 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
-import androidx.annotation.VisibleForTesting
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit.*
 import kotlinx.android.synthetic.main.edit_color_picker.*
 import kotlinx.android.synthetic.main.edit_data_layout.*
 import javax.inject.Inject
 import kotlin.random.Random
-import android.content.DialogInterface
-import androidx.appcompat.app.AlertDialog
 
 
 private const val TAG = "EditActivity"
-private const val KEY_WIDGET_ID = "KEY_WIDGET_ID"
-private const val KEY_BARCODE = "KEY_BARCODE"
 private const val KEY_TITLE = "KEY_TITLE"
 private const val KEY_COLOR = "KEY_COLOR"
 private const val COLORS_NUMBER = 8
 
-class EditActivity : DisposeActivity(), View.OnClickListener {
+@SuppressWarnings("TooManyFunctions")
+class EditActivity : CoroutineScopeActivity(), View.OnClickListener {
 
     companion object {
         const val REQUEST_EDIT_ACTIVITY = 4
@@ -56,7 +52,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
             barcode: Barcode,
             widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
         ): Intent {
-            return BarcodeActivityHelper.intent(EditActivity::class.java, context, barcode, widgetId)
+            return context.getBarcodeActivityIntent(EditActivity::class.java, barcode, widgetId)
         }
     }
 
@@ -98,8 +94,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     }
 
     private fun updateUI(barcode: Barcode) {
-        val disposable = barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode)
-        addDisposable(disposable)
+        barcodeImage.setImageFromBarcode(codeToImageConverter, barcode.rawBarcode, this)
         initColorPicker(barcode.color!!)
         dataTextView.text = barcode.rawBarcode.value
         formatTextView.text = barcode.rawBarcode.format.toString()
@@ -109,8 +104,7 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     }
 
     private fun initColorPicker(chosenColor: Int) {
-        val colorsNumber = 8
-        for (i in 0 until colorsNumber) {
+        for (i in 0 until COLORS_NUMBER) {
             val id = resources.getIdentifier("colorView$i", "id", packageName)
             val imageView = findViewById<ImageView>(id)
             val colorId = resources.getIdentifier("choice_color_$i", "color", packageName)
@@ -132,19 +126,17 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
 
     private fun saveAndExit(barcode: Barcode) {
         val id = this.barcode.id
-        val observable = if (id == BarcodeDao.INVALID_DB_ID) {
-            Log.d(TAG, "Save new barcode: $barcode")
-            barcodeDao.insert(barcode)
-        } else {
-            Log.d(TAG, "Update barcode: $barcode")
-            barcodeDao.update(barcode)
-        }
-        addDisposable(observable.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                exitAfterSaved(barcode)
+        launchWithResult({
+            if (id == BarcodeDao.INVALID_DB_ID) {
+                Log.d(TAG, "Save new barcode: $barcode")
+                barcodeDao.insert(barcode)
+            } else {
+                Log.d(TAG, "Update barcode: $barcode")
+                barcodeDao.update(barcode)
             }
-        )
+        }, {
+            exitAfterSaved(barcode)
+        })
     }
 
     private fun exitAfterSaved(barcode: Barcode) {
@@ -212,14 +204,13 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
     }
 
     private fun showDeleteConfirmationDialog() {
-        val dialogClickListener = DialogInterface.OnClickListener { dialog, which ->
+        val dialogClickListener = DialogInterface.OnClickListener { _, which ->
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
-                    barcodeDao.delete(barcode)
-                        .subscribeOn(Schedulers.io())
-                        .subscribe {
-                            finish()
-                        }
+                    launchWithResult(
+                        { barcodeDao.delete(barcode) },
+                        { finish() }
+                    )
                 }
             }
         }
@@ -230,46 +221,6 @@ class EditActivity : DisposeActivity(), View.OnClickListener {
             .setNegativeButton(android.R.string.no, dialogClickListener)
             .show()
     }
-}
-
-object BarcodeActivityHelper {
-
-    fun <T> intent(
-        clazz: Class<T>, context: Context, barcode: Barcode? = null,
-        widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
-    ): Intent {
-        val intent = Intent(context, clazz)
-        return appendExtras(intent, barcode, widgetId)
-    }
-
-    @VisibleForTesting
-    fun appendExtras(
-        intent: Intent, barcode: Barcode? = null,
-        widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
-    ): Intent {
-        if (widgetId.isValidWidgetId()) {
-            intent.putExtra(KEY_WIDGET_ID, widgetId)
-        }
-        if (barcode != null) {
-            intent.putExtra(KEY_BARCODE, barcode)
-        }
-        return intent
-    }
-}
-
-fun Intent.getWidgetId() = getIntExtra(KEY_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
-
-fun Intent.getBarcode(): Barcode = getParcelableExtra(KEY_BARCODE)
-
-fun ImageView.setImageFromBarcode(codeToImageConverter: CodeToImageConverter, rawBarcode: RawBarcode): Disposable {
-    visibility = View.INVISIBLE
-    return codeToImageConverter.convert(rawBarcode)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { bitmap ->
-            setImageBitmap(bitmap)
-            visibility = View.VISIBLE
-        }
 }
 
 

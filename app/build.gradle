@@ -58,11 +58,11 @@ detekt {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha5'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
 
     implementation 'com.google.android.material:material:1.1.0-alpha06'
-    implementation "androidx.lifecycle:lifecycle-extensions:2.1.0-alpha04"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0-alpha01'
 
     implementation 'com.google.dagger:dagger:2.14.1'
     kapt 'com.google.dagger:dagger-compiler:2.14.1'
@@ -74,10 +74,14 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    implementation 'com.github.ReactiveX:RxKotlin:2.x-SNAPSHOT'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1'
 
-    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha01'
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1'
+    androidTestImplementation 'android.arch.core:core-testing:1.1.1'
+
+    implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
 
     kaptAndroidTest 'com.google.dagger:dagger-compiler:2.14.1'

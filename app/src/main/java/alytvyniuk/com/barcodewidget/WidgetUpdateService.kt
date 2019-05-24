@@ -7,15 +7,22 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.Rect
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.JobIntentService
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 private const val TAG = "WidgetUpdateService"
 
 private const val JOB_ID = 1000
+private const val FRAME_WIDTH = 7
 private const val EXTRA_WIDGET_IDS = "EXTRA_WIDGET_IDS"
 
 class WidgetUpdateService : JobIntentService() {
@@ -50,14 +57,18 @@ class WidgetUpdateService : JobIntentService() {
         val widgetIds = intent.getIntegerArrayListExtra(EXTRA_WIDGET_IDS) ?: return
         when (intent.action) {
             AppWidgetManager.ACTION_APPWIDGET_UPDATE -> {
-                val barcodes = barcodeDao.loadBarcodeEntities(widgetIds).blockingFirst()
-                val appWidgetManager = AppWidgetManager.getInstance(this)
-                for (barcode in barcodes) {
-                    updateWidget(this, appWidgetManager, barcode)
+                runBlocking {
+                    val barcodes = barcodeDao.loadBarcodeEntities(widgetIds)
+                    val appWidgetManager = AppWidgetManager.getInstance(this@WidgetUpdateService)
+                    for (barcode in barcodes) {
+                        updateWidget(this@WidgetUpdateService, appWidgetManager, barcode)
+                    }
                 }
             }
             AppWidgetManager.ACTION_APPWIDGET_DELETED -> {
-                barcodeDao.eraseWidgetIds(widgetIds).blockingFirst()
+                runBlocking {
+                    barcodeDao.eraseWidgetIds(widgetIds)
+                }
             }
         }
     }
@@ -65,7 +76,9 @@ class WidgetUpdateService : JobIntentService() {
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, barcode: Barcode) {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
         Log.d(TAG, "Update widget for id ${barcode.widgetId}, barcode = $barcode")
-        val bitmap = codeToImageConverter.convert(barcode.rawBarcode).blockingFirst()
+        val bitmap = runBlocking {
+            codeToImageConverter.convert(barcode.rawBarcode)
+        }
         remoteViews.setOnClickPendingIntent(R.id.widgetImageView, getOnClickIntent(context, barcode))
         val bitmapWithFrame = createFrameBitmap(bitmap, barcode.color ?: Color.TRANSPARENT)
         remoteViews.setBitmap(R.id.widgetImageView, "setImageBitmap", bitmapWithFrame)
@@ -82,9 +95,8 @@ class WidgetUpdateService : JobIntentService() {
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, imageBitmap.width, imageBitmap.height)
         drawable.draw(canvas)
-        val frameWidth = 8
         canvas.drawBitmap(imageBitmap, null,
-            Rect(frameWidth, frameWidth, bitmap.width - frameWidth, bitmap.height - frameWidth), null)
+            Rect(FRAME_WIDTH, FRAME_WIDTH, bitmap.width - FRAME_WIDTH, bitmap.height - FRAME_WIDTH), null)
         return bitmap
     }
 

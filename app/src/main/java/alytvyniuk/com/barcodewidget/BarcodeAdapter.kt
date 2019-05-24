@@ -3,7 +3,8 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
-import alytvyniuk.com.barcodewidget.utils.ReusableCompositeDisposable
+import alytvyniuk.com.barcodewidget.utils.AsyncTaskCoroutineScope
+import alytvyniuk.com.barcodewidget.utils.setImageFromBarcode
 import android.graphics.Color
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -17,7 +18,7 @@ private const val VIEW_TYPE_HEADER = 0
 private const val VIEW_TYPE_BARCODE = 1
 
 class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter,
-                     private val reusableDisposable: ReusableCompositeDisposable)
+                     private val scope: AsyncTaskCoroutineScope)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var barcodes : List<Barcode> = listOf()
@@ -42,7 +43,10 @@ class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter,
     }
 
     override fun getItemViewType(position: Int)
-            = if (position == 0 || (availableCount > 0 && position == availableCount + 1)) VIEW_TYPE_HEADER else VIEW_TYPE_BARCODE
+            = if (position == 0 || (availableCount > 0 && position == availableCount + 1))
+        VIEW_TYPE_HEADER
+    else
+        VIEW_TYPE_BARCODE
 
     override fun getItemCount() : Int {
         var result = barcodes.size + 1
@@ -78,8 +82,7 @@ class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter,
             itemView.setOnClickListener(this)
             itemView.dataTextView.text = item.rawBarcode.value
 
-            val disposable = itemView.barcodeImageView.setImageFromBarcode(codeToImageConverter, item.rawBarcode)
-            reusableDisposable.add(disposable)
+            itemView.barcodeImageView.setImageFromBarcode(codeToImageConverter, item.rawBarcode, scope)
             if (TextUtils.isEmpty(item.title)) {
                 itemView.titleTextView.visibility = View.INVISIBLE
             } else {

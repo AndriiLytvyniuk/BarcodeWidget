@@ -2,51 +2,40 @@ package alytvyniuk.com.barcodewidget
 
 import alytvyniuk.com.barcodewidget.converters.ImageToCodeConverter
 import alytvyniuk.com.barcodewidget.model.RawBarcode
-import alytvyniuk.com.barcodewidget.utils.ReusableCompositeDisposable
 import android.app.Application
 import android.net.Uri
 import androidx.annotation.NonNull
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
 class ImageConvertViewModel(application: Application,
                             private val imageToCodeConverter: ImageToCodeConverter) : AndroidViewModel(application) {
 
-    private val liveData: MutableLiveData<ConvertResponse> = MutableLiveData()
-    private val reusableDisposable = ReusableCompositeDisposable()
+    @VisibleForTesting
+    val liveData: MutableLiveData<ConvertResponse> = MutableLiveData()
 
     fun observe(@NonNull owner: LifecycleOwner, @NonNull observer: Observer<ConvertResponse>) {
         liveData.observe(owner, observer)
     }
 
+    @SuppressWarnings("TooGenericExceptionCaught")
     fun performConversion(uri: Uri) {
-        executeConversion(Observable.fromCallable {
-            getApplication<Application>().getBitmapForImageUri(uri)
-        }.flatMap { bitmap -> imageToCodeConverter.convert(bitmap) })
-    }
-
-    private fun executeConversion(observable: Observable<RawBarcode>) {
-        val disposable = observable
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ rawBarcode ->
+        viewModelScope.launch {
+            try {
+                val bitmap = getApplication<Application>().getBitmapForImageUri(uri)
+                val rawBarcode = imageToCodeConverter.convert(bitmap)
                 liveData.value = ConvertResponse(rawBarcode)
-            }, { t ->
-                liveData.value = ConvertResponse(exception = t)
-            })
-        reusableDisposable.add(disposable)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        reusableDisposable.dispose()
+            } catch (e : Exception) {
+                liveData.value = ConvertResponse(exception = e)
+            }
+        }
     }
 }
 
