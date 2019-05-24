@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.work.OneTimeWorkRequestBuilder
 
 
 private const val TAG = "BarcodeWidgetProvider"
@@ -25,12 +26,12 @@ open class BarcodeWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         Log.d(TAG, "onUpdate ${appWidgetIds.size}")
-        WidgetUpdateService.enqueueUpdate(context, appWidgetIds.toCollection(ArrayList()))
+        WidgetUpdateWorker.enqueueUpdate(appWidgetIds)
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         super.onDeleted(context, appWidgetIds)
         Log.d(TAG, "onDeleted: ${appWidgetIds.contentToString()}")
-        WidgetUpdateService.enqueueDelete(context, appWidgetIds.toCollection(ArrayList()))
+        WidgetUpdateWorker.enqueueDelete(appWidgetIds)
     }
 }

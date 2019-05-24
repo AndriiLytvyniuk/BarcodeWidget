@@ -5,6 +5,7 @@ import alytvyniuk.com.barcodewidget.EditActivity
 import alytvyniuk.com.barcodewidget.ListActivity
 import alytvyniuk.com.barcodewidget.PreviewActivity
 import alytvyniuk.com.barcodewidget.WidgetUpdateService
+import androidx.work.WorkManager
 import dagger.Component
 import javax.inject.Singleton
 
@@ -14,13 +15,15 @@ import javax.inject.Singleton
         ImageToCodeConverterModule::class,
         CodeToImageConverterModule::class,
         ImageConverterFactoryModule::class,
+        WorkManagerInitModule::class,
         BarcodeDaoModule::class]
 )
 interface AppComponent {
 
     fun inject(barcodeCaptureActivity: CaptureActivity)
-    fun inject(widgetUpdateService: WidgetUpdateService)
     fun inject(editActivity: EditActivity)
     fun inject(previewActivity: PreviewActivity)
     fun inject(listActivity: ListActivity)
+
+    fun getWorkManager() : WorkManager
 }

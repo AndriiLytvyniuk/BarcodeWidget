@@ -71,6 +71,7 @@ dependencies {
     implementation 'me.dm7.barcodescanner:zxing:1.9.13'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
 
+    def room_version = "2.1.0-beta01"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
@@ -83,6 +84,10 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
+
+    def work_version = "2.0.1"
+    implementation "androidx.work:work-runtime:$work_version"
+    implementation "androidx.work:work-runtime-ktx:$work_version"
 
     kaptAndroidTest 'com.google.dagger:dagger-compiler:2.14.1'
     androidTestImplementation 'junit:junit:4.12'
