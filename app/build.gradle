@@ -79,7 +79,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1'
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha01'
-    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1'
     androidTestImplementation 'android.arch.core:core-testing:1.1.1'
 
     implementation 'com.google.firebase:firebase-core:16.0.9'

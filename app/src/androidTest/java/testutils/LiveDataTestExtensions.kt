@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.example.android.kotlincoroutines.test.util
+package testutils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.google.common.truth.Truth
+import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withTimeout
@@ -39,24 +39,6 @@ class LiveDataValueCapture<T> {
     fun addValue(value: T?) {
         _values += value
         channel.offer(value)
-    }
-
-    suspend fun assertSendsValues(timeout: Long, vararg expected: T?) {
-        val expectedList = expected.asList()
-        if (values == expectedList) {
-            return
-        }
-        try {
-            withTimeout(timeout) {
-                for (value in channel) {
-                    if (values == expectedList) {
-                        return@withTimeout
-                    }
-                }
-            }
-        } catch (ex: TimeoutCancellationException) {
-            Truth.assertThat(values).isEqualTo(expectedList)
-        }
     }
 }
 

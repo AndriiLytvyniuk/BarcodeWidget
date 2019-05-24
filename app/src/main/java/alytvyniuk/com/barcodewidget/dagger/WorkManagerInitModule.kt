@@ -11,7 +11,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [CodeToImageConverterModule::class, AppContextModule::class, BarcodeDaoModule::class])
+@Module
 class WorkManagerInitModule {
 
     @Provides

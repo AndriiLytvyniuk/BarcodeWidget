@@ -4,7 +4,6 @@ import alytvyniuk.com.barcodewidget.CaptureActivity
 import alytvyniuk.com.barcodewidget.EditActivity
 import alytvyniuk.com.barcodewidget.ListActivity
 import alytvyniuk.com.barcodewidget.PreviewActivity
-import alytvyniuk.com.barcodewidget.WidgetUpdateService
 import androidx.work.WorkManager
 import dagger.Component
 import javax.inject.Singleton

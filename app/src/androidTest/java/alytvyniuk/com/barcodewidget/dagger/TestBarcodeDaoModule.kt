@@ -4,7 +4,6 @@ import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Observable
 import javax.inject.Singleton
 
 @Module
@@ -29,29 +28,25 @@ class BarcodeDaoMock : BarcodeDao {
     }
 
 
-    override fun insert(barcode: Barcode): Observable<Unit> = Observable.fromCallable {
+    override suspend fun insert(barcode: Barcode) {
         barcodes.add(barcode)
-        return@fromCallable
     }
 
-    override fun loadBarcodeEntities(widgetIds: List<Int>): Observable<List<Barcode>> = Observable.fromCallable {
+    override suspend fun loadBarcodeEntities(widgetIds: List<Int>) =
         barcodes.subList(0, widgetIds.size)
-    }
 
-    override fun loadAll(): Observable<List<Barcode>> = Observable.fromCallable {
-        barcodes
-    }
 
-    override fun update(barcode: Barcode): Observable<Unit> {
+    override suspend fun loadAll(): List<Barcode> = barcodes
+
+    override suspend fun update(barcode: Barcode) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun eraseWidgetIds(widgetIds: List<Int>): Observable<Int> {
+    override suspend fun eraseWidgetIds(widgetIds: List<Int>): Int {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-
-    override fun delete(barcode: Barcode): Observable<Int> {
+    override suspend fun delete(barcode: Barcode): Int {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
