@@ -22,7 +22,6 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
 private const val TAG = "WidgetUpdateWorker"
 
@@ -37,7 +36,6 @@ class WidgetUpdateWorker(private val appContext: Context,
     : Worker(appContext, workerParams)  {
 
     companion object {
-
         fun enqueueUpdate(widgetIds : IntArray) {
             val data = workDataOf(EXTRA_WIDGET_IDS to widgetIds,
                 EXTRA_ACTION to AppWidgetManager.ACTION_APPWIDGET_UPDATE)
