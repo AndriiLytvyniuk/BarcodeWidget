@@ -6,7 +6,13 @@ import android.app.Application
 import android.net.Uri
 import androidx.annotation.NonNull
 import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 class ImageConvertViewModel(application: Application,
@@ -19,6 +25,7 @@ class ImageConvertViewModel(application: Application,
         liveData.observe(owner, observer)
     }
 
+    @SuppressWarnings("TooGenericExceptionCaught")
     fun performConversion(uri: Uri) {
         viewModelScope.launch {
             try {

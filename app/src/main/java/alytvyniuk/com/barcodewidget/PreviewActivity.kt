@@ -4,6 +4,9 @@ import alytvyniuk.com.barcodewidget.EditActivity.Companion.REQUEST_EDIT_ACTIVITY
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.utils.CoroutineScopeActivity
+import alytvyniuk.com.barcodewidget.utils.getBarcode
+import alytvyniuk.com.barcodewidget.utils.getBarcodeActivityIntent
+import alytvyniuk.com.barcodewidget.utils.setImageFromBarcode
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -19,7 +22,7 @@ class PreviewActivity : CoroutineScopeActivity() {
 
     companion object {
         fun intent(context: Context, barcode: Barcode): Intent {
-            return BarcodeActivityHelper.intent(PreviewActivity::class.java, context, barcode)
+            return context.getBarcodeActivityIntent(PreviewActivity::class.java, barcode)
         }
     }
 

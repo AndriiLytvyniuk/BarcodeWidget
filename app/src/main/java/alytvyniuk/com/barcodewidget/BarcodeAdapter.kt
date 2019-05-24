@@ -4,6 +4,7 @@ import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
 import alytvyniuk.com.barcodewidget.utils.AsyncTaskCoroutineScope
+import alytvyniuk.com.barcodewidget.utils.setImageFromBarcode
 import android.graphics.Color
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -42,7 +43,10 @@ class BarcodeAdapter(private val codeToImageConverter: CodeToImageConverter,
     }
 
     override fun getItemViewType(position: Int)
-            = if (position == 0 || (availableCount > 0 && position == availableCount + 1)) VIEW_TYPE_HEADER else VIEW_TYPE_BARCODE
+            = if (position == 0 || (availableCount > 0 && position == availableCount + 1))
+        VIEW_TYPE_HEADER
+    else
+        VIEW_TYPE_BARCODE
 
     override fun getItemCount() : Int {
         var result = barcodes.size + 1

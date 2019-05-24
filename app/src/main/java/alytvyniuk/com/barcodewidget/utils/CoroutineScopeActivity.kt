@@ -2,7 +2,11 @@ package alytvyniuk.com.barcodewidget.utils
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 abstract class CoroutineScopeActivity : AppCompatActivity(), AsyncTaskCoroutineScope {

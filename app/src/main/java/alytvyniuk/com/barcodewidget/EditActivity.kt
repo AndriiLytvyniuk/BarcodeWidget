@@ -3,10 +3,13 @@ package alytvyniuk.com.barcodewidget
 import alytvyniuk.com.barcodewidget.converters.CodeToImageConverter
 import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
-import alytvyniuk.com.barcodewidget.model.RawBarcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
-import alytvyniuk.com.barcodewidget.utils.AsyncTaskCoroutineScope
 import alytvyniuk.com.barcodewidget.utils.CoroutineScopeActivity
+import alytvyniuk.com.barcodewidget.utils.KEY_BARCODE
+import alytvyniuk.com.barcodewidget.utils.getBarcode
+import alytvyniuk.com.barcodewidget.utils.getBarcodeActivityIntent
+import alytvyniuk.com.barcodewidget.utils.getWidgetId
+import alytvyniuk.com.barcodewidget.utils.setImageFromBarcode
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -19,7 +22,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
-import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -31,12 +33,11 @@ import kotlin.random.Random
 
 
 private const val TAG = "EditActivity"
-private const val KEY_WIDGET_ID = "KEY_WIDGET_ID"
-private const val KEY_BARCODE = "KEY_BARCODE"
 private const val KEY_TITLE = "KEY_TITLE"
 private const val KEY_COLOR = "KEY_COLOR"
 private const val COLORS_NUMBER = 8
 
+@SuppressWarnings("TooManyFunctions")
 class EditActivity : CoroutineScopeActivity(), View.OnClickListener {
 
     companion object {
@@ -51,7 +52,7 @@ class EditActivity : CoroutineScopeActivity(), View.OnClickListener {
             barcode: Barcode,
             widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
         ): Intent {
-            return BarcodeActivityHelper.intent(EditActivity::class.java, context, barcode, widgetId)
+            return context.getBarcodeActivityIntent(EditActivity::class.java, barcode, widgetId)
         }
     }
 
@@ -103,8 +104,7 @@ class EditActivity : CoroutineScopeActivity(), View.OnClickListener {
     }
 
     private fun initColorPicker(chosenColor: Int) {
-        val colorsNumber = 8
-        for (i in 0 until colorsNumber) {
+        for (i in 0 until COLORS_NUMBER) {
             val id = resources.getIdentifier("colorView$i", "id", packageName)
             val imageView = findViewById<ImageView>(id)
             val colorId = resources.getIdentifier("choice_color_$i", "color", packageName)
@@ -221,49 +221,6 @@ class EditActivity : CoroutineScopeActivity(), View.OnClickListener {
             .setNegativeButton(android.R.string.no, dialogClickListener)
             .show()
     }
-}
-
-object BarcodeActivityHelper {
-
-    fun <T> intent(
-        clazz: Class<T>, context: Context, barcode: Barcode? = null,
-        widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
-    ): Intent {
-        val intent = Intent(context, clazz)
-        return appendExtras(intent, barcode, widgetId)
-    }
-
-    @VisibleForTesting
-    fun appendExtras(
-        intent: Intent, barcode: Barcode? = null,
-        widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
-    ): Intent {
-        if (widgetId.isValidWidgetId()) {
-            intent.putExtra(KEY_WIDGET_ID, widgetId)
-        }
-        if (barcode != null) {
-            intent.putExtra(KEY_BARCODE, barcode)
-        }
-        return intent
-    }
-}
-
-fun Intent.getWidgetId() = getIntExtra(KEY_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
-
-fun Intent.getBarcode(): Barcode = getParcelableExtra(KEY_BARCODE)
-
-fun ImageView.setImageFromBarcode(
-    codeToImageConverter: CodeToImageConverter,
-    rawBarcode: RawBarcode,
-    asyncTaskCoroutineScope: AsyncTaskCoroutineScope
-) {
-    visibility = View.INVISIBLE
-    asyncTaskCoroutineScope.launchWithResult(
-        { codeToImageConverter.convert(rawBarcode) },
-        { bitmap ->
-            setImageBitmap(bitmap)
-            visibility = View.VISIBLE
-        })
 }
 
 

@@ -5,6 +5,8 @@ import alytvyniuk.com.barcodewidget.db.BarcodeDao
 import alytvyniuk.com.barcodewidget.model.Barcode
 import alytvyniuk.com.barcodewidget.model.isValidWidgetId
 import alytvyniuk.com.barcodewidget.utils.CoroutineScopeActivity
+import alytvyniuk.com.barcodewidget.utils.getBarcodeActivityIntent
+import alytvyniuk.com.barcodewidget.utils.getWidgetId
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -26,7 +28,7 @@ class ListActivity : CoroutineScopeActivity(), OnItemClickListener {
 
     companion object {
         fun intent(context: Context, widgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID): Intent {
-            return BarcodeActivityHelper.intent(ListActivity::class.java, context, widgetId = widgetId)
+            return context.getBarcodeActivityIntent(ListActivity::class.java, widgetId = widgetId)
         }
     }
 
